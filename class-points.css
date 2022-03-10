@@ -1,0 +1,744 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 0px;
+  margin: 0px;
+  background-color: #d3d3d3;
+}
+
+/* Modals */
+
+.modal {
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  overflow-y: auto;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+.modal .content {
+  position: relative;
+  margin: auto;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: center;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.modal-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.modal-right {
+  flex: 1;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal .avatar {
+  width: 240px;
+  height: 240px;
+}
+
+.modal .row {
+  display: flex;
+  flex: 2;
+  justify-content: space-between;
+}
+
+.modal label {
+  white-space: nowrap;
+  margin-right: 5px;
+  margin-left: auto;
+}
+.modal select {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+.modal-buttons {
+  display: flex;
+  bottom: 0px;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
+  margin-right: 0;
+}
+
+.close-button,
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #a9a9a9;
+  color: #fff;
+  text-decoration: none;
+  border: none;
+  border-radius: 25%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.close-button:hover,
+.close-button:hover {
+  background: red;
+}
+
+#infoModal .content,
+#confirmModal .content {
+  position: relative;
+  flex-direction: column;
+  width: 350px;
+  height: 150px;
+  padding: 10px 30px;
+}
+
+#infoModal .content button,
+#confirmModal .content .buttons {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
+
+#infoModalMessage,
+#confirmModalMessage {
+  margin: auto;
+  text-align: left;
+  white-space: wrap;
+}
+
+/* Containers */
+
+#studentsContainer, #avatarsContainer, #randomAvatarContainer {
+  padding: 10px;
+  margin: 0px;
+  min-height: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+#avatarsContainer, #randomAvatarContainer {
+  position: absolute;
+  padding: 10px 0px;
+  background: white;
+  width: 100%;
+}
+
+/* Elements */
+
+button, input {
+  padding: 5px 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  transition: background-color 0.3s ease;
+}
+
+select {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+}
+
+label {
+   padding: 8px;
+}
+
+input {
+  text-align: center;
+  outline: 0;
+}
+
+button:hover, input:hover {
+  background-color: #ddd;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+/* Card Styles */
+
+.card {
+  position: relative;
+  border: 2px solid #a9a9a9;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f9f9f9;
+  min-width: 300px;
+  min-height: 100px;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  cursor: pointer;
+}
+
+.student-card.selected {
+  background: #d3d3d3;
+}
+
+.dummy {
+  background: #d3d3d3;
+  box-shadow: none;
+  outline: 4px dotted darkgrey;
+  border: 2px solid transparent;
+}
+
+.dummy .info,
+.dummy .avatar {
+  visibility: hidden;
+}
+
+.card > .info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.card .name {
+  padding: 5px;
+  font-weight: 700;
+  font-size: x-large;
+  cursor: pointer;
+}
+
+.card .points {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  background: #006400;
+  color: #fff;
+  border: 2px;
+  border-radius: 50%;
+  border-color: #fff;
+  border-style: solid;
+  width: 20px;
+  height: 20px;
+  padding: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.card .pointsManage {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+}
+
+.card .points-input {
+  width: 3ch;
+}
+
+.card .delete,
+.card .avatar-settings-button {
+  position: absolute;
+  top: 5px;
+  background: #a9a9a9;
+  color: #fff;
+  border: none;
+  border-radius: 25%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.card .delete {
+  right: 5px;
+}
+
+.card .avatar-settings-button {
+  right: 34px;
+}
+
+.card .avatar-settings-button:hover {
+  background: #007bff;
+}
+
+.card .delete:hover {
+  background: red;
+}
+
+.teacher-card {
+  background: lightsteelblue;
+}
+
+/* Class Card */
+
+.class-card {
+  background: #add8e6;
+}
+
+.class-name {
+  padding: 0 0;
+  border: 1px solid #add8e6;
+  border-radius: 5px;
+  background-color: #add8e6;
+  font-weight: 700;
+  font-size: x-large;
+  text-align: left;
+  outline: 0;
+  transition: background-color 0.3s ease;
+  width: 180px;
+}
+.class-name:hover {
+  border: 1px solid #a9a9a9;
+  background-color: #e0e0e0;
+}
+.class-name:focus {
+  border: 1px solid #a9a9a9;
+  border-color: #999;
+  background-color: #e0e0e0;
+}
+
+/* Avatar */
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 12.5%;
+  background-color: #d3d3d3;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.avatar svg {
+  width: 100%;
+  height: 100%;
+}
+
+#randomAvatarContainer .avatar {
+  width: 640px;
+  height: 640px;
+}
+
+#newStudentCard .avatar svg {
+  opacity: 33%
+}
+
+.avatar linearGradient,
+.avatar stop,
+.avatar svg,
+.avatar defs,
+.avatar circle,
+.avatar ellipse,
+.avatar path,
+.avatar polygon,
+.avatar rect {
+  transform-origin: center;
+}
+
+/* Taskbar */
+
+#taskbar {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 16px;
+  position: fixed;
+  padding: 10px 0px;
+  gap: 10px;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  background-color: #222;
+  justify-content: center;
+  transition: opacity 0.3s ease-in-out;
+  visibility: visible;
+  z-index: 1000;
+}
+
+#taskbar button,
+#taskbar input {
+  padding: 10px 20px;
+  font-size: 16px;
+}
+
+#taskbar #searchBar {
+  position: relative; 
+}
+    
+#taskbar #searchInput {
+  text-align: left;
+  margin: 0px;
+  width: 200px;
+  padding: 11px 50px 11px 10px;
+}
+
+#taskbar #clearButton {
+  position: absolute;
+  right: 0px;
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 41px;
+  border: none;
+  background: transparent;
+  color: gray;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 10px;
+}
+
+.taskdropdown {
+  position: relative;
+}
+
+.taskdropdown-content {
+  display: none;
+  position: absolute;
+  bottom: 41px;
+  background-color: #f9f9f9;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  border-radius: 5px;
+  border: 1px #f1f1f1 solid;
+  white-space: nowrap;
+}
+
+.taskdropdown:hover .taskdropdown-content {
+  display: flex;
+  flex-flow: column;
+}
+.taskdropdown-content button {
+  border-radius: 0;
+  text-align: left;
+}
+
+/* Animations */
+
+#confettiContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #ff0;
+  animation: fall 3s 3s;
+}
+@keyframes fall {
+  to {
+    transform: translateY(200vh) rotate(720deg);
+  }
+}
+
+/* Spinner */
+
+#spinnerOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+}
+.spinner {
+  border: 16px solid lightgray;
+  border-top: 16px solid rgba(0, 0, 0, 0.0);
+  border-bottom: 16px solid rgba(0, 0, 0, 0.0);
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* SignUp */
+
+#signUp,
+#signinWithCode {
+  display:none;
+}
+
+#signUp:target,
+#signinWithCode:target {
+  display:flex;
+}
+
+#signUp .content,
+#signinWithCode .content {
+  position: relative;
+  flex-direction: column;
+  max-width: 90vw;
+  min-width: 300px;
+  max-height: 90vh;
+  min-height: 300px;
+}
+
+#signinWithCode input[type="text"],
+#signUp input[type="email"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+#signinWithCode input[type="email"]::placeholder,
+#signUp input[type="email"]::placeholder {
+  color: #999;
+}
+#signinWithCode input[type="email"]:focus,
+#signUp input[type="email"]:focus {
+  border-color: #007bff;
+  outline: 0;
+}
+
+#signinWithCode button,
+#signUp button {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#signinWithCode button:hover,
+#signUp button:hover {
+  background-color: #0056b3;
+}
+
+#signinWithCode a,
+#signUp a {
+  color: #000;
+}
+
+/* Groups View */
+
+#groupsView {
+  background: #d3d3d3;
+  flex-direction: column;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  overflow-y: auto;
+  box-sizing: border-box;
+  z-index: 1000;
+}
+
+#groupsContainer {
+  flex-direction: row;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px 20px;
+}
+
+.group-card,
+.group-member-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #a9a9a9;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  gap: 10px;
+}
+
+.group-card {
+  flex-direction: row;
+  min-width: 140px;
+}
+
+.group-member-card {
+  min-height: 110px;
+  min-width: 110px;
+  flex-direction: column
+}
+
+.group-member-card-name {
+  font-weight: 700;
+}
+
+.group-controls {
+  position: relative;
+  display: flex;
+  width: 100vw;
+  flex-direction: row;
+  justify-content: right;
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+
+.group-controls button {
+  font-size: 48px;
+  padding: 0px 0px;
+  margin: 0;
+  background: transparent;
+}
+
+.dummy-group {
+  background: transparent;
+  box-shadow: none;
+  border: 2px dotted darkgrey;
+  min-width: 110px;
+}
+
+/* Help View */
+
+.welcome-modal,
+.helpModal {
+  padding: 20px;
+  border-radius: 5px;
+  text-align: left;
+  overflow-y: auto;
+  max-height: 100vh;
+  position: relative;
+  margin: auto;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+#welcomeView,
+#helpView {
+  display: none;
+}
+#welcomeView:target,
+#helpView:target {
+  display: flex;
+}
+
+.welcome-modal button,
+.helpModal button {
+  width: 150px;
+  padding: 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  justify-content: center;
+}
+.welcome-modal button:hover,
+.helpModal button:hover {
+  background-color: #0056b3;
+}
+
+/* Welcome View */
+
+.welcome-modal {
+  max-width: 40vw;
+  min-width: 350px;
+}
+
+/* Class Photo View */
+
+#classPhotoView {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: white;
+  width: 100%;
+  height: 100vh;
+  gap: 20px;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  justify-content: center;
+  align-content: center;
+}
+
+#classPhotoView .group-member-card {
+  height: 10px;
+}
+
+/* Mobile Fixes */
+
+@media (max-width: 650px) {
+  .modal .content {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+}
+
+/* Print Layout */
+
+@media print {
+  @page {
+    size: landscape;
+    margin: 0;
+  }
+  .close-button {
+    display: none !important;
+  }
+  body {
+    background: none;
+  }
+}
