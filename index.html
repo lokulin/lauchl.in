@@ -1,9 +1,594 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>lauchlin.com</title>
-    </head>
-    <body>
-        <P>🚽</P>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Class Points!</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+
+      #manageControls,
+      #bulkControls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 20px;
+      }
+
+      #manageControls button,
+      #manageControls input,
+      #manageControls span,
+      #bulkControls button,
+      #bulkControls span {
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      #manageControls span,
+      #bulkControls span {
+        min-width: 100px;
+        text-align: center;
+      }
+
+      #bulkControls #classTotal {
+        font-weight: bold;
+        font-size: xx-large;
+        padding: 5px;
+      }
+
+      #studentsContainer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      .student-card {
+        position: relative;
+        display: flex;
+        align-items: center;
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 8px;
+        background: #f9f9f9;
+        min-width: 400px;
+      }
+      .student-card.selected {
+        background: lightblue;
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .name {
+        padding: 5px;
+        font-weight: bold;
+        font-size: x-large;
+        cursor: pointer;
+      }
+      .points {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px;
+      }
+
+      .delete {
+        position: absolute; /* Position the delete button absolutely */
+        top: 5px; /* Adjust top position */
+        right: 5px; /* Adjust right position */
+        background: gray;
+        color: white;
+        border: none;
+        border-radius: 25%; /* Make it circular */
+        width: 24px; /* Set width and height for a small circle */
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px; /* Adjust font size for the "X" */
+        font-weight: bold;
+        line-height: 1; /* Ensure the "X" is centered */
+      }
+
+      .delete:hover {
+        background: darkgray; /* Change color on hover */
+      }
+
+      .avatar {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        background-color: #f0f0f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .avatar svg {
+        width: 100%;
+        height: 100%;
+      }
+      .avatar circle,
+      .avatar rect,
+      .avatar polygon,
+      .avatar ellipse,
+      .avatar path {
+        transform-origin: center; /* Ensure shapes are centered */
+      }
+
+      button {
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+      input[type="file"] {
+        margin-bottom: 20px;
+      }
+
+      input[type="number"]::-webkit-outer-spin-button,
+      input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+
+      #confetti {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      .confetti-piece {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: #ff0;
+        animation: fall 3s 3s;
+      }
+
+      @keyframes fall {
+        to {
+          transform: translateY(200vh) rotate(720deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="bulkControls">
+      <button onclick="bulkUpdatePoints(-10)">-10</button>
+      <button onclick="bulkUpdatePoints(-5)">-5</button>
+      <button onclick="bulkUpdatePoints(-1)">-1</button>
+      <span id="classTotal"></span>
+      <button onclick="bulkUpdatePoints(1)">+1</button>
+      <button onclick="bulkUpdatePoints(5)">+5</button>
+      <button onclick="bulkUpdatePoints(10)">+10</button>
+      <button onclick="launchConfetti()">Celebrate!</button>
+    </div>
+    <div id="studentsContainer"></div>
+    <div id="manageControls">
+      <button onclick="toggleSelectAll()">Select/Deselect All</button>
+      <button onclick="resetPoints()">Zero</button>
+      <button id="undoButton" onclick="undo()" disabled>Undo</button>
+      <button onclick="sortStudentsByName()">Sort</button>
+      <button onclick="sortStudentsByScore()">Leaderboard</button>
+      <button onclick="exportCSV()">Backup</button>
+      <button onclick="clickFileInput()">Import</button>
+      <input
+        id="fileInput"
+        type="file"
+        accept=".csv, .txt"
+        onchange="importCSV(event)"
+        style="display: none"
+      />
+    </div>
+    <div id="confetti"></div>
+
+    <script>
+      let students = JSON.parse(localStorage.getItem("students")) || [];
+      let historyStack = [];
+
+      function saveState() {
+        // Save the current state to historyStack
+        if (historyStack.length >= 10) {
+          historyStack.shift(); // Remove the oldest state if there are more than 10
+        }
+        historyStack.push(JSON.parse(JSON.stringify(students))); // Deep clone to avoid reference issues
+        updateUndoButton();
+      }
+
+      function updateUndoButton() {
+        // Enable or disable the undo button based on historyStack length
+        const undoButton = document.getElementById("undoButton");
+        undoButton.disabled = historyStack.length === 0;
+      }
+
+      function undo() {
+        if (historyStack.length > 0) {
+          students = historyStack.pop(); // Revert to the last saved state
+          saveAndRender();
+        }
+        updateUndoButton();
+      }
+
+      function generateAvatar(name) {
+        const hash = stringToHash(name);
+        const color = getColorFromHash(hash);
+        const shape = getShapeFromHash(hash);
+        const eyes = getEyesFromHash(hash);
+        const mouth = getMouthFromHash(hash);
+
+        return `
+            <div class="avatar">
+            <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                ${shape}
+                ${eyes}
+                ${mouth}
+            </svg>
+            </div>
+        `;
+      }
+
+      function stringToHash(name) {
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+          hash = name.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        return Math.abs(hash);
+      }
+
+      function getColorFromHash(hash) {
+        const colors = [
+          "#FF6F61",
+          "#6B5B95",
+          "#88B04B",
+          "#F7CAC9",
+          "#92A8D1",
+          "#955251",
+          "#B565A7",
+          "#009B77",
+          "#DD4124",
+          "#D65076",
+          "#EFC050",
+          "#45B8AC",
+          "#5B5EA6",
+          "#9B2335",
+          "#DFCFBE",
+          "#55B4B0",
+          "#E15D44",
+          "#7FCDCD",
+          "#BC243C",
+          "#C3447A",
+          "#98B4D4",
+          "#FF6F61",
+          "#6B5B95",
+          "#88B04B",
+        ];
+        return colors[hash % colors.length];
+      }
+
+      function getShapeFromHash(hash) {
+        const shapes = [
+          `<circle cx="50" cy="50" r="40" fill="${getColorFromHash(hash)}" />`,
+          `<rect x="10" y="10" width="80" height="80" fill="${getColorFromHash(
+            hash
+          )}" />`,
+          `<polygon points="50,10 90,90 10,90" fill="${getColorFromHash(
+            hash
+          )}" />`,
+          `<ellipse cx="50" cy="50" rx="45" ry="35" fill="${getColorFromHash(
+            hash
+          )}" />`,
+          `<polygon points="50,10 10,90 90,90" fill="${getColorFromHash(
+            hash
+          )}" />`, // Inverted Triangle
+          `<polygon points="10,10 90,10 50,90" fill="${getColorFromHash(
+            hash
+          )}" />`, // Equilateral Triangle
+          `<polygon points="50,10 90,50 50,90 10,50" fill="${getColorFromHash(
+            hash
+          )}" />`, // Diamond
+        ];
+        return shapes[(hash % 100) % shapes.length];
+      }
+
+      function getEyesFromHash(hash) {
+        const eyes = [
+          `<circle cx="35" cy="45" r="16" fill="white" stroke="black" stroke-width="2" />
+            <circle cx="65" cy="45" r="16" fill="white" stroke="black" stroke-width="2" />
+            <circle cx="35" cy="45" r="8" fill="black" />
+            <circle cx="65" cy="45" r="8" fill="black" />`,
+          `<circle cx="35" cy="45" r="16" fill="white" stroke="black" stroke-width="2" />
+            <circle cx="65" cy="45" r="16" fill="white" stroke="black" stroke-width="2" />
+            <circle cx="25" cy="45" r="8" fill="black" />
+            <circle cx="55" cy="45" r="8" fill="black" />`,
+          `<rect x="20" y="40" width="20" height="20" fill="white" stroke="black" stroke-width="2" />
+            <rect x="60" y="40" width="20" height="20" fill="white" stroke="black" stroke-width="2" />
+            <rect x="20" y="40" width="10" height="10" fill="black" stroke="black" stroke-width="2" />
+            <rect x="60" y="40" width="10" height="10" fill="black" stroke="black" stroke-width="2" />`,
+          `<circle cx="35" cy="45" r="16" fill="white" stroke="black" stroke-width="2" />
+            <circle cx="65" cy="45" r="16" fill="white" stroke="black" stroke-width="2" />
+            <circle cx="40" cy="45" r="8" fill="black" stroke="black" stroke-width="2" />
+            <circle cx="70" cy="45" r="8" fill="black" stroke="black" stroke-width="2" />`,
+        ];
+        return eyes[Math.floor((hash / 100) % 100) % eyes.length];
+      }
+
+      function getMouthFromHash(hash) {
+        const mouths = [
+          `<path d="M30,70 Q50,80 70,70" stroke="black" stroke-width="6" fill="transparent" />`,
+          `<path d="M30,65 Q50,80 70,80" stroke="black" stroke-width="6" fill="transparent" />`,
+          `<path d="M30,70 Q50,70 70,70" stroke="black" stroke-width="6" fill="transparent" />`,
+          `<circle cx="50" cy="70" r="10" fill="black" />`,
+        ];
+        return mouths[Math.floor((hash / 10000) % 100) % mouths.length];
+      }
+
+      let selectedStudents = new Set();
+
+      function renderStudents() {
+        const container = document.querySelector("#studentsContainer");
+        container.innerHTML =
+          students
+            .map((student, index) => {
+              const nameParts = student.name.split(" ");
+              const points = student.points;
+              const firstName = nameParts[0];
+              const lastInitial =
+                nameParts.length > 1 ? nameParts[1][0] + "." : "";
+              const selectedClass = selectedStudents.has(index)
+                ? "selected"
+                : "";
+              return `
+      <div class="student-card ${selectedClass}" >
+        <div class="avatar" onclick="toggleSelect(${index})">${generateAvatar(
+                student.name
+              )}</div>
+        <div class="info">
+          <button class="delete" onclick="deleteStudent(${index})">X</button>
+          <span class="name" onclick="toggleSelect(${index})">${firstName} ${lastInitial} (${points} points)</span>
+          <div class="points">
+            <button onclick="updatePoints(${index}, -10)">-10</button>
+            <button onclick="updatePoints(${index}, -5)">-5</button>
+            <button onclick="updatePoints(${index}, -1)">-1</button>
+            <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)">
+            <button onclick="updatePoints(${index}, 1)">+1</button>
+            <button onclick="updatePoints(${index}, 5)">+5</button>
+            <button onclick="updatePoints(${index}, 10)">+10</button>
+          </div>
+        </div>
+      </div>
+    `;
+            })
+            .join("") +
+          `
+    <div class="student-card">
+      <div class="avatar">${generateAvatar("New Student")}</div>
+      <div class="info">
+        <input type="text" id="newStudentName" placeholder="Enter student name">
+        <button class="add-student" onclick="addNewStudent()">Add Student</button>
+      </div>
+    </div>
+  `;
+        updateClassTotal();
+      }
+
+      function addNewStudent() {
+        const newStudentName = document
+          .querySelector("#newStudentName")
+          .value.trim();
+
+        if (newStudentName) {
+          saveState();
+          students.push({ name: newStudentName, points: 0 });
+          saveAndRender();
+        } else {
+          alert("Please enter a student name.");
+        }
+      }
+
+      function toggleSelect(index) {
+        if (selectedStudents.has(index)) {
+          selectedStudents.delete(index);
+        } else {
+          selectedStudents.add(index);
+        }
+        saveAndRender();
+      }
+
+      function toggleSelectAll() {
+        if (selectedStudents.size === students.length) {
+          // If all students are selected, deselect all
+          selectedStudents.clear();
+        } else {
+          // If not all are selected, select all students
+          students.forEach((_, index) => {
+            selectedStudents.add(index);
+          });
+        }
+        saveAndRender();
+      }
+
+      function updatePoints(index, amount) {
+        saveState();
+        students[index].points += parseInt(amount);
+        saveAndRender();
+      }
+
+      function setPoints(index, amount) {
+        saveState();
+        students[index].points = parseInt(amount);
+        saveAndRender();
+      }
+
+      function bulkUpdatePoints(amount) {
+        saveState();
+        if (selectedStudents.size === 0) {
+          students.forEach((student) => {
+            student.points += amount;
+          });
+        } else {
+          selectedStudents.forEach((index) => {
+            students[index].points += amount;
+          });
+        }
+        saveAndRender();
+      }
+
+      function resetPoints() {
+        saveState();
+        if (selectedStudents.size === 0) {
+          students.forEach((student) => {
+            student.points = 0;
+          });
+        } else {
+          selectedStudents.forEach((index) => {
+            students[index].points = 0;
+          });
+        }
+        saveAndRender();
+      }
+
+      function deleteStudent(index) {
+        saveState();
+        students.splice(index, 1);
+        saveAndRender();
+      }
+
+      function updateClassTotal() {
+        const total = students.reduce(
+          (sum, student) => sum + student.points,
+          0
+        );
+        document.querySelector(
+          "#classTotal"
+        ).textContent = `Class Total: ${total}`;
+      }
+
+      function sortStudentsByName() {
+        saveState();
+        students.sort((a, b) => {
+          if (a.name < b.name) return -1; // a comes before b
+          if (a.name > b.name) return 1; // a comes after b
+          return 0; // names are equal
+        });
+        saveAndRender();
+      }
+
+      function sortStudentsByScore() {
+        saveState();
+        students.sort((a, b) => b.points - a.points);
+        saveAndRender();
+      }
+
+      function saveAndRender() {
+        localStorage.setItem("students", JSON.stringify(students));
+        renderStudents();
+      }
+
+      function exportCSV() {
+        const csvContent =
+          "data:text/csv;charset=utf-8," +
+          students.map((s) => `${s.name},${s.points}`).join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "students_backup.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      function clickFileInput() {
+        const fileInput = document.getElementById("fileInput");
+        fileInput.click();
+      }
+
+      function importCSV(event) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          // Split lines, handling both Windows and Linux line endings
+          const lines = e.target.result.split(/\r?\n/);
+
+          // Process each line
+          students = lines.map((line) => {
+            // If the line contains a comma, split into name and points
+            if (line.includes(",")) {
+              const [name, points] = line.split(",");
+              return { name, points: parseInt(points) || 0 };
+            } else {
+              // If no comma, treat the entire line as the student's name with 0 points
+              return { name: line.trim(), points: 0 };
+            }
+          });
+
+          // Save and render the updated student list
+          saveAndRender();
+
+          // Clear the file input
+          event.target.value = "";
+        };
+        reader.readAsText(file);
+      }
+
+      function launchConfetti() {
+        const confettiContainer = document.getElementById("confetti");
+        const numberOfConfetti = 1000;
+
+        for (let i = 0; i < numberOfConfetti; i++) {
+          const confetti = document.createElement("div");
+          confetti.classList.add("confetti-piece");
+
+          // Randomize the confetti's position, size, and color
+          confetti.style.backgroundColor = getRandomColor();
+          confetti.style.left = `${Math.random() * 100}vw`;
+          confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
+          confetti.style.animationDelay = `${Math.random() * 2}s`;
+
+          // Append the confetti piece to the container
+          confettiContainer.appendChild(confetti);
+
+          // Remove the confetti after it finishes falling
+          setTimeout(() => {
+            confetti.remove();
+          }, 3000); // Confetti lasts for 5 seconds
+        }
+      }
+
+      // Helper function to generate random colors
+      function getRandomColor() {
+        const colors = [
+          "#FF5733",
+          "#33FF57",
+          "#3357FF",
+          "#FF33A1",
+          "#FFD700",
+          "#00FF7F",
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      document.addEventListener("DOMContentLoaded", renderStudents);
+    </script>
+  </body>
 </html>
