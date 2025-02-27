@@ -171,10 +171,44 @@
           transform: translateY(200vh) rotate(720deg);
         }
       }
+
+      #helpPopup {
+        max-width: 500px;
+        width: 90%;
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 10000;
+      }
+
+      #helpPopup h2 {
+        margin-top: 0;
+      }
+
+      #helpPopup button {
+        margin-top: 10px;
+      }
     </style>
   </head>
   <body>
     <div id="bulkControls">
+      <button
+        onclick="openHelpPopup()"
+        style="
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          padding: 10px 20px;
+          background: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        "
+      >
+        Help
+      </button>
       <button onclick="bulkUpdatePoints(-10)">-10</button>
       <button onclick="bulkUpdatePoints(-5)">-5</button>
       <button onclick="bulkUpdatePoints(-1)">-1</button>
@@ -200,6 +234,75 @@
         onchange="importCSV(event)"
         style="display: none"
       />
+    </div>
+    <div
+      id="helpPopup"
+      style="
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 10000;
+      "
+    >
+      <h2>How to Use Class Points</h2>
+      <p>
+        <strong>1. Add a Student:</strong> Enter a student's name in the input
+        field at the bottom and click "Add Student."
+      </p>
+      <p>
+        <strong>2. Update Points:</strong> Use the buttons (-10, -5, -1, +1, +5,
+        +10) below each student's name to adjust their points. You can also type
+        a number directly into the input box.
+      </p>
+      <p>
+        <strong>3. Bulk Update Points:</strong> Select one or more students by
+        clicking their avatar or name, then use the buttons at the top of the
+        page (-10, -5, -1, +1, +5, +10) to update points for all selected
+        students.
+      </p>
+      <p>
+        <strong>4. Select/Deselect All:</strong> Use the "Select/Deselect All"
+        button to quickly select or deselect all students.
+      </p>
+      <p>
+        <strong>5. Reset Points:</strong> Click "Zero" to reset points for all
+        selected students (or all students if none are selected).
+      </p>
+      <p>
+        <strong>6. Sort Students:</strong> Use the "Sort" button to sort
+        students alphabetically by name, or "Leaderboard" to sort by points.
+      </p>
+      <p>
+        <strong>7. Backup/Restore:</strong> Use "Backup" to export student data
+        as a CSV file. Use "Import" to restore data from a CSV file.
+      </p>
+      <p>
+        <strong>8. Celebrate:</strong> Click "Celebrate!" to launch confetti and
+        celebrate your class's achievements!
+      </p>
+      <p>
+        <strong>9. Undo:</strong> Use the "Undo" button to revert the last
+        action (up to 10 actions).
+      </p>
+      <button
+        onclick="closeHelpPopup()"
+        style="
+          padding: 10px 20px;
+          background: #007bff;
+          color: white;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+        "
+      >
+        Close
+      </button>
     </div>
     <div id="confetti"></div>
 
@@ -586,6 +689,14 @@
           "#00FF7F",
         ];
         return colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      function openHelpPopup() {
+        document.getElementById("helpPopup").style.display = "block";
+      }
+
+      function closeHelpPopup() {
+        document.getElementById("helpPopup").style.display = "none";
       }
 
       document.addEventListener("DOMContentLoaded", renderStudents);
