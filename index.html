@@ -588,7 +588,7 @@
         return `<div class="student-card class-card">
           <div class="avatar">${generateAvatar(classDetails.name)}</div>
           <div class="info">
-            <span class="name"><input type="text" id="newStudentName" placeholder="Class Name" class="class-name" value="${classDetails.name}" onchange="setClassName(this.value)"><span class="points">${classDetails.points}</span></span>
+            <span class="name"><input type="text" id="className" placeholder="Class Name" class="class-name" value="${classDetails.name}" onchange="setClassName(this.value)"><span class="points">${classDetails.points}</span></span>
             <div class="pointsManage">
               <input type="number" min="-100" max="100" onchange="setClassPoints(this.value)" class="points-input">
               <button onclick="updateClassPoints(1)">❤️</button>
