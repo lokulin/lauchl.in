@@ -8,6 +8,7 @@
       body {
         font-family: Arial, sans-serif;
         margin: 20px;
+        background-color: lightgray;
       }
 
       #manageControls,
@@ -50,6 +51,7 @@
         align-items: center;
         padding: 20px;
       }
+
       .student-card {
         position: relative;
         display: flex;
@@ -58,8 +60,9 @@
         padding: 10px;
         border-radius: 8px;
         background: #f9f9f9;
-        min-width: 400px;
+        min-width: 300px;
       }
+
       .student-card.selected {
         background: lightblue;
       }
@@ -69,47 +72,71 @@
         flex-direction: column;
         gap: 5px;
       }
+
       .name {
         padding: 5px;
         font-weight: bold;
         font-size: x-large;
         cursor: pointer;
       }
-      .points {
+
+      .pointsManage {
         display: flex;
         align-items: center;
         gap: 5px;
         padding: 5px;
       }
 
+      .points {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        background: darkgreen;
+        color: white;
+        border: 2px;
+        border-radius: 50%;
+        border-color: white;
+        border-style: solid;
+        width: 20px;
+        height: 20px;
+        padding: 5px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 1;
+      }
+
       .delete {
-        position: absolute; /* Position the delete button absolutely */
-        top: 5px; /* Adjust top position */
-        right: 5px; /* Adjust right position */
+        position: absolute;
+        top: 5px;
+        right: 5px;
         background: gray;
         color: white;
         border: none;
-        border-radius: 25%; /* Make it circular */
-        width: 24px; /* Set width and height for a small circle */
+        border-radius: 25%;
+        width: 24px;
         height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        font-size: 14px; /* Adjust font size for the "X" */
+        font-size: 14px;
         font-weight: bold;
-        line-height: 1; /* Ensure the "X" is centered */
+        line-height: 1;
       }
 
       .delete:hover {
-        background: darkgray; /* Change color on hover */
+        background: darkgray;
       }
 
       .avatar {
         width: 80px;
         height: 80px;
-        border-radius: 50%;
-        background-color: #f0f0f0;
+        border-radius: 12.5%;
+        background-color: lightgrey;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -122,18 +149,20 @@
         width: 100%;
         height: 100%;
       }
+
       .avatar circle,
       .avatar rect,
       .avatar polygon,
       .avatar ellipse,
       .avatar path {
-        transform-origin: center; /* Ensure shapes are centered */
+        transform-origin: center;
       }
 
       button {
         padding: 5px 10px;
         cursor: pointer;
       }
+
       input[type="file"] {
         margin-bottom: 20px;
       }
@@ -256,9 +285,9 @@
         field at the bottom and click "Add Student."
       </p>
       <p>
-        <strong>2. Update Points:</strong> Use the buttons (-10, -5, -1, +1, +5,
-        +10) below each student's name to adjust their points. You can also type
-        a number directly into the input box.
+        <strong>2. Update Points:</strong> Use the buttons (+1, +5, +10) below
+        each student's name to adjust their points. You can also type a number
+        directly into the input box.
       </p>
       <p>
         <strong>3. Bulk Update Points:</strong> Select one or more students by
@@ -291,7 +320,9 @@
         action (up to 10 actions).
       </p>
       <p>
-        <a href="https://github.com/lokulin/lauchl.in">Pull requests welcome.</a>
+        <a href="https://github.com/lokulin/lauchl.in"
+          >Pull requests welcome.</a
+        >
       </p>
       <button
         onclick="closeHelpPopup()"
@@ -314,23 +345,21 @@
       let historyStack = [];
 
       function saveState() {
-        // Save the current state to historyStack
         if (historyStack.length >= 10) {
-          historyStack.shift(); // Remove the oldest state if there are more than 10
+          historyStack.shift();
         }
-        historyStack.push(JSON.parse(JSON.stringify(students))); // Deep clone to avoid reference issues
+        historyStack.push(JSON.parse(JSON.stringify(students)));
         updateUndoButton();
       }
 
       function updateUndoButton() {
-        // Enable or disable the undo button based on historyStack length
         const undoButton = document.getElementById("undoButton");
         undoButton.disabled = historyStack.length === 0;
       }
 
       function undo() {
         if (historyStack.length > 0) {
-          students = historyStack.pop(); // Revert to the last saved state
+          students = historyStack.pop();
           saveAndRender();
         }
         updateUndoButton();
@@ -394,25 +423,25 @@
 
       function getShapeFromHash(hash) {
         const shapes = [
-          `<circle cx="50" cy="50" r="40" fill="${getColorFromHash(hash)}" />`,
+          `<circle cx="50" cy="50" r="40" fill="${getColorFromHash(hash)}" />`, //circle
           `<rect x="10" y="10" width="80" height="80" fill="${getColorFromHash(
             hash
-          )}" />`,
+          )}" />`, //square
           `<polygon points="50,10 90,90 10,90" fill="${getColorFromHash(
             hash
-          )}" />`,
+          )}" />`, // triangle
           `<ellipse cx="50" cy="50" rx="45" ry="35" fill="${getColorFromHash(
             hash
-          )}" />`,
-          `<polygon points="50,10 10,90 90,90" fill="${getColorFromHash(
-            hash
-          )}" />`, // Inverted Triangle
+          )}" />`, // oval
           `<polygon points="10,10 90,10 50,90" fill="${getColorFromHash(
             hash
-          )}" />`, // Equilateral Triangle
+          )}" />`, // upside down triangle
           `<polygon points="50,10 90,50 50,90 10,50" fill="${getColorFromHash(
             hash
-          )}" />`, // Diamond
+          )}" />`, // diamond
+          `<path d="M50,10 C70,10 90,30 90,60 C90,90 70,90 50,90 C30,90 10,90 10,60 C10,30 30,10 50,10 Z" fill="${getColorFromHash(
+            hash
+          )}" />`, // egg
         ];
         return shapes[(hash % 100) % shapes.length];
       }
@@ -429,12 +458,12 @@
             <circle cx="55" cy="45" r="8" fill="black" />`,
           `<rect x="20" y="40" width="20" height="20" fill="white" stroke="black" stroke-width="2" />
             <rect x="60" y="40" width="20" height="20" fill="white" stroke="black" stroke-width="2" />
-            <rect x="20" y="40" width="10" height="10" fill="black" stroke="black" stroke-width="2" />
-            <rect x="60" y="40" width="10" height="10" fill="black" stroke="black" stroke-width="2" />`,
+            <rect x="20" y="40" width="10" height="10" fill="black" />
+            <rect x="60" y="40" width="10" height="10" fill="black" />`,
           `<circle cx="35" cy="45" r="16" fill="white" stroke="black" stroke-width="2" />
             <circle cx="65" cy="45" r="16" fill="white" stroke="black" stroke-width="2" />
-            <circle cx="40" cy="45" r="8" fill="black" stroke="black" stroke-width="2" />
-            <circle cx="70" cy="45" r="8" fill="black" stroke="black" stroke-width="2" />`,
+            <circle cx="40" cy="45" r="8" fill="black" />
+            <circle cx="70" cy="45" r="8" fill="black" />`,
         ];
         return eyes[Math.floor((hash / 100) % 100) % eyes.length];
       }
@@ -471,15 +500,12 @@
               )}</div>
         <div class="info">
           <button class="delete" onclick="deleteStudent(${index})">X</button>
-          <span class="name" onclick="toggleSelect(${index})">${firstName} ${lastInitial} (${points} points)</span>
-          <div class="points">
-            <button onclick="updatePoints(${index}, -10)">-10</button>
-            <button onclick="updatePoints(${index}, -5)">-5</button>
-            <button onclick="updatePoints(${index}, -1)">-1</button>
+          <span class="name" onclick="toggleSelect(${index})">${firstName} ${lastInitial} <span class="points">${points}</span></span>
+          <div class="pointsManage">
             <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)">
-            <button onclick="updatePoints(${index}, 1)">+1</button>
-            <button onclick="updatePoints(${index}, 5)">+5</button>
-            <button onclick="updatePoints(${index}, 10)">+10</button>
+            <button onclick="updatePoints(${index}, 1)">❤️</button>
+            <button onclick="updatePoints(${index}, 5)">x5</button>
+            <button onclick="updatePoints(${index}, 10)">x10</button>
           </div>
         </div>
       </div>
@@ -490,8 +516,8 @@
     <div class="student-card">
       <div class="avatar">${generateAvatar("New Student")}</div>
       <div class="info">
-        <input type="text" id="newStudentName" placeholder="Enter student name">
-        <button class="add-student" onclick="addNewStudent()">Add Student</button>
+        <span class="name"><input type="text" id="newStudentName" placeholder="Enter student name"></span>
+        <span class="name"><button class="add-student" onclick="addNewStudent()">Add Student</button></span>
       </div>
     </div>
   `;
@@ -523,10 +549,8 @@
 
       function toggleSelectAll() {
         if (selectedStudents.size === students.length) {
-          // If all students are selected, deselect all
           selectedStudents.clear();
         } else {
-          // If not all are selected, select all students
           students.forEach((_, index) => {
             selectedStudents.add(index);
           });
@@ -538,6 +562,7 @@
         saveState();
         students[index].points += parseInt(amount);
         saveAndRender();
+        animateHeart(amount);
       }
 
       function setPoints(index, amount) {
@@ -551,10 +576,12 @@
         if (selectedStudents.size === 0) {
           students.forEach((student) => {
             student.points += amount;
+            animateHeart(amount)
           });
         } else {
           selectedStudents.forEach((index) => {
             students[index].points += amount;
+            animateHeart(amount)
           });
         }
         saveAndRender();
@@ -587,15 +614,15 @@
         );
         document.querySelector(
           "#classTotal"
-        ).textContent = `Class Total: ${total}`;
+        ).textContent = `Whole Class: ${total}`;
       }
 
       function sortStudentsByName() {
         saveState();
         students.sort((a, b) => {
-          if (a.name < b.name) return -1; // a comes before b
-          if (a.name > b.name) return 1; // a comes after b
-          return 0; // names are equal
+          if (a.name < b.name) return -1;
+          if (a.name > b.name) return 1;
+          return 0;
         });
         saveAndRender();
       }
@@ -633,25 +660,16 @@
         const file = event.target.files[0];
         const reader = new FileReader();
         reader.onload = function (e) {
-          // Split lines, handling both Windows and Linux line endings
           const lines = e.target.result.split(/\r?\n/);
-
-          // Process each line
           students = lines.map((line) => {
-            // If the line contains a comma, split into name and points
             if (line.includes(",")) {
               const [name, points] = line.split(",");
               return { name, points: parseInt(points) || 0 };
             } else {
-              // If no comma, treat the entire line as the student's name with 0 points
               return { name: line.trim(), points: 0 };
             }
           });
-
-          // Save and render the updated student list
           saveAndRender();
-
-          // Clear the file input
           event.target.value = "";
         };
         reader.readAsText(file);
@@ -665,23 +683,19 @@
           const confetti = document.createElement("div");
           confetti.classList.add("confetti-piece");
 
-          // Randomize the confetti's position, size, and color
           confetti.style.backgroundColor = getRandomColor();
           confetti.style.left = `${Math.random() * 100}vw`;
           confetti.style.animationDuration = `${Math.random() * 2 + 3}s`;
           confetti.style.animationDelay = `${Math.random() * 2}s`;
 
-          // Append the confetti piece to the container
           confettiContainer.appendChild(confetti);
 
-          // Remove the confetti after it finishes falling
           setTimeout(() => {
             confetti.remove();
-          }, 3000); // Confetti lasts for 5 seconds
+          }, 3000);
         }
       }
 
-      // Helper function to generate random colors
       function getRandomColor() {
         const colors = [
           "#FF5733",
@@ -692,6 +706,46 @@
           "#00FF7F",
         ];
         return colors[Math.floor(Math.random() * colors.length)];
+      }
+
+      function animateHeart(amount) {
+        for (let i = 0; i < amount; i++) {
+          // Create a heart emoji element
+          const heart = document.createElement("div");
+          const emojis = ["😍", "🥰", "😻", "😘", "❤️‍🔥", "💜", "💙", "💛", "💚", "🧡", "🖤", "💖", "❤️", "👍", "⭐", "🎉", "🥳", "👏"];
+          const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+          heart.textContent = randomEmoji;
+          heart.style.position = "fixed";
+          heart.style.fontSize = "100px"; // Adjust size as needed
+          heart.style.opacity = "1";
+          heart.style.transition = `opacity ${0.5 + Math.random()}s ease-out`; // Random fade-out duration
+          heart.style.zIndex = "1000"; // Ensure it appears above other elements
+
+          // Random position
+          const randomX = Math.random() * window.innerWidth;
+          const randomY = Math.random() * window.innerHeight;
+          heart.style.left = `${randomX}px`;
+          heart.style.top = `${randomY}px`;
+
+          // Random tilt (rotation)
+          const randomRotation = Math.random() * 60 - 30; // Tilt between -30deg and 30deg
+          heart.style.transform = `translate(-50%, -50%) rotate(${randomRotation}deg)`;
+
+          // Append the heart to the body
+          document.body.appendChild(heart);
+
+          // Trigger the fade-out effect with a random delay
+          setTimeout(() => {
+            heart.style.opacity = "0";
+          }, 100 + Math.random() * 500); // Random delay between 100ms and 600ms
+
+          // Remove the heart element after the animation completes
+          setTimeout(() => {
+            if (heart.parentElement) {
+              document.body.removeChild(heart);
+            }
+          }, 1600 + Math.random() * 1000); // Random removal time between 1.6s and 2.6s
+        }
       }
 
       function openHelpPopup() {
