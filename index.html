@@ -284,10 +284,10 @@
     <div id="studentsContainer"></div>
     <div id="manageControls">
       <button onclick="toggleSelectAll()">Select/Deselect All</button>
-      <button onclick="resetPoints()">Zero</button>
+      <button onclick="resetPoints()">Reset Points</button>
       <button id="undoButton" onclick="undo()" disabled>Undo</button>
-      <button onclick="sortStudentsByName()">Sort</button>
-      <button onclick="sortStudentsByScore()">Leaderboard</button>
+      <button onclick="sortStudentsByName()">Sort By Name</button>
+      <button onclick="sortStudentsByScore()">Sort By Score</button>
       <button onclick="exportCSV()">Backup</button>
       <button onclick="clickFileInput()">Import</button>
       <input
@@ -382,13 +382,14 @@
 
     <script>
       let students = JSON.parse(localStorage.getItem("students")) || [];
-      let historyStack = [];
+      let historyStack = JSON.parse(localStorage.getItem("historyStack")) || [];;
 
       function saveState() {
         if (historyStack.length >= 10) {
           historyStack.shift();
         }
         historyStack.push(JSON.parse(JSON.stringify(students)));
+        localStorage.setItem("history", JSON.stringify(historyStack));
         updateUndoButton();
       }
 
