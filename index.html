@@ -65,6 +65,10 @@
         box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
       }
 
+      .student-card.class-card {
+        background: plum;
+      }
+
       .student-card.selected {
         background: lightblue;
       }
@@ -112,9 +116,32 @@
       }
 
       .points-input:focus,
-      ,
       .student-name:focus {
         border-color: #999; /* Darker border on focus */
+      }
+
+      .class-name {
+        padding: 0px 0px; /* Add some padding for better spacing */
+        border: 1px solid plum; /* Light grey border */
+        border-radius: 5px; /* Rounded corners */
+        background-color: plum; /* Light grey background */
+        font-weight: bold;
+        font-size: x-large;
+        text-align: left; /* Center text horizontally */
+        outline: none; /* Remove default focus outline */
+        transition: background-color 0.3s ease; /* Smooth hover effect */
+        width: 180px;
+      }
+
+      .class-name:hover {
+        border: 1px solid darkgrey;
+        background-color: #e0e0e0; /* Slightly darker grey on hover */
+      }
+
+      .class-name:focus {
+        border: 1px solid darkgrey;
+        border-color: #999; /* Darker border on focus */
+        background-color: #e0e0e0;
       }
 
       .points {
@@ -255,7 +282,26 @@
     </style>
   </head>
   <body>
-    <div id="bulkControls">
+    <div id="studentsContainer"></div>
+    <div id="manageControls">
+      <button onclick="launchConfetti()">Celebrate!</button>
+      <button onclick="bulkUpdatePoints(1)">+1</button>
+      <button onclick="bulkUpdatePoints(5)">+5</button>
+      <button onclick="bulkUpdatePoints(10)">+10</button>
+      <button onclick="toggleSelectAll()">Select/Deselect All</button>
+      <button onclick="resetPoints()">Reset Points</button>
+      <button id="undoButton" onclick="undo()" disabled>Undo</button>
+      <button onclick="sortStudentsByName()">Sort By Name</button>
+      <button onclick="sortStudentsByScore()">Sort By Score</button>
+      <button onclick="exportCSV()">Backup</button>
+      <button onclick="clickFileInput()">Import</button>
+      <input
+        id="fileInput"
+        type="file"
+        accept=".csv, .txt"
+        onchange="importCSV(event)"
+        style="display: none"
+      />
       <button
         onclick="openHelpPopup()"
         style="
@@ -271,29 +317,7 @@
         "
       >
         Help
-      </button>
-      <span id="classTotal"></span>
-      <button onclick="bulkUpdatePoints(1)">+1</button>
-      <button onclick="bulkUpdatePoints(5)">+5</button>
-      <button onclick="bulkUpdatePoints(10)">+10</button>
-      <button onclick="launchConfetti()">Celebrate!</button>
-    </div>
-    <div id="studentsContainer"></div>
-    <div id="manageControls">
-      <button onclick="toggleSelectAll()">Select/Deselect All</button>
-      <button onclick="resetPoints()">Reset Points</button>
-      <button id="undoButton" onclick="undo()" disabled>Undo</button>
-      <button onclick="sortStudentsByName()">Sort By Name</button>
-      <button onclick="sortStudentsByScore()">Sort By Score</button>
-      <button onclick="exportCSV()">Backup</button>
-      <button onclick="clickFileInput()">Import</button>
-      <input
-        id="fileInput"
-        type="file"
-        accept=".csv, .txt"
-        onchange="importCSV(event)"
-        style="display: none"
-      />
+    </button>
     </div>
     <div
       id="helpPopup"
@@ -385,7 +409,9 @@
 
     <script>
       let students = JSON.parse(localStorage.getItem("students")) || [];
-      let historyStack = JSON.parse(localStorage.getItem("historyStack")) || [];;
+      let classDetails = JSON.parse(localStorage.getItem("classDetails")) || { "name": "Grade 2 T", "points": 0 };
+      let historyStack = JSON.parse(localStorage.getItem("historyStack")) || [];
+      let selectedStudents = new Set();
 
       function saveState() {
         if (historyStack.length >= 10) {
@@ -523,50 +549,63 @@
         return mouths[Math.floor((hash / 10000) % 100) % mouths.length];
       }
 
-      let selectedStudents = new Set();
+      function renderStudent(student, index) {
+        const nameParts = student.name.split(" ");
+        const points = student.points;
+        const firstName = nameParts[0];
+        const lastInitial =
+          nameParts.length > 1 ? nameParts[1][0] + "." : "";
+        const selectedClass = selectedStudents.has(index)
+          ? "selected"
+          : "";
+
+        return `<div class="student-card ${selectedClass}" >
+          <div class="avatar" onclick="toggleSelect(${index})">${generateAvatar(student.name)}</div>
+          <div class="info">
+            <button class="delete" onclick="deleteStudent(${index})">X</button>
+            <span class="name" onclick="toggleSelect(${index})">${firstName} ${lastInitial} <span class="points">${points}</span></span>
+            <div class="pointsManage">
+              <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)" class="points-input">
+              <button onclick="updatePoints(${index}, 1)">❤️</button>
+              <button onclick="updatePoints(${index}, 5)">x5</button>
+              <button onclick="updatePoints(${index}, 10)">x10</button>
+            </div>
+          </div>
+        </div>`;
+      }
+
+      function renderNewStudent() {
+        return `<div class="student-card">
+          <div class="avatar">${generateAvatar("New Student")}</div>
+          <div class="info">
+            <span class="name"><input type="text" id="newStudentName" placeholder="Enter student name" class="student-name"></span>
+            <span class="name"><button class="add-student" onclick="addNewStudent()">Add Student</button></span>
+          </div>
+        </div>`
+      }
+
+      function renderClass() {
+        return `<div class="student-card class-card">
+          <div class="avatar">${generateAvatar(classDetails.name)}</div>
+          <div class="info">
+            <span class="name"><input type="text" id="newStudentName" placeholder="Class Name" class="class-name" value="${classDetails.name}" onchange="setClassName(this.value)"><span class="points">${classDetails.points}</span></span>
+            <div class="pointsManage">
+              <input type="number" min="-100" max="100" onchange="setClassPoints(this.value)" class="points-input">
+              <button onclick="updateClassPoints(1)">❤️</button>
+              <button onclick="updateClassPoints(5)">x5</button>
+              <button onclick="updateClassPoints(10)">x10</button>
+            </div>
+          </div>
+        </div>`
+      }
 
       function renderStudents() {
         const container = document.querySelector("#studentsContainer");
-        container.innerHTML =
+        container.innerHTML = renderClass() + 
           students
-            .map((student, index) => {
-              const nameParts = student.name.split(" ");
-              const points = student.points;
-              const firstName = nameParts[0];
-              const lastInitial =
-                nameParts.length > 1 ? nameParts[1][0] + "." : "";
-              const selectedClass = selectedStudents.has(index)
-                ? "selected"
-                : "";
-              return `
-      <div class="student-card ${selectedClass}" >
-        <div class="avatar" onclick="toggleSelect(${index})">${generateAvatar(
-                student.name
-              )}</div>
-        <div class="info">
-          <button class="delete" onclick="deleteStudent(${index})">X</button>
-          <span class="name" onclick="toggleSelect(${index})">${firstName} ${lastInitial} <span class="points">${points}</span></span>
-          <div class="pointsManage">
-            <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)" class="points-input">
-            <button onclick="updatePoints(${index}, 1)">❤️</button>
-            <button onclick="updatePoints(${index}, 5)">x5</button>
-            <button onclick="updatePoints(${index}, 10)">x10</button>
-          </div>
-        </div>
-      </div>
-    `;
-            })
+            .map((student, index) => { return renderStudent(student, index)})
             .join("") +
-          `
-    <div class="student-card">
-      <div class="avatar">${generateAvatar("New Student")}</div>
-      <div class="info">
-        <span class="name"><input type="text" id="newStudentName" placeholder="Enter student name" class="student-name"></span>
-        <span class="name"><button class="add-student" onclick="addNewStudent()">Add Student</button></span>
-      </div>
-    </div>
-  `;
-        updateClassTotal();
+            renderNewStudent();
       }
 
       function addNewStudent() {
@@ -610,6 +649,25 @@
         animateHeart(amount);
       }
 
+      function setClassPoints(amount) {
+        //saveState();
+        classDetails.points = parseInt(amount);
+        saveAndRender();
+      }
+
+      function setClassName(name) {
+        //saveState();
+        classDetails.name = name;
+        saveAndRender();
+      }
+
+      function updateClassPoints(amount) {
+        //saveState();
+        classDetails.points += parseInt(amount);
+        saveAndRender();
+        animateHeart(amount);
+      }
+
       function setPoints(index, amount) {
         saveState();
         students[index].points = parseInt(amount);
@@ -638,6 +696,7 @@
           students.forEach((student) => {
             student.points = 0;
           });
+          classDetails.points = 0;
         } else {
           selectedStudents.forEach((index) => {
             students[index].points = 0;
@@ -650,16 +709,6 @@
         saveState();
         students.splice(index, 1);
         saveAndRender();
-      }
-
-      function updateClassTotal() {
-        const total = students.reduce(
-          (sum, student) => sum + student.points,
-          0
-        );
-        document.querySelector(
-          "#classTotal"
-        ).textContent = `Whole Class: ${total}`;
       }
 
       function sortStudentsByName() {
@@ -680,12 +729,14 @@
 
       function saveAndRender() {
         localStorage.setItem("students", JSON.stringify(students));
+        localStorage.setItem("classDetails", JSON.stringify(classDetails));
         renderStudents();
       }
 
       function exportCSV() {
         const csvContent =
           "data:text/csv;charset=utf-8," +
+          classDetails.name + "," + classDetails.points + "\n" +
           students.map((s) => `${s.name},${s.points}`).join("\n");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
@@ -706,7 +757,22 @@
         const reader = new FileReader();
         reader.onload = function (e) {
           const lines = e.target.result.split(/\r?\n/);
-          students = lines.map((line) => {
+
+          // Extract the first line and store it in classDetails
+          if (lines.length > 0) {
+            const firstLine = lines[0];
+            if (firstLine.includes(",")) {
+              const [name, points] = firstLine.split(",");
+              classDetails.name = name.trim();
+              classDetails.points = parseInt(points) || 0;
+            } else {
+              classDetails.name = firstLine.trim();
+              classDetails.points = 0;
+            }
+          }
+
+          // Process the remaining lines as students
+          students = lines.slice(1).map((line) => {
             if (line.includes(",")) {
               const [name, points] = line.split(",");
               return { name, points: parseInt(points) || 0 };
@@ -714,6 +780,7 @@
               return { name: line.trim(), points: 0 };
             }
           });
+
           saveAndRender();
           event.target.value = "";
         };
