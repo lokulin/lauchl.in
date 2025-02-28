@@ -389,7 +389,7 @@
           historyStack.shift();
         }
         historyStack.push(JSON.parse(JSON.stringify(students)));
-        localStorage.setItem("history", JSON.stringify(historyStack));
+        localStorage.setItem("historyStack", JSON.stringify(historyStack));
         updateUndoButton();
       }
 
