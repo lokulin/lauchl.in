@@ -56,11 +56,13 @@
         position: relative;
         display: flex;
         align-items: center;
-        border: 1px solid #ccc;
+        border: 2px solid darkgrey;
         padding: 10px;
         border-radius: 8px;
         background: #f9f9f9;
         min-width: 300px;
+        min-height: 100px;
+        box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
       }
 
       .student-card.selected {
@@ -85,6 +87,30 @@
         align-items: center;
         gap: 5px;
         padding: 5px;
+      }
+
+      .points-input {
+        width: 2ch; /* Adjust width as needed */
+      }
+
+      .points-input, .student-name {
+        padding: 6px 10px; /* Add some padding for better spacing */
+        border: 1px solid darkgrey; /* Light grey border */
+        border-radius: 5px; /* Rounded corners */
+        background-color: #f0f0f0; /* Light grey background */
+        font-family: Arial, sans-serif; /* Match font to buttons */
+        font-size: 14px; /* Match font size to buttons */
+        text-align: center; /* Center text horizontally */
+        outline: none; /* Remove default focus outline */
+        transition: background-color 0.3s ease; /* Smooth hover effect */
+      }
+
+      .points-input:hover, .student-name:hover {
+        background-color: #e0e0e0; /* Slightly darker grey on hover */
+      }
+
+      .points-input:focus, , .student-name:focus {
+        border-color: #999; /* Darker border on focus */
       }
 
       .points {
@@ -502,7 +528,7 @@
           <button class="delete" onclick="deleteStudent(${index})">X</button>
           <span class="name" onclick="toggleSelect(${index})">${firstName} ${lastInitial} <span class="points">${points}</span></span>
           <div class="pointsManage">
-            <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)">
+            <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)" class="points-input">
             <button onclick="updatePoints(${index}, 1)">❤️</button>
             <button onclick="updatePoints(${index}, 5)">x5</button>
             <button onclick="updatePoints(${index}, 10)">x10</button>
@@ -516,7 +542,7 @@
     <div class="student-card">
       <div class="avatar">${generateAvatar("New Student")}</div>
       <div class="info">
-        <span class="name"><input type="text" id="newStudentName" placeholder="Enter student name"></span>
+        <span class="name"><input type="text" id="newStudentName" placeholder="Enter student name" class="student-name"></span>
         <span class="name"><button class="add-student" onclick="addNewStudent()">Add Student</button></span>
       </div>
     </div>
@@ -576,12 +602,12 @@
         if (selectedStudents.size === 0) {
           students.forEach((student) => {
             student.points += amount;
-            animateHeart(amount)
+            animateHeart(amount);
           });
         } else {
           selectedStudents.forEach((index) => {
             students[index].points += amount;
-            animateHeart(amount)
+            animateHeart(amount);
           });
         }
         saveAndRender();
@@ -712,7 +738,26 @@
         for (let i = 0; i < amount; i++) {
           // Create a heart emoji element
           const heart = document.createElement("div");
-          const emojis = ["😍", "🥰", "😻", "😘", "❤️‍🔥", "💜", "💙", "💛", "💚", "🧡", "🖤", "💖", "❤️", "👍", "⭐", "🎉", "🥳", "👏"];
+          const emojis = [
+            "😍",
+            "🥰",
+            "😻",
+            "😘",
+            "❤️‍🔥",
+            "💜",
+            "💙",
+            "💛",
+            "💚",
+            "🧡",
+            "🖤",
+            "💖",
+            "❤️",
+            "👍",
+            "⭐",
+            "🎉",
+            "🥳",
+            "👏",
+          ];
           const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
           heart.textContent = randomEmoji;
           heart.style.position = "fixed";
