@@ -578,7 +578,7 @@
         return `<div class="student-card">
           <div class="avatar">${generateAvatar("New Student")}</div>
           <div class="info">
-            <span class="name"><input type="text" id="newStudentName" placeholder="Enter student name" class="student-name"></span>
+            <span class="name"><input type="text" id="newStudentName" placeholder="Enter student name" class="student-name" onchange="addNewStudent()"></span>
             <span class="name"><button class="add-student" onclick="addNewStudent()">Add Student</button></span>
           </div>
         </div>`
