@@ -401,6 +401,7 @@
       function undo() {
         if (historyStack.length > 0) {
           students = historyStack.pop();
+          localStorage.setItem("historyStack", JSON.stringify(historyStack));
           saveAndRender();
         }
         updateUndoButton();
