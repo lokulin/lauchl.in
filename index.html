@@ -279,6 +279,25 @@
       audio {
         display: none;
       }
+
+      .modal {
+        display: none; /* Hidden by default */
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+        justify-content: center;
+        align-items: center;
+      }
+
+      .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+      }
     </style>
   </head>
   <body>
@@ -289,7 +308,7 @@
       <button onclick="bulkUpdatePoints(5)">+5</button>
       <button onclick="bulkUpdatePoints(10)">+10</button>
       <button onclick="toggleSelectAll()">Select/Deselect All</button>
-      <button onclick="resetPoints()">Reset Points</button>
+      <button onclick="showConfirmationModal(resetPoints)">Reset Points</button>
       <button id="undoButton" onclick="undo()" disabled>Undo</button>
       <button onclick="sortStudentsByName()">Sort By Name</button>
       <button onclick="sortStudentsByScore()">Sort By Score</button>
@@ -317,7 +336,7 @@
         "
       >
         Help
-    </button>
+      </button>
     </div>
     <div
       id="helpPopup"
@@ -347,8 +366,7 @@
       <p>
         <strong>3. Bulk Update Points:</strong> Select one or more students by
         clicking their avatar or name, then use the buttons at the top of the
-        page (+1, +5, +10) to update points for all selected
-        students.
+        page (+1, +5, +10) to update points for all selected students.
       </p>
       <p>
         <strong>4. Select/Deselect All:</strong> Use the "Select/Deselect All"
@@ -393,6 +411,13 @@
         Close
       </button>
     </div>
+    <div id="confirmationModal" class="modal">
+      <div class="modal-content">
+        <p>Are you sure you want to proceed?</p>
+        <button id="confirmButton">Confirm</button>
+        <button id="cancelButton">Cancel</button>
+      </div>
+    </div>
     <div id="confetti"></div>
     <audio id="tadaSound">
       <source
@@ -409,7 +434,10 @@
 
     <script>
       let students = JSON.parse(localStorage.getItem("students")) || [];
-      let classDetails = JSON.parse(localStorage.getItem("classDetails")) || { "name": "Our Class", "points": 0 };
+      let classDetails = JSON.parse(localStorage.getItem("classDetails")) || {
+        name: "Our Class",
+        points: 0,
+      };
       let historyStack = JSON.parse(localStorage.getItem("historyStack")) || [];
       let selectedStudents = new Set();
 
@@ -553,16 +581,15 @@
         const nameParts = student.name.split(" ");
         const points = student.points;
         const firstName = nameParts[0];
-        const lastInitial =
-          nameParts.length > 1 ? nameParts[1][0] + "." : "";
-        const selectedClass = selectedStudents.has(index)
-          ? "selected"
-          : "";
+        const lastInitial = nameParts.length > 1 ? nameParts[1][0] + "." : "";
+        const selectedClass = selectedStudents.has(index) ? "selected" : "";
 
         return `<div class="student-card ${selectedClass}" >
-          <div class="avatar" onclick="toggleSelect(${index})">${generateAvatar(student.name)}</div>
+          <div class="avatar" onclick="toggleSelect(${index})">${generateAvatar(
+          student.name
+        )}</div>
           <div class="info">
-            <button class="delete" onclick="deleteStudent(${index})">X</button>
+            <button class="delete" onclick="showConfirmationModal(deleteStudent, ${index})">X</button>
             <span class="name" onclick="toggleSelect(${index})">${firstName} ${lastInitial} <span class="points">${points}</span></span>
             <div class="pointsManage">
               <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)" class="points-input">
@@ -581,14 +608,18 @@
             <span class="name"><input type="text" id="newStudentName" placeholder="Enter student name" class="student-name" onchange="addNewStudent()"></span>
             <span class="name"><button class="add-student" onclick="addNewStudent()">Add Student</button></span>
           </div>
-        </div>`
+        </div>`;
       }
 
       function renderClass() {
         return `<div class="student-card class-card">
           <div class="avatar">${generateAvatar(classDetails.name)}</div>
           <div class="info">
-            <span class="name"><input type="text" id="className" placeholder="Class Name" class="class-name" value="${classDetails.name}" onchange="setClassName(this.value)"><span class="points">${classDetails.points}</span></span>
+            <span class="name"><input type="text" id="className" placeholder="Class Name" class="class-name" value="${
+              classDetails.name
+            }" onchange="setClassName(this.value)"><span class="points">${
+          classDetails.points
+        }</span></span>
             <div class="pointsManage">
               <input type="number" min="-100" max="100" onchange="setClassPoints(this.value)" class="points-input">
               <button onclick="updateClassPoints(1)">❤️</button>
@@ -596,16 +627,19 @@
               <button onclick="updateClassPoints(10)">x10</button>
             </div>
           </div>
-        </div>`
+        </div>`;
       }
 
       function renderStudents() {
         const container = document.querySelector("#studentsContainer");
-        container.innerHTML = renderClass() + 
+        container.innerHTML =
+          renderClass() +
           students
-            .map((student, index) => { return renderStudent(student, index)})
+            .map((student, index) => {
+              return renderStudent(student, index);
+            })
             .join("") +
-            renderNewStudent();
+          renderNewStudent();
       }
 
       function addNewStudent() {
@@ -691,28 +725,24 @@
       }
 
       function resetPoints() {
-        if(confirm("Are you sure?")) {
-          saveState();
-          if (selectedStudents.size === 0) {
-            students.forEach((student) => {
-              student.points = 0;
-            });
-            classDetails.points = 0;
-          } else {
-            selectedStudents.forEach((index) => {
-              students[index].points = 0;
-            });
-          }
-          saveAndRender();
+        saveState();
+        if (selectedStudents.size === 0) {
+          students.forEach((student) => {
+            student.points = 0;
+          });
+          classDetails.points = 0;
+        } else {
+          selectedStudents.forEach((index) => {
+            students[index].points = 0;
+          });
         }
+        saveAndRender();
       }
 
       function deleteStudent(index) {
-        if(confirm("Are you sure?")) {
-          saveState();
-          students.splice(index, 1);
-          saveAndRender();
-        }
+        saveState();
+        students.splice(index, 1);
+        saveAndRender();
       }
 
       function sortStudentsByName() {
@@ -740,7 +770,10 @@
       function exportCSV() {
         const csvContent =
           "data:text/csv;charset=utf-8," +
-          classDetails.name + "," + classDetails.points + "\n" +
+          classDetails.name +
+          "," +
+          classDetails.points +
+          "\n" +
           students.map((s) => `${s.name},${s.points}`).join("\n");
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
@@ -895,6 +928,24 @@
 
       function closeHelpPopup() {
         document.getElementById("helpPopup").style.display = "none";
+      }
+
+      function showConfirmationModal(onConfirm, ...args) {
+        const modal = document.getElementById("confirmationModal");
+        const confirmButton = document.getElementById("confirmButton");
+        const cancelButton = document.getElementById("cancelButton");
+
+        modal.style.display = "flex";
+
+        confirmButton.onclick = function () {
+          modal.style.display = "none"; 
+          onConfirm(...args);
+        };
+
+        // Cancel button click handler
+        cancelButton.onclick = function () {
+          modal.style.display = "none";
+        };
       }
 
       document.addEventListener("DOMContentLoaded", renderStudents);
