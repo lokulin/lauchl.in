@@ -691,24 +691,28 @@
       }
 
       function resetPoints() {
-        saveState();
-        if (selectedStudents.size === 0) {
-          students.forEach((student) => {
-            student.points = 0;
-          });
-          classDetails.points = 0;
-        } else {
-          selectedStudents.forEach((index) => {
-            students[index].points = 0;
-          });
+        if(confirm("Are you sure?")) {
+          saveState();
+          if (selectedStudents.size === 0) {
+            students.forEach((student) => {
+              student.points = 0;
+            });
+            classDetails.points = 0;
+          } else {
+            selectedStudents.forEach((index) => {
+              students[index].points = 0;
+            });
+          }
+          saveAndRender();
         }
-        saveAndRender();
       }
 
       function deleteStudent(index) {
-        saveState();
-        students.splice(index, 1);
-        saveAndRender();
+        if(confirm("Are you sure?")) {
+          saveState();
+          students.splice(index, 1);
+          saveAndRender();
+        }
       }
 
       function sortStudentsByName() {
