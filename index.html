@@ -451,42 +451,48 @@
     >
       <h2>How to Use Class Points</h2>
       <p>
-        <strong>1. Add a Student:</strong> Enter a student's name in the input
-        field at the bottom and click "Add Student."
+        <strong>1. Add a Student:</strong> Click on the "Enter student name"
+        field, type a name, and press Enter or click "Add Student."
       </p>
       <p>
-        <strong>2. Update Points:</strong> Use the buttons (+1, +5, +10) below
-        each student's name to adjust their points. You can also type a number
-        directly into the input box.
+        <strong>2. Update Points:</strong> Click the +1, +5, or +10 buttons next
+        to a student’s name to increase their points. You can also enter a
+        number manually.
       </p>
       <p>
-        <strong>3. Bulk Update Points:</strong> Select one or more students by
-        clicking their avatar or name, then use the buttons at the top of the
-        page (+1, +5, +10) to update points for all selected students.
+        <strong>3. Bulk Update:</strong> Select multiple students by clicking
+        their avatars or names, then use the bulk +1, +5, or +10 buttons at the
+        top to update all selected students.
       </p>
       <p>
         <strong>4. Select/Deselect All:</strong> Use the "Select/Deselect All"
-        button to quickly select or deselect all students.
+        button to quickly toggle selection for all students.
       </p>
       <p>
-        <strong>5. Reset Points:</strong> Click "Zero" to reset points for all
-        selected students (or all students if none are selected).
+        <strong>5. Reset Points:</strong> Click "Reset Points" to set all
+        selected students' scores back to zero. If no students are selected, it
+        resets all students.
       </p>
       <p>
-        <strong>6. Sort Students:</strong> Use the "Sort" button to sort
-        students alphabetically by name, or "Leaderboard" to sort by points.
+        <strong>6. Sort Students:</strong> Use "Sort By Name" to arrange
+        students alphabetically or "Sort By Score" to order them by points.
       </p>
       <p>
-        <strong>7. Backup/Restore:</strong> Use "Backup" to export student data
-        as a CSV file. Use "Import" to restore data from a CSV file.
+        <strong>7. Customize Avatars:</strong> Click the settings icon (three
+        dots) on a student’s card to modify their avatar features, including
+        face shape, accessories, and colors.
       </p>
       <p>
-        <strong>8. Celebrate:</strong> Click "Celebrate!" to launch confetti and
-        celebrate your class's achievements!
+        <strong>8. Backup & Restore:</strong> Click "Backup" to download student
+        data as a CSV file. Click "Import" to restore data from a CSV file.
       </p>
       <p>
-        <strong>9. Undo:</strong> Use the "Undo" button to revert the last
-        action (up to 10 actions).
+        <strong>9. Undo:</strong> Click "Undo" to revert the last action
+        (supports up to 10 undo steps).
+      </p>
+      <p>
+        <strong>10. Celebrate:</strong> Click "Celebrate!" to launch confetti
+        and recognize achievements!
       </p>
       <p>
         <a href="https://github.com/lokulin/lauchl.in"
@@ -785,13 +791,26 @@
       function generateNewStudentAvatar() {
         const color = "darkgray"; // Ghost-like color
         const shape = getShape(6, color); // This might still be the basic shape, but transparent
-        const eye = eyes[1];
+        const eye = eyes[3];
+        const mouth = mouths[3];
         return `
             <div class="avatar">
             <svg width="100%" height="100%" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                <g opacity="0.25">
-                ${shape}
+                <g>
+    <!-- Ghost Body with Wavy Bottom -->
+    <path d="M50,10 
+             C70,10 90,30 90,60 
+             C90,85 80,90 75,85 
+             C70,80 60,80 55,85 
+             C50,90 40,90 35,85 
+             C30,80 20,80 15,85 
+             C10,90 10,85 10,60 
+             C10,30 30,10 50,10 Z" 
+          fill="darkgray" stroke="black" stroke-width="2" />
+</g>
                 ${eye}
+                ${mouth}
                 </g>
             </svg>
             </div>
@@ -1019,19 +1038,14 @@
       }
 
       function bulkUpdatePoints(amount) {
-        saveState();
-        if (selectedStudents.size === 0) {
-          students.forEach((student) => {
-            student.points += amount;
-            animateHeart(amount);
-          });
-        } else {
+        if (selectedStudents.size > 0) {
+          saveState();
           selectedStudents.forEach((index) => {
             students[index].points += amount;
             animateHeart(amount);
           });
+          saveAndRender();
         }
-        saveAndRender();
       }
 
       function resetPoints() {
@@ -1158,7 +1172,8 @@
                 // If the line has the expected number of columns (name, points, and new properties)
                 if (fields.length === 8) {
                   // Handle the new format with extra properties
-                  const [name, points, color, shape, eye, glass, hat, mouth] = fields;
+                  const [name, points, color, shape, eye, glass, hat, mouth] =
+                    fields;
                   return {
                     name: name.trim(),
                     points: parseInt(points) || 0,
@@ -1346,7 +1361,9 @@
               document.getElementById("faceShape").value
             );
             student.eye = parseInt(document.getElementById("eyeShape").value);
-            student.mouth = parseInt(document.getElementById("mouthShape").value);
+            student.mouth = parseInt(
+              document.getElementById("mouthShape").value
+            );
             student.glass = parseInt(
               document.getElementById("sunglasses").value
             );
