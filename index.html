@@ -161,7 +161,7 @@
         position: absolute;
         top: 5px;
         right: 5px;
-        background: gray;
+        background: lightgray;
         color: white;
         border: none;
         border-radius: 25%;
@@ -184,7 +184,7 @@
         position: absolute;
         top: 5px;
         right: 34px;
-        background: gray;
+        background: lightgray;
         color: white;
         border: none;
         border-radius: 25%;
@@ -498,8 +498,8 @@
       <div class="dropdown">
             <button class="dropbtn">↕️ Sort</button>
             <div class="dropdown-content">
-          <button onclick="sortStudentsByName()">🔠 Sort By Name</button>
-          <button onclick="sortStudentsByScore()">🏅 Sort By Score</button>
+          <button onclick="sortStudentsByName()">🔠 by Name</button>
+          <button onclick="sortStudentsByScore()">🏅 by Score</button>
         </div>
       </div>
       <div class="dropdown">
@@ -716,8 +716,10 @@
         points: 0,
       };
       let historyStack = JSON.parse(localStorage.getItem("historyStack")) || [];
+      let classHistoryStack = JSON.parse(localStorage.getItem("classHistoryStack")) || [];
       let selectedStudents = new Set();
       let modalEventListeners = [];
+      let savedQuery = "";
 
       const colors = [
         "#FF5733", // Bright Orange
@@ -819,9 +821,12 @@
       function saveState() {
         if (historyStack.length >= 10) {
           historyStack.shift();
+          classHistoryStack.shift();
         }
         historyStack.push(JSON.parse(JSON.stringify(students)));
+        classHistoryStack.push(JSON.parse(JSON.stringify(classDetails)));
         localStorage.setItem("historyStack", JSON.stringify(historyStack));
+        localStorage.setItem("classHistoryStack", JSON.stringify(classHistoryStack));
         updateUndoButton();
       }
 
@@ -833,7 +838,9 @@
       function undo() {
         if (historyStack.length > 0) {
           students = historyStack.pop();
+          classDetails = classHistoryStack.pop();
           localStorage.setItem("historyStack", JSON.stringify(historyStack));
+          localStorage.setItem("classHistoryStack", JSON.stringify(classHistoryStack));
           saveAndRender();
         }
         updateUndoButton();
@@ -1138,20 +1145,20 @@
       }
 
       function setClassPoints(amount) {
-        //saveState();
+        saveState();
         classDetails.points = parseInt(amount);
         saveAndRender();
         wiggleClassCard();
       }
 
       function setClassName(name) {
-        //saveState();
+        saveState();
         classDetails.name = name;
         saveAndRender();
       }
 
       function updateClassPoints(amount) {
-        //saveState();
+        saveState();
         classDetails.points += parseInt(amount);
         saveAndRender();
         animateHeart(amount);
@@ -1219,7 +1226,9 @@
       }
 
       function saveAndRender() {
+        savedQuery = document.getElementById("searchInput").value.toLowerCase();
         renderStudents();
+        filterStudents();
         localStorage.setItem("students", JSON.stringify(students));
         localStorage.setItem("classDetails", JSON.stringify(classDetails));
         enableDragAndDrop();
@@ -1597,7 +1606,7 @@
       }
 
       function filterStudents() {
-        const query = document.getElementById("searchInput").value.toLowerCase();
+        const query = savedQuery || document.getElementById("searchInput").value.toLowerCase();
         const studentCards = document.querySelectorAll(".student-card");
         const clearButton = document.getElementById("clearButton");
 
@@ -1612,6 +1621,7 @@
 
       function clearSearch() {
         document.getElementById("searchInput").value = "";
+        savedQuery = "";
         filterStudents();
         document.getElementById("searchInput").focus(); // Keep focus on input
       }
