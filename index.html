@@ -722,25 +722,25 @@
       let savedQuery = "";
 
       const colors = [
-        "#FF5733", // Bright Orange
-        "#FF6F61", // Warm Red
-        "#FFCC33", // Golden Yellow
-        "#FFD700", // Bright Yellow
-        "#88B04B", // Grass Green
-        "#009B77", // Deep Teal
-        "#00BFFF", // Sky Blue
-        "#5B5EA6", // Cool Blue
-        "#6A0DAD", // Vivid Purple
-        "#B565A7", // Soft Purple
-        "#F7CAC9", // Light Pink
-        "#E15D44", // Coral
-        "#D65076", // Magenta
-        "#EFC050", // Warm Gold
-        "#7FCDCD", // Turquoise
-        "#C3447A", // Deep Pink
-        "#9B2335", // Dark Red
-        "#55B4B0", // Aqua
-        "#DFCFBE", // Light Beige (Neutral)
+        ["Bright Orange", "#FF5733"],
+        ["Warm Red", "#FF6F61"],
+        ["Golden Yellow", "#FFCC33"],
+        ["Bright Yellow", "#FFD700"],
+        ["Grass Green", "#88B04B"],
+        ["Deep Teal", "#009B77"],
+        ["Sky Blue", "#00BFFF"],
+        ["Cool Blue", "#5B5EA6"],
+        ["Vivid Purple", "#6A0DAD"],
+        ["Soft Purple", "#B565A7"],
+        ["Light Pink", "#F7CAC9"],
+        ["Coral", "#E15D44"],
+        ["Magenta", "#D65076"],
+        ["Warm Gold", "#EFC050"],
+        ["Turquoise", "#7FCDCD"],
+        ["Deep Pink", "#C3447A"],
+        ["Dark Red", "#9B2335"],
+        ["Aqua", "#55B4B0"],
+        ["Light Beige (Neutral)", "#DFCFBE"]
       ];
 
       const eyes = [
@@ -877,7 +877,7 @@
         }
 
         // Use the stored indices to generate the SVG components
-        const color = colors[student.color];
+        const color = colors[student.color][1]
         const shape = getShape([student.shape], color);
         const eye =
           student.glass !== 0 ? glasses[student.glass] : eyes[student.eye];
@@ -931,7 +931,7 @@
         const scale = 0.6;
 
         for (let i = 0; i < numberOfAvatars; i++) {
-          const color = colors[(i * 4) % colors.length];
+          const color = colors[(i * 4) % colors.length][1];
           const shape = getShape(i % 7, color);
           const eye = eyes[i % eyes.length];
           const mouth = mouths[i % mouths.length];
@@ -1632,14 +1632,14 @@
         }
       }
 
-      colors.sort((a, b) => hexToHsl(a) - hexToHsl(b));
+      colors.sort((a, b) => hexToHsl(a[1]) - hexToHsl(b[1]));
 
       const skinColorSelect = document.getElementById("skinColor");
       colors.forEach((color, index) => {
         const option = document.createElement("option");
         option.value = index; // Set the option value to the index
-        option.style.backgroundColor = color;
-        option.textContent = color;
+        option.style.backgroundColor = color[1];
+        option.textContent = color[0];
         skinColorSelect.appendChild(option);
       });
 
