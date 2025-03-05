@@ -11,36 +11,27 @@
         background-color: lightgray;
       }
 
-      #manageControls,
-      #bulkControls {
+      #manageControls {
         display: flex;
         justify-content: center;
         align-items: center;
         gap: 10px;
         flex-wrap: wrap;
-        padding: 20px;
+        padding: 0px;
       }
 
       #manageControls button,
       #manageControls input,
-      #manageControls span,
-      #bulkControls button,
-      #bulkControls span {
+      #manageControls span {
         padding: 10px 20px;
         font-size: 16px;
         cursor: pointer;
+        margin: 0px
       }
 
-      #manageControls span,
-      #bulkControls span {
+      #manageControls span {
         min-width: 100px;
         text-align: center;
-      }
-
-      #bulkControls #classTotal {
-        font-weight: bold;
-        font-size: xx-large;
-        padding: 5px;
       }
 
       #studentsContainer {
@@ -52,7 +43,7 @@
         padding: 20px;
       }
 
-      .student-card {
+      .student-card, .class-card, .new-student-card {
         position: relative;
         display: flex;
         align-items: center;
@@ -65,7 +56,7 @@
         box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
       }
 
-      .student-card.class-card {
+      .class-card {
         background: plum;
       }
 
@@ -394,22 +385,130 @@
         margin-left: auto;
         margin-right: 0px;
       }
+
+      .dragging {
+        opacity: 0.5;
+        transform: scale(0.95);
+      }
+
+      @keyframes wobble {
+        0% { transform: rotate(0deg); }
+        25% { transform: rotate(-2deg); }
+        50% { transform: rotate(2deg); }
+        75% { transform: rotate(-1deg); }
+        100% { transform: rotate(0deg); }
+      }
+
+      .drag-over {
+        animation: wobble 0.2s ease-in-out infinite;
+        transform: translateY(10px);
+      }
+
+      /* Style the dropdown button */
+      .dropbtn {
+        padding: 16px;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: left;
+        margin-bottom: 10px;
+      }
+
+      /* Dropdown container */
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      /* Dropdown content (hidden by default) */
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f9f9f9;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+        z-index: 1;
+        margin-top: 0px;
+      }
+
+      /* Show the dropdown content when hovering over the button */
+      .dropdown:hover .dropdown-content {
+        display: block;
+      }
+
+      /* Style the buttons inside the dropdown */
+      .dropdown-content button {
+        background-color: #f1f1f1;
+        color: black;
+        padding: 12px 16px;
+        text-align: left;
+        border: none;
+        width: 100%;
+        cursor: pointer;
+        display: block;
+      }
+
+      /* Hover effect for buttons inside the dropdown */
+      .dropdown-content button:hover {
+        background-color: #ddd;
+      }
     </style>
   </head>
   <body>
-    <div id="studentsContainer"></div>
     <div id="manageControls">
-      <button onclick="launchConfetti()">Celebrate!</button>
-      <button onclick="bulkUpdatePoints(1)">+1</button>
-      <button onclick="bulkUpdatePoints(5)">+5</button>
-      <button onclick="bulkUpdatePoints(10)">+10</button>
-      <button onclick="toggleSelectAll()">Select/Deselect All</button>
-      <button onclick="showConfirmationModal(resetPoints)">Reset Points</button>
-      <button id="undoButton" onclick="undo()" disabled>Undo</button>
-      <button onclick="sortStudentsByName()">Sort By Name</button>
-      <button onclick="sortStudentsByScore()">Sort By Score</button>
-      <button onclick="exportCSV()">Backup</button>
-      <button onclick="clickFileInput()">Import</button>
+      <div style="position: relative; display: inline-block;">
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="🔍 Search students..." 
+          oninput="filterStudents()"
+          onkeydown="clearOnEscape(event)"
+          style="padding: 10px 35px 10px 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; width: 200px;"
+        >
+        <button 
+          id="clearButton" 
+          onclick="clearSearch()" 
+          style="
+            position: absolute; 
+            right: 5px; 
+            top: 50%; 
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            color: gray;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 5px;
+          "
+        >
+          Clear
+        </button>
+      </div>      
+      <button onclick="launchConfetti()">🎉 Celebrate!</button>
+      <div class="dropdown">
+        <button class="dropbtn">💯 Points...</button>
+        <div class="dropdown-content">
+          <button onclick="bulkUpdatePoints(1)">+1</button>
+          <button onclick="bulkUpdatePoints(5)">+5</button>
+          <button onclick="bulkUpdatePoints(10)">+10</button>
+          <button onclick="showConfirmationModal(resetPoints)">Reset</button>
+        </div>
+      </div>
+      <button onclick="toggleSelectAll()">🔘 Select...</button>
+      <button id="undoButton" onclick="undo()" disabled> ↩️ Undo</button>
+      <div class="dropdown">
+            <button class="dropbtn">↕️ Sort</button>
+            <div class="dropdown-content">
+          <button onclick="sortStudentsByName()">🔠 Sort By Name</button>
+          <button onclick="sortStudentsByScore()">🏅 Sort By Score</button>
+        </div>
+      </div>
+      <div class="dropdown">
+        <button class="dropbtn">💾</button>
+        <div class="dropdown-content">
+          <button onclick="exportCSV()">⬆️ Backup</button>
+          <button onclick="clickFileInput()">⬇️ Restore</button>
+        </div>
+      </div>
       <input
         id="fileInput"
         type="file"
@@ -434,6 +533,7 @@
         Help
       </button>
     </div>
+    <div id="studentsContainer"></div>
     <div
       id="helpPopup"
       style="
@@ -931,7 +1031,7 @@
       }
 
       function renderNewStudent() {
-        return `<div class="student-card">
+        return `<div class="new-student-card">
           <div class="avatar">${generateNewStudentAvatar()}</div>
           <div class="info">
             <span class="name"><input type="text" id="newStudentName" placeholder="Enter student name" class="student-name" onchange="addNewStudent()"></span>
@@ -941,7 +1041,7 @@
       }
 
       function renderClass() {
-        return `<div class="student-card class-card">
+        return `<div class="class-card">
           <div class="avatar">${generateClassAvatar()}</div>
           <div class="info">
             <span class="name"><input type="text" id="className" placeholder="Class Name" class="class-name" value="${
@@ -1005,17 +1105,43 @@
         saveAndRender();
       }
 
+      function wiggleStudentCard(index) {
+        const studentCards = document.querySelectorAll(".student-card");
+        const studentCard = studentCards[index]; // Adjust for the class row being first
+
+        wiggleCard(studentCard)
+      }
+
+      function wiggleClassCard() {
+        const classCards = document.querySelectorAll(".class-card");
+        const classCard = classCards[0]; // Adjust for the class row being first
+
+        wiggleCard(classCard)
+      }
+
+      function wiggleCard(card) {
+        if (card) {
+          card.classList.add("drag-over");
+
+          setTimeout(() => {
+            card.classList.remove("drag-over");
+          }, 600);
+        }
+      }
+
       function updatePoints(index, amount) {
         saveState();
         students[index].points += parseInt(amount);
         saveAndRender();
         animateHeart(amount);
+        wiggleStudentCard(index);
       }
 
       function setClassPoints(amount) {
         //saveState();
         classDetails.points = parseInt(amount);
         saveAndRender();
+        wiggleClassCard();
       }
 
       function setClassName(name) {
@@ -1029,12 +1155,14 @@
         classDetails.points += parseInt(amount);
         saveAndRender();
         animateHeart(amount);
+        wiggleClassCard();
       }
 
       function setPoints(index, amount) {
         saveState();
         students[index].points = parseInt(amount);
         saveAndRender();
+        wiggleStudentCard(index);
       }
 
       function bulkUpdatePoints(amount) {
@@ -1045,6 +1173,9 @@
             animateHeart(amount);
           });
           saveAndRender();
+          selectedStudents.forEach((index) => {
+            wiggleStudentCard(index);
+          });
         }
       }
 
@@ -1070,6 +1201,7 @@
       }
 
       function sortStudentsByName() {
+        selectedStudents.clear();
         saveState();
         students.sort((a, b) => {
           if (a.name < b.name) return -1;
@@ -1080,6 +1212,7 @@
       }
 
       function sortStudentsByScore() {
+        selectedStudents.clear();
         saveState();
         students.sort((a, b) => b.points - a.points);
         saveAndRender();
@@ -1089,6 +1222,7 @@
         renderStudents();
         localStorage.setItem("students", JSON.stringify(students));
         localStorage.setItem("classDetails", JSON.stringify(classDetails));
+        enableDragAndDrop();
       }
 
       function exportCSV() {
@@ -1419,6 +1553,73 @@
           h /= 6;
         }
         return h * 360;
+      }
+
+      function enableDragAndDrop() {
+        const studentCards = document.querySelectorAll(".student-card");
+        studentCards.forEach((card, index) => {
+          card.draggable = true;
+
+          card.addEventListener("dragstart", (e) => {
+            e.dataTransfer.setData("text/plain", index);
+            card.classList.add("dragging"); // Style the dragged card
+          });
+
+          card.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            card.classList.add("drag-over");
+          });
+
+          card.addEventListener("dragleave", () => {
+            card.classList.remove("drag-over");
+          });
+
+          card.addEventListener("drop", (e) => {
+            selectedStudents.clear();
+            e.preventDefault();
+            const oldIndex = e.dataTransfer.getData("text/plain");
+            const newIndex = Array.from(studentCards).indexOf(
+              e.target.closest(".student-card")
+            );
+
+            // Move student in array
+            const movedItem = students.splice(oldIndex, 1)[0];
+            students.splice(newIndex, 0, movedItem);
+
+            saveAndRender();
+          });
+
+          card.addEventListener("dragend", () => {
+            card.classList.remove("dragging");
+            document.querySelectorAll(".drag-over").forEach((el) => el.classList.remove("drag-over"));
+          });
+        });
+      }
+
+      function filterStudents() {
+        const query = document.getElementById("searchInput").value.toLowerCase();
+        const studentCards = document.querySelectorAll(".student-card");
+        const clearButton = document.getElementById("clearButton");
+
+        studentCards.forEach((card) => {
+          const studentName = card.querySelector(".name").textContent.toLowerCase();
+          card.style.display = studentName.includes(query) ? "flex" : "none";
+        });
+
+        // Show/hide the clear button based on input
+        clearButton.style.display = query ? "block" : "none";
+      }
+
+      function clearSearch() {
+        document.getElementById("searchInput").value = "";
+        filterStudents();
+        document.getElementById("searchInput").focus(); // Keep focus on input
+      }
+
+      function clearOnEscape(event) {
+        if (event.key === "Escape") {
+          clearSearch();
+        }
       }
 
       colors.sort((a, b) => hexToHsl(a) - hexToHsl(b));
