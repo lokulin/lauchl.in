@@ -551,6 +551,16 @@
             </div>
 
             <div class="row">
+              <label for="mouthShape">Mouth Shape:</label>
+              <select id="mouthShape" class="avatar-select">
+                <option value="0">Smile</option>
+                <option value="1">Smirk Left</option>
+                <option value="2">Smirk Right</option>
+                <option value="3">Surprise</option>
+              </select>
+            </div>
+
+            <div class="row">
               <label for="sunglasses">Sunglasses:</label>
               <select id="sunglasses" class="avatar-select">
                 <option value="0">None</option>
@@ -646,6 +656,9 @@
 
       const mouths = [
         `<path d="M30,70 Q50,80 70,70" stroke="black" stroke-width="6" fill="transparent" />`,
+        `<path d="M30,65 Q50,80 70,80" stroke="black" stroke-width="6" fill="transparent" />`,
+        `<path d="M30,70 Q50,70 70,70" stroke="black" stroke-width="6" fill="transparent" />`,
+        `<circle cx="50" cy="70" r="10" fill="black" />`,
       ];
 
       const glasses = [
@@ -743,7 +756,7 @@
         }
 
         if (student.mouth === undefined) {
-          student.mouth = Math.floor((hash / 10000) % 100) % mouths.length;
+          student.mouth = 0; // Assuming glasses[0] is the default (index 0)
         }
 
         if (student.hat === undefined) {
@@ -795,7 +808,7 @@
           const color = colors[(i * 4) % colors.length];
           const shape = getShape(i % 7, color);
           const eye = eyes[i % eyes.length];
-          const mouth = mouths[0];
+          const mouth = mouths[i % mouths.length];
 
           const posX = (i % 3) * (size / 2) - 12;
           const posY = Math.floor(i / 3) * (size / 2) - 12;
@@ -1067,7 +1080,7 @@
       function exportCSV() {
         const csvContent =
           "data:text/csv;charset=utf-8," +
-          "Name,Points,Color,Shape,Eye,Glass,Hat\n" + // Column headers
+          "Name,Points,Color,Shape,Eye,Glass,Hat,Mouth\n" + // Column headers
           classDetails.name +
           "," +
           classDetails.points +
@@ -1075,7 +1088,7 @@
           students
             .map(
               (s) =>
-                `${s.name},${s.points},${s.color},${s.shape},${s.eye},${s.glass},${s.hat}`
+                `${s.name},${s.points},${s.color},${s.shape},${s.eye},${s.glass},${s.hat},${s.mouth}`
             )
             .join("\n");
 
@@ -1110,6 +1123,7 @@
               "Eye",
               "Glass",
               "Hat",
+              "Mouth",
             ];
 
             // Check if the first line contains headers (matching one of the new CSV formats)
@@ -1142,9 +1156,9 @@
               if (fields.length >= 2) {
                 const [name, points] = fields;
                 // If the line has the expected number of columns (name, points, and new properties)
-                if (fields.length === 7) {
+                if (fields.length === 8) {
                   // Handle the new format with extra properties
-                  const [name, points, color, shape, eye, glass, hat] = fields;
+                  const [name, points, color, shape, eye, glass, hat, mouth] = fields;
                   return {
                     name: name.trim(),
                     points: parseInt(points) || 0,
@@ -1153,6 +1167,7 @@
                     eye: parseInt(eye) || 0,
                     glass: parseInt(glass) || 0,
                     hat: parseInt(hat) || 0,
+                    mouth: parseInt(mouth) || 0,
                   };
                 } else {
                   // Handle the backward-compatible format with only name and points
@@ -1304,6 +1319,7 @@
         document.getElementById("skinColor").value = student.color;
         document.getElementById("faceShape").value = student.shape;
         document.getElementById("eyeShape").value = student.eye;
+        document.getElementById("mouthShape").value = student.mouth;
         document.getElementById("sunglasses").value = student.glass;
         document.getElementById("hat").value = student.hat;
 
@@ -1330,6 +1346,7 @@
               document.getElementById("faceShape").value
             );
             student.eye = parseInt(document.getElementById("eyeShape").value);
+            student.mouth = parseInt(document.getElementById("mouthShape").value);
             student.glass = parseInt(
               document.getElementById("sunglasses").value
             );
