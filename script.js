@@ -141,8 +141,8 @@ function renderStudent(student, index) {
             <div class="pointsManage">
               <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)" class="points-input">
               <button onclick="updatePoints(${index}, 1)">❤️</button>
-              <button onclick="updatePoints(${index}, 5)">x5</button>
-              <button onclick="updatePoints(${index}, 10)">x10</button>
+              <button onclick="updatePoints(${index}, 5)">+5</button>
+              <button onclick="updatePoints(${index}, 10)">+10</button>
             </div>
           </div>
         </div>`;
@@ -799,7 +799,6 @@ function toggleClassPhotoMode() {
   );
   const classPhotoButton = document.getElementById("classPhotoRestoreButton");
   const studentCards = document.querySelectorAll(".student-card");
-  const avatars = document.querySelectorAll(".avatar");
 
   const isPhotoMode = elementsToHide[0]?.style.display !== "none"; // Check if currently visible
 
@@ -814,9 +813,7 @@ function toggleClassPhotoMode() {
     card.classList.toggle("photo-mode", isPhotoMode);
   });
 
-  avatars.forEach((avatar) => {
-    avatar.classList.toggle("avatar-large", isPhotoMode); // Add "avatar-large" class when not in photo mode
-  });
+  document.body.style.background = isPhotoMode ? "none" : "";
 }
 
 

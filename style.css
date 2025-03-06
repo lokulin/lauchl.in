@@ -53,12 +53,15 @@ body {
 }
 
 .student-card.photo-mode .avatar {
-  margin-bottom: 10px; /* Add space between avatar and name */
+  margin-bottom: 0px; /* Add space between avatar and name */
 }
 
 .student-card.photo-mode {
+  min-width: 150px;
+  min-height: 100px;
   flex-direction: column; /* Stack elements vertically */
   align-items: center; /* Center align elements */
+  padding: 5px;
 }
 
 .class-card,
@@ -565,35 +568,11 @@ select {
     size: landscape;
     margin: none; /* Adjust margin as needed */
   }
-
-  /* Apply scaling factor to everything on the page */
-  body {
-    transform-origin: top left; /* Ensure scaling starts from the top-left corner */
-    width: 100%; /* Ensure full width is used */
-    height: 100%; /* Ensure full height is used */
-  }
-
-  #studentsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .student-card {
-    display: flex;
-    flex-direction: column; /* Stack avatar and name vertically */
-    align-items: center;
-    border: 2px solid darkgrey;
-    padding: 0px;
-    border-radius: 8px;
-    background: #f9f9f9;
-    min-width: 100px; /* Ensure the cards fit well in grid */
-    min-height: 100px; /* Ensure sufficient height for content */
-    box-shadow: none; /* Remove shadow for printing */
-  }
-
   .floatingRestoreButton {
     display: none !important;
+  }
+
+  body {
+    background-color: none;
   }
 }
