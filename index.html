@@ -621,12 +621,13 @@
         </div>
       </div>
       <div class="dropdown">
-        <button class="dropbtn">💾</button>
+        <button class="dropbtn">☰</button>
         <div class="dropdown-content">
           <button onclick="exportCSV()">⬆️ Backup</button>
           <button onclick="clickFileInput()">⬇️ Restore</button>
-          <button onclick="showConfirmationModal(resetPoints)">💣 Reset Points</button>
           <button onclick="toggleClassPhotoMode()">📸 Class Photo</button>
+          <button onclick="showConfirmationModal(resetPoints)">💣 Reset Points</button>
+          <button onclick="showConfirmationModal(clearStudents)">⚙️ Clear Class</button>
         </div>
       </div>
       <input id="fileInput" type="file" accept=".csv, .txt" onchange="importCSV(event)" style="display: none" />
@@ -656,7 +657,7 @@
       button to quickly toggle selection for all students.
     </p>
     <p>
-      <strong>5. Reset Points:</strong> Click "💾" then "💣 Reset Points" to set all
+      <strong>5. Reset Points:</strong> Click "☰" then "💣 Reset Points" to set all
       selected students' scores back to zero. If no students are selected, it
       resets all students.
     </p>
@@ -670,8 +671,8 @@
       face shape, accessories, and colors.
     </p>
     <p>
-      <strong>8. Backup & Restore:</strong> Click "💾" then "⬆️ Backup" to download student
-      data as a CSV file. Click "💾" then "⬇️ Restore" to restore data from a CSV file.
+      <strong>8. Backup & Restore:</strong> Click "☰" then "⬆️ Backup" to download student
+      data as a CSV file. Click "☰" then "⬇️ Restore" to restore data from a CSV file.
     </p>
     <p>
       <strong>9. Undo:</strong> Click "↩️ Undo" to revert the last action
@@ -682,7 +683,7 @@
       and recognize achievements!
     </p>
     <p>
-      <strong>11. Class Photo:</strong> Click "💾" then "📸 Class Photo" to enter class photo mode.  Print with no margin and backgrounds enabled for best results. Click the "X" to exit.
+      <strong>11. Class Photo:</strong> Click "☰" then "📸 Class Photo" to enter class photo mode.  Print with no margin and backgrounds enabled for best results. Click the "X" to exit.
     </p>
     <p>
       <a href="https://github.com/lokulin/lauchl.in">Pull requests welcome.</a>
@@ -773,6 +774,7 @@
             <div class="modal-buttons">
               <button id="avatarNextButton">Next</button>
               <button id="avatarRandomButton">Random</button>
+              <button id="avatarDefaultButton">Default</button>
               <button id="avatarResetButton">Reset</button>
               <button id="avatarConfirmButton">Close</button>
             </div>
