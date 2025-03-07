@@ -411,7 +411,7 @@ function importCSV(event) {
 
       return {
         name: name.trim(),
-        points: parseInt(points),
+        points: !isNaN(points) ? Number(points) : 0,
         color: color !== undefined ? parseInt(color) : undefined,
         shape: shape !== undefined ? parseInt(shape) : undefined,
         eye: eye !== undefined ? parseInt(eye) : undefined,
