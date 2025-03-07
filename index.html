@@ -582,8 +582,8 @@
         <div class="pointsManage">
           <input type="number" min="-100" max="100" onchange="setClassPoints(this.value)" class="points-input">
           <button onclick="updateClassPoints(1)">❤️</button>
-          <button onclick="updateClassPoints(5)">x5</button>
-          <button onclick="updateClassPoints(10)">x10</button>
+          <button onclick="updateClassPoints(5)">+5</button>
+          <button onclick="updateClassPoints(10)">+10</button>
         </div>
       </div>
     </div>
@@ -625,6 +625,8 @@
         <div class="dropdown-content">
           <button onclick="exportCSV()">⬆️ Backup</button>
           <button onclick="clickFileInput()">⬇️ Restore</button>
+          <button class="cloudFeature" onclick="storeData()" style="display: none;">⛅ Cloud Save</button>
+          <button class="cloudFeature" onclick="loadData()" style="display: none;">🌧️ Cloud Load</button>
           <button onclick="toggleClassPhotoMode()">📸 Class Photo</button>
           <button onclick="showConfirmationModal(resetPoints)">💣 Reset Points</button>
           <button onclick="showConfirmationModal(clearStudents)">⚙️ Clear Class</button>
