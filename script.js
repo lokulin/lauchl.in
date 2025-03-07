@@ -370,24 +370,17 @@ function saveAndRender() {
 }
 
 function exportCSV() {
-  const csvContent =
-    "data:text/csv;charset=utf-8," +
-    "Name,Points,Color,Shape,Eye,Glass,Hat,Mouth\n" + // Column headers
-    classDetails.name +
-    "," +
-    classDetails.points +
-    "\n" +
-    students
-      .map(
-        (s) =>
-          `${s.name},${s.points},${s.color},${s.shape},${s.eye},${s.glass},0,${s.mouth}`
-      )
-      .join("\n");
+  const csvContent = [
+    ["Name", "Points", "Color", "Shape", "Eye", "Glass", "Hat", "Mouth"],
+    [classDetails.name, classDetails.points],
+    ...students.map(s => [s.name, s.points, s.color, s.shape, s.eye, s.glass, s.hat, s.mouth])
+  ].map(row => row.join(",")).join("\n");
 
-  const encodedUri = encodeURI(csvContent);
-  const link = document.createElement("a");
-  link.setAttribute("href", encodedUri);
-  link.setAttribute("download", "students_backup.csv");
+  const link = Object.assign(document.createElement("a"), {
+    href: URL.createObjectURL(new Blob([csvContent], { type: "text/csv" })),
+    download: "students_backup.csv"
+  });
+
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -401,77 +394,37 @@ function clickFileInput() {
 function importCSV(event) {
   const file = event.target.files[0];
   const reader = new FileReader();
-  reader.onload = function (e) {
-    const lines = e.target.result.split(/\r?\n/);
 
-    // Extract the first line and store it in classDetails (with or without headers)
-    if (lines.length > 0) {
-      const firstLine = lines[0].trim();
-      const headers = [
-        "Name",
-        "Points",
-        "Color",
-        "Shape",
-        "Eye",
-        "Glass",
-        "Hat",
-        "Mouth",
-      ];
+  reader.onload = (e) => {
+    let [firstLine, ...lines] = e.target.result.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
 
-      // Check if the first line contains headers (matching one of the new CSV formats)
-      if (
-        firstLine.split(",").length === headers.length &&
-        firstLine.includes(headers[0])
-      ) {
-        // The first line contains the headers, so we skip it
-        lines.shift();
+    const hasHeaders = firstLine.startsWith("Name");
+    if (hasHeaders) firstLine = lines.shift();
 
-        // Parse class details from the first student line (since there are no class details in the header)
-        const [name, points] = lines[0].split(",");
-        classDetails.name = name.trim();
-        classDetails.points = parseInt(points) || 0;
-      } else {
-        // Backward compatibility: Handle cases without column headers
-        const [name, points] = firstLine.split(",");
-        classDetails.name = name.trim();
-        classDetails.points = parseInt(points) || 0;
-      }
-    }
+    const [name, points = "0"] = firstLine.split(",");
+    classDetails.name = name.trim();
+    classDetails.points = parseInt(points) || 0;
 
-    lines.shift();
+    students = lines.map(line => {
+      const fields = line.split(",");
+      const [name, points, color, shape, eye, glass, hat, mouth] = fields;
 
-    // Process the remaining lines as students
-    students = lines
-      .map((line) => {
-        const fields = line.split(",");
-
-        if (fields.length >= 2) {
-          const [name, points] = fields;
-          // If the line has the expected number of columns (name, points, and new properties)
-          if (fields.length === 8) {
-            // Handle the new format with extra properties
-            const [name, points, color, shape, eye, glass, hat, mouth] = fields;
-            return {
-              name: name.trim(),
-              points: parseInt(points) || 0,
-              color: parseInt(color) || 0,
-              shape: parseInt(shape) || 0,
-              eye: parseInt(eye) || 0,
-              glass: parseInt(glass) || 0,
-              hat: parseInt(hat) || 0,
-              mouth: parseInt(mouth) || 0,
-            };
-          } else {
-            // Handle the backward-compatible format with only name and points
-            return { name: name.trim(), points: parseInt(points) || 0 };
-          }
-        }
-      })
-      .filter((student) => student.name); // Filter out any empty rows
+      return {
+        name: name.trim(),
+        points: parseInt(points),
+        color: color !== undefined ? parseInt(color) : undefined,
+        shape: shape !== undefined ? parseInt(shape) : undefined,
+        eye: eye !== undefined ? parseInt(eye) : undefined,
+        glass: glass !== undefined ? parseInt(glass) : undefined,
+        hat: hat !== undefined ? parseInt(hat) : undefined,
+        mouth: mouth !== undefined ? parseInt(mouth) : undefined,
+      };
+    }).filter(student => student.name);
 
     saveAndRender();
-    event.target.value = ""; // Reset the file input
+    event.target.value = "";
   };
+
   reader.readAsText(file);
 }
 
