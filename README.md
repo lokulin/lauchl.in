@@ -1,8 +1,12 @@
 # Class Points App
 
-<img src="weeble.svg" alt="ClassPoints Logo" width="150" height="auto" align="left">
+<div style="float:left; margin-right:15px;">
+  <img src="weeble.svg" alt="ClassPoints Logo" width="150" height="auto">
+</div>
 
 Class Points is an easy-to-use app for managing student points, perfect for classrooms, teams, or group activities. With features like bulk point updates, sorting, customizable avatars, and the ability to backup/restore data, it's designed to make managing students' scores fun and efficient.
+
+<div style="clear:both;"></div>
 
 ## How to Use Class Points
 
