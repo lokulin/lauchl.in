@@ -1,4 +1,78 @@
-let students = JSON.parse(localStorage.getItem("students")) || [];
+const defaultStudents = [
+  {
+    name: "Alexander Garcia",
+    points: 0
+  },
+  {
+    name: "Amelia Thompson",
+    points: 0,
+  },
+  {
+    name: "Ava Miller",
+    points: 0,
+  },
+  {
+    name: "Benjamin Thomas",
+    points: 0,
+  },
+  {
+    name: "David Zane",
+    points: 0,
+  },
+  {
+    name: "Emma Johnson",
+    points: 0,
+  },
+  {
+    name: "Emma Kilpatrick",
+    points: 0,
+  },
+  {
+    name: "Evelyn Clark",
+    points: 0,
+  },
+  {
+    name: "Harper Martinez",
+    points: 0,
+  },
+  {
+    name: "Henry Martin",
+    points: 0,
+  },
+  {
+    name: "Isabella Anderson",
+    points: 0,
+  },
+  {
+    name: "James Dean",
+    points: 0,
+  },
+  {
+    name: "James Taylor",
+    points: 0,
+  },
+  {
+    name: "Liam Smith",
+    points: 0,
+  },
+  {
+    name: "Lucas White",
+    points: 0,
+  },
+  {
+    name: "Matilda McCoy",
+    points: 0,
+  },
+  {
+    name: "Mia Jackson",
+    points: 0,
+  },
+  {
+    name: "Noah Davis",
+    points: 0,
+  },
+];
+let students = JSON.parse(localStorage.getItem("students")) || defaultStudents;
 let classDetails = JSON.parse(localStorage.getItem("classDetails")) || {
   name: "Our Class",
   points: 0,
@@ -8,7 +82,7 @@ let historyStack = JSON.parse(localStorage.getItem("historyStack")) || [];
 let classHistoryStack =
   JSON.parse(localStorage.getItem("classHistoryStack")) || [];
 
-  let selectedStudents = new Set();
+let selectedStudents = new Set();
 let modalEventListeners = [];
 let savedQuery = "";
 
@@ -16,6 +90,8 @@ let shapes = [];
 let eyes = [];
 let mouths = [];
 let glasses = [];
+
+let studentReset = {};
 
 const colors = [
   ["Bright Orange", "#FF5733"],
@@ -111,7 +187,7 @@ function generateClassAvatar() {
 }
 
 function getShape(index, color) {
-  const template = shapes[index] //document.querySelector(`template[id="shape-${index}"]`);
+  const template = shapes[index]; //document.querySelector(`template[id="shape-${index}"]`);
   return Array.from(template.content.children)
     .map((el) => {
       el.setAttribute("fill", color);
@@ -149,29 +225,31 @@ function renderStudent(student, index) {
 }
 
 function renderNewStudent() {
-  document.getElementById('newStudentAvatar').innerHTML = generateNewStudentAvatar();
+  document.getElementById("newStudentAvatar").innerHTML =
+    generateNewStudentAvatar();
 }
 
 function renderClass() {
-    document.getElementById('className').value = classDetails.name;
-    document.getElementById('classPoints').textContent = classDetails.points;
-    document.getElementById('classAvatar').innerHTML = generateClassAvatar();
+  document.getElementById("className").value = classDetails.name;
+  document.getElementById("classPoints").textContent = classDetails.points;
+  document.getElementById("classAvatar").innerHTML = generateClassAvatar();
 }
 
 function renderStudents() {
   const container = document.querySelector("#studentsContainer");
   const classCardTemplate = document.querySelector("#classCardTemplate");
   const clonedClassTemplate = classCardTemplate.cloneNode(true);
-  const newStudentCardTemplate = document.querySelector("#newStudentCardTemplate");
+  const newStudentCardTemplate = document.querySelector(
+    "#newStudentCardTemplate"
+  );
   const clonedNewStudentTemplate = newStudentCardTemplate.cloneNode(true);
-  
-  container.innerHTML =
-    students
-      .map((student, index) => {
-        return renderStudent(student, index);
-      })
-      .join("")
-    
+
+  container.innerHTML = students
+    .map((student, index) => {
+      return renderStudent(student, index);
+    })
+    .join("");
+
   container.prepend(clonedClassTemplate);
   container.append(clonedNewStudentTemplate);
   renderClass();
@@ -239,7 +317,6 @@ function toggleSelectAll() {
   saveAndRender();
 }
 
-
 function updatePoints(index, amount) {
   saveState();
   students[index].points += parseInt(amount);
@@ -271,7 +348,11 @@ function updateClassPoints(amount) {
 
 function setPoints(index, amount) {
   saveState();
-  students[index].points = parseInt(amount);
+  if (amount.startsWith('+') || amount < 0) {
+    students[index].points += parseInt(amount);
+  } else {
+    students[index].points = parseInt(amount);
+  }
   saveAndRender();
   wiggleStudentCard(index);
 }
@@ -308,6 +389,16 @@ function resetPoints() {
 function deleteStudent(index) {
   saveState();
   students.splice(index, 1);
+  saveAndRender();
+}
+
+function clearStudents() {
+  saveState();
+  students = [];
+  classDetails = {
+    name: "Our Class",
+    points: 0,
+  };
   saveAndRender();
 }
 
@@ -373,12 +464,23 @@ function exportCSV() {
   const csvContent = [
     ["Name", "Points", "Color", "Shape", "Eye", "Glass", "Hat", "Mouth"],
     [classDetails.name, classDetails.points],
-    ...students.map(s => [s.name, s.points, s.color, s.shape, s.eye, s.glass, s.hat, s.mouth])
-  ].map(row => row.join(",")).join("\n");
+    ...students.map((s) => [
+      s.name,
+      s.points,
+      s.color,
+      s.shape,
+      s.eye,
+      s.glass,
+      s.hat,
+      s.mouth,
+    ]),
+  ]
+    .map((row) => row.join(","))
+    .join("\n");
 
   const link = Object.assign(document.createElement("a"), {
     href: URL.createObjectURL(new Blob([csvContent], { type: "text/csv" })),
-    download: "students_backup.csv"
+    download: "students_backup.csv",
   });
 
   document.body.appendChild(link);
@@ -396,7 +498,10 @@ function importCSV(event) {
   const reader = new FileReader();
 
   reader.onload = (e) => {
-    let [firstLine, ...lines] = e.target.result.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    let [firstLine, ...lines] = e.target.result
+      .split(/\r?\n/)
+      .map((line) => line.trim())
+      .filter(Boolean);
 
     const hasHeaders = firstLine.startsWith("Name");
     if (hasHeaders) firstLine = lines.shift();
@@ -405,21 +510,23 @@ function importCSV(event) {
     classDetails.name = name.trim();
     classDetails.points = parseInt(points) || 0;
 
-    students = lines.map(line => {
-      const fields = line.split(",");
-      const [name, points, color, shape, eye, glass, hat, mouth] = fields;
+    students = lines
+      .map((line) => {
+        const fields = line.split(",");
+        const [name, points, color, shape, eye, glass, hat, mouth] = fields;
 
-      return {
-        name: name.trim(),
-        points: !isNaN(points) ? Number(points) : 0,
-        color: color !== undefined ? parseInt(color) : undefined,
-        shape: shape !== undefined ? parseInt(shape) : undefined,
-        eye: eye !== undefined ? parseInt(eye) : undefined,
-        glass: glass !== undefined ? parseInt(glass) : undefined,
-        hat: hat !== undefined ? parseInt(hat) : undefined,
-        mouth: mouth !== undefined ? parseInt(mouth) : undefined,
-      };
-    }).filter(student => student.name);
+        return {
+          name: name.trim(),
+          points: !isNaN(points) ? Number(points) : 0,
+          color: color !== undefined ? parseInt(color) : undefined,
+          shape: shape !== undefined ? parseInt(shape) : undefined,
+          eye: eye !== undefined ? parseInt(eye) : undefined,
+          glass: glass !== undefined ? parseInt(glass) : undefined,
+          hat: hat !== undefined ? parseInt(hat) : undefined,
+          mouth: mouth !== undefined ? parseInt(mouth) : undefined,
+        };
+      })
+      .filter((student) => student.name);
 
     saveAndRender();
     event.target.value = "";
@@ -576,7 +683,10 @@ function showAvatarSettingsModal(index) {
   const confirmButton = document.getElementById("avatarConfirmButton");
   const nextButton = document.getElementById("avatarNextButton");
   const randomButton = document.getElementById("avatarRandomButton");
+  const defaultButton = document.getElementById("avatarDefaultButton");
   const resetButton = document.getElementById("avatarResetButton");
+
+  resetStudent = { ...student };
 
   saveState();
 
@@ -589,7 +699,9 @@ function showAvatarSettingsModal(index) {
   document.getElementById("sunglasses").value = student.glass;
 
   const container = document.querySelector("#avatarModalAvatarContainer");
-  container.innerHTML = `<div class="avatar-large">${generateAvatar(index)}</div>`;
+  container.innerHTML = `<div class="avatar-large">${generateAvatar(
+    index
+  )}</div>`;
 
   modalEventListeners.forEach((listener) => {
     listener.element.removeEventListener(listener.event, listener.handler);
@@ -631,12 +743,16 @@ function showAvatarSettingsModal(index) {
     slotMachineEffect(index);
   };
 
+  defaultButton.onclick = function () {
+    defaultAvatar(index);
+  };
+
   resetButton.onclick = function () {
     resetAvatar(index);
   };
 }
 
-function resetAvatar(index) {
+function defaultAvatar(index) {
   const student = students[index];
   const hash = stringToHash(student.name);
   student.color = hash % colors.length;
@@ -653,15 +769,32 @@ function resetAvatar(index) {
 
   students[index] = student;
 
-  console.log(student);
+  const container = document.querySelector("#avatarModalAvatarContainer");
+  container.innerHTML = `<div class="avatar-large">${generateAvatar(
+    index
+  )}</div>`;
+}
+
+function resetAvatar(index) {
+  const student = { ...resetStudent };
+
+  document.getElementById("skinColor").value = student.color;
+  document.getElementById("faceShape").value = student.shape;
+  document.getElementById("eyeShape").value = student.eye;
+  document.getElementById("mouthShape").value = student.mouth;
+  document.getElementById("sunglasses").value = student.glass;
+
+  students[index] = student;
 
   const container = document.querySelector("#avatarModalAvatarContainer");
-  container.innerHTML = `<div class="avatar-large">${generateAvatar(index)}</div>`;
+  container.innerHTML = `<div class="avatar-large">${generateAvatar(
+    index
+  )}</div>`;
 }
 
 function nextStyle(index) {
   const student = students[index];
-  
+
   let shapeIndex = student.shape;
   let eyeIndex = student.eye;
   let mouthIndex = student.mouth;
@@ -702,7 +835,9 @@ function nextStyle(index) {
   students[index] = student;
 
   const container = document.querySelector("#avatarModalAvatarContainer");
-  container.innerHTML = `<div class="avatar-large">${generateAvatar(index)}</div>`;
+  container.innerHTML = `<div class="avatar-large">${generateAvatar(
+    index
+  )}</div>`;
 }
 
 function randomizeAvatar(index) {
@@ -711,7 +846,7 @@ function randomizeAvatar(index) {
   student.color = Math.floor(Math.random() * colors.length);
   student.shape = Math.floor(Math.random() * shapes.length);
   student.eye = Math.floor(Math.random() * (eyes.length + glasses.length));
-  
+
   if (student.eye >= eyes.length) {
     student.glass = student.eye - eyes.length;
     student.eye = 0; // No eye type if wearing glasses
@@ -731,10 +866,17 @@ function randomizeAvatar(index) {
 
   // Render the updated avatar
   const container = document.querySelector("#avatarModalAvatarContainer");
-  container.innerHTML = `<div class="avatar-large">${generateAvatar(index)}</div>`;
+  container.innerHTML = `<div class="avatar-large">${generateAvatar(
+    index
+  )}</div>`;
 }
 
-function slotMachineEffect(index, iterations = 10, initialDelay = 50, maxDelay = 300) {
+function slotMachineEffect(
+  index,
+  iterations = 10,
+  initialDelay = 50,
+  maxDelay = 300
+) {
   let delay = initialDelay;
   for (let i = 0; i < iterations; i++) {
     setTimeout(() => {
@@ -768,7 +910,6 @@ function toggleClassPhotoMode() {
 
   document.body.style.background = isPhotoMode ? "none" : "";
 }
-
 
 // Helper Functions
 
