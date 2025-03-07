@@ -993,6 +993,55 @@ function enableDragAndDrop() {
   });
 }
 
+// gsheets functions
+
+function storeData(silent = false) {
+  let data = {
+    students: students,
+    classDetails: classDetails
+  };
+
+  let formData = new URLSearchParams();
+  formData.append("code", classDetails.code);
+  formData.append("data", JSON.stringify(data));
+
+  fetch("https://script.google.com/macros/s/AKfycbzkVWpzBcgrW4kzzucREBr7wfOubJc6jOZ1A9v9iNODQVPDhI6zhxv_VMT3QWSyeks9uQ/exec", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => response.text())
+  .then(text => {
+    if (!silent) {
+      alert("Your code: " + classDetails.code + "\n" + text);
+    } else {
+      console.log("Code:", classDetails.code);
+      console.log("Response:", text);
+    }
+  });
+}
+
+function loadData() {
+  // alert if classDetails.code is not set
+  if (!classDetails.code) {
+    alert("Add a class code before attempting to loading data.");
+    return;
+  }
+
+  fetch(`https://script.google.com/macros/s/AKfycbzkVWpzBcgrW4kzzucREBr7wfOubJc6jOZ1A9v9iNODQVPDhI6zhxv_VMT3QWSyeks9uQ/exec?code=${classDetails.code}`)
+  .then(response => response.text())
+  .then(text => {
+    if (text === "Not found" || text === "Missing code") {
+      console.log("Invalid code");
+    } else {
+      let data = JSON.parse(text);
+      students = data.students;
+      classDetails = data.classDetails;
+      saveAndRender();
+      console.log("Data loaded!");
+    }
+  });
+}
+
 // Startup functions (usually only called once)
 
 function loadSVGTemplates() {
@@ -1029,5 +1078,15 @@ function onLoad() {
   loadSVGTemplates();
   sortColors();
   renderSkinColorSelect();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  classDetails.code = urlParams.has('code') ? urlParams.get('code') : classDetails.code;
+  urlParams.delete('code');
+  window.history.replaceState({}, '', `${window.location.pathname}${urlParams.toString() ? '?' + urlParams : ''}`);
+
+  if (classDetails.code) {
+    document.querySelectorAll('.cloudFeature').forEach(el => el.style.display = '');
+  }
+  
   saveAndRender();
 }
