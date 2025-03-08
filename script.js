@@ -327,7 +327,11 @@ function updatePoints(index, amount) {
 
 function setClassPoints(amount) {
   saveState();
-  classDetails.points = parseInt(amount);
+  if (amount.startsWith('+') || amount < 0) {
+    classDetails.points += parseInt(amount);
+  } else {
+    classDetails.points = parseInt(amount);
+  }
   saveAndRender();
   wiggleClassCard();
 }
