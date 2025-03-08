@@ -716,7 +716,7 @@ function showAvatarSettingsModal(index) {
   const student = students[index];
   const modal = document.getElementById("avatarSettingsModal");
   const confirmButton = document.getElementById("avatarConfirmButton");
-  const nextButton = document.getElementById("avatarNextButton");
+  //const nextButton = document.getElementById("avatarNextButton");
   const randomButton = document.getElementById("avatarRandomButton");
   const defaultButton = document.getElementById("avatarDefaultButton");
   const resetButton = document.getElementById("avatarResetButton");
@@ -770,9 +770,9 @@ function showAvatarSettingsModal(index) {
     saveAndRender();
   };
 
-  nextButton.onclick = function () {
-    nextStyle(index);
-  };
+  //nextButton.onclick = function () {
+  //  nextStyle(index);
+  //};
 
   randomButton.onclick = function () {
     slotMachineEffect(index);
