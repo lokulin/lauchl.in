@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Class Points!</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: lightgray;
+      }
+
+      .avatarModal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+      }
+
+      .avatarModal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        /* Arrange items horizontally */
+        align-items: center;
+        /* Center the items vertically */
+      }
+
+      .modal-left {
+        flex: 1;
+        display: flex;
+        margin-top: 0px;
+        margin-bottom: auto;
+      }
+
+      .modal-right {
+        flex: 2;
+        padding-left: 20px;
+        flex-direction: row;
+      }
+
+      .avatar,
+      .avatar-large {
+        width: 80px;
+        height: 80px;
+        border-radius: 12.5%;
+        background-color: lightgrey;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+      }
+
+      .avatar-large {
+        width: 240px;
+        height: 240px;
+      }
+
+      .avatar svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .avatar-large svg {
+        width: 300%;
+        height: 300%;
+      }
+
+      .avatar circle,
+      .avatar rect,
+      .avatar polygon,
+      .avatar ellipse,
+      .avatar path {
+        transform-origin: center;
+      }
+
+      .avatar-large circle,
+      .avatar-large rect,
+      .avatar-large polygon,
+      .avatar-large ellipse,
+      .avatar-large path {
+        transform-origin: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="avatarSettingsModal" class="avatarModal" style="display: flex">
+      <div class="avatarModal-content">
+        <div class="modal-left">
+          <div id="avatarModalAvatarContainer">
+            <div class="avatar-large">
+              <svg
+                width="100%"
+                height="100%"
+                viewBox="0 0 100 100"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <g data-shape-name="Star" fill="#EFC050">
+                  <path
+                    stroke="black"
+                    stroke-width="2"
+                    d="M 28.544587,30.350682 C 24.369072,33.381552 14.844029,27.192285 9.6850509,27.269986 4.7076171,27.344952 -4.3637318,33.834606 -8.3897232,30.906832 -12.562557,27.872272 -9.6196148,16.900829 -11.287724,12.01836 -12.897133,7.3077047 -21.872361,0.68575248 -20.331983,-4.0479248 c 1.596562,-4.9063313 12.940443,-5.4977893 17.068473,-8.5930222 3.98276451,-2.986311 7.5071173,-13.568556 12.4851151,-13.566355 5.1595629,0.0023 9.2275249,10.608182 13.4468979,13.577692 4.070892,2.8650133 15.22429,2.9467784 16.760483,7.6818156 1.592224,4.90774091 -7.237518,12.0540065 -8.757833,16.9844974 -1.466814,4.756987 1.902012,15.389765 -2.126566,18.313979 z"
+                    transform="matrix(1.641149,0,0,1.641149,67,78)"
+                  ></path>
+                  <ellipse
+                    fill="#ffffff"
+                    opacity="0.7"
+                    ry="3.4490228"
+                    rx="7.1017342"
+                    cy="-55.099815"
+                    cx="114.48854"
+                    transform="matrix(0.60999432,-0.79240578,0.75035741,0.66103234,37,87)"
+                  ></ellipse>
+                </g>
+                <g data-shape-name="Angry">
+                  <path
+                    fill="#ffffff"
+                    stroke="#000000"
+                    stroke-width="2"
+                    id="circle2"
+                    d="M 51,45 A 16,16 0 0 1 43,58.856407 16,16 0 0 1 27,58.856406 16,16 0 0 1 19,45 h 16 z"
+                  ></path>
+                  <path
+                    fill="#ffffff"
+                    stroke="#000000"
+                    stroke-width="2"
+                    id="circle3"
+                    d="M 78.106433,35.822777 A 16,16 0 0 1 77.833971,54.554538 16,16 0 0 1 59.967283,60.187882 16,16 0 0 1 49,45 h 16 z"
+                  ></path>
+                  <path
+                    fill="#000000"
+                    id="circle4"
+                    d="m 43,45 a 8,8 0 0 1 -4,6.928203 8,8 0 0 1 -8,0 A 8,8 0 0 1 27,45 h 8 z"
+                  ></path>
+                  <path
+                    fill="#000000"
+                    id="circle5"
+                    d="m 71.553216,40.411389 a 8,8 0 0 1 -0.136231,9.36588 8,8 0 0 1 -8.933343,2.816672 A 8,8 0 0 1 57,45 h 8 z"
+                  ></path>
+                </g>
+                <g data-shape-name="Rabbit Teeth">
+                  <path
+                    d="m 30,70 q 20,10 40,0"
+                    stroke="#000000"
+                    stroke-width="2"
+                    fill="transparent"
+                  ></path>
+                  <rect
+                    stroke="#000000"
+                    stroke-width="2"
+                    fill="white"
+                    width="9.6950741"
+                    height="8.1558609"
+                    x="45.464962"
+                    y="75.339966"
+                  ></rect>
+                  <path
+                    stroke="#000000"
+                    stroke-width="1"
+                    fill="transparent"
+                    d="m 50.248776,75.373164 0.04419,8.26431 z"
+                  ></path>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-right">
+          <h1>404 Not Found</h1>
+          <p>The page you are looking for does not exist.</p>
+          <a href="https://lauchl.in/">Go back to the homepage</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
