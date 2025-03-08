@@ -1047,7 +1047,7 @@ function storeData(silent = false) {
 
   showSpinner();
 
-  fetch("https://script.google.com/macros/s/AKfycbx8mu6REQVsV9RPa3RnOYW02LQTa9U6X0aw5xcJTy4bB8YDohxhpWyYkrGvjSqtDCP9Tg/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec", {
     method: "POST",
     body: formData
   })
@@ -1075,7 +1075,7 @@ function signUpUser(email) {
 
   console.log("Signing up user with email:", email);
 
-  return fetch("https://script.google.com/macros/s/AKfycbx8mu6REQVsV9RPa3RnOYW02LQTa9U6X0aw5xcJTy4bB8YDohxhpWyYkrGvjSqtDCP9Tg/exec", {
+  return fetch("https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec", {
     method: "POST",
     body: formData
   })
@@ -1103,7 +1103,7 @@ function loadData() {
 
   showSpinner();
 
-  fetch(`https://script.google.com/macros/s/AKfycbx8mu6REQVsV9RPa3RnOYW02LQTa9U6X0aw5xcJTy4bB8YDohxhpWyYkrGvjSqtDCP9Tg/exec?code=${classDetails.code}`)
+  fetch(`https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec?code=${classDetails.code}`)
   .then(response => response.text())
   .then(text => {
     if (text === "Not found" || text === "Missing code") {
@@ -1265,7 +1265,7 @@ function onLoad() {
     classDetails.code = urlParams.get('code');
     urlParams.delete('code');
     window.history.replaceState({}, '', `${window.location.pathname}${urlParams.toString() ? '?' + urlParams : ''}`);
-    showConfirmationModal(loadData, "Would you like to cloud load the data for this class? It will overwrite any existing data.");
+    showConfirmationModal(loadData, "Welcome back. Would you like to cloud load the data for this class? It will overwrite any existing data.");
   }
   
 
