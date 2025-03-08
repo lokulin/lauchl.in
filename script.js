@@ -1,7 +1,7 @@
 const defaultStudents = [
   {
     name: "Alexander Garcia",
-    points: 0
+    points: 0,
   },
   {
     name: "Amelia Thompson",
@@ -327,7 +327,7 @@ function updatePoints(index, amount) {
 
 function setClassPoints(amount) {
   saveState();
-  if (amount.startsWith('+') || amount < 0) {
+  if (amount.startsWith("+") || amount < 0) {
     classDetails.points += parseInt(amount);
   } else {
     classDetails.points = parseInt(amount);
@@ -352,7 +352,7 @@ function updateClassPoints(amount) {
 
 function setPoints(index, amount) {
   saveState();
-  if (amount.startsWith('+') || amount < 0) {
+  if (amount.startsWith("+") || amount < 0) {
     students[index].points += parseInt(amount);
   } else {
     students[index].points = parseInt(amount);
@@ -399,10 +399,7 @@ function deleteStudent(index) {
 function clearStudents() {
   saveState();
   students = [];
-  classDetails = {
-    name: "Our Class",
-    points: 0,
-  };
+  classDetails.points = 0;
   saveAndRender();
 }
 
@@ -669,13 +666,13 @@ function openSignUpPopup() {
 }
 
 function closeSignUpPopup() {
-  document.getElementById('signupPopup').style.display = 'none';
+  document.getElementById("signupPopup").style.display = "none";
 }
 
 function showMessage(message) {
-  var messageDiv = document.getElementById('message');
+  var messageDiv = document.getElementById("message");
   messageDiv.innerText = message;
-  messageDiv.style.display = '';
+  messageDiv.style.display = "";
 }
 
 function showConfirmationModal(onConfirm, text = "Are you sure", ...args) {
@@ -684,8 +681,8 @@ function showConfirmationModal(onConfirm, text = "Are you sure", ...args) {
   const cancelButton = document.getElementById("cancelButton");
   const infoBox = document.getElementById("confirmationModalText");
 
-  cancelButton.style.display = '';
-  infoBox.innerText = text;
+  cancelButton.style.display = "";
+  infoBox.innerHTML = text;
 
   modal.style.display = "flex";
 
@@ -713,7 +710,7 @@ function showInfoModal(text) {
     modal.style.display = "none";
   };
 
-  cancelButton.style.display = 'none';
+  cancelButton.style.display = "none";
 }
 
 function showAvatarSettingsModal(index) {
@@ -1037,7 +1034,7 @@ function enableDragAndDrop() {
 function storeData(silent = false) {
   let data = {
     students: students,
-    classDetails: classDetails
+    classDetails: classDetails,
   };
 
   let formData = new URLSearchParams();
@@ -1047,25 +1044,29 @@ function storeData(silent = false) {
 
   showSpinner();
 
-  fetch("https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec", {
-    method: "POST",
-    body: formData
-  })
-  .then(response => response.text())
-  .then(text => {
-    if (!silent) {
-      showInfoModal(text);
-    } else {
-      console.log("Code:", classDetails.code);
-      console.log("Response:", text);
+  fetch(
+    "https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec",
+    {
+      method: "POST",
+      body: formData,
     }
-  }).catch(error => {
-    console.error("Error loading data:", error);
-  })
-  .finally(() => {
-    // Hide the spinner when the fetch operation is complete
-    hideSpinner();
-  });
+  )
+    .then((response) => response.text())
+    .then((text) => {
+      if (!silent) {
+        showInfoModal(text);
+      } else {
+        console.log("Code:", classDetails.code);
+        console.log("Response:", text);
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading data:", error);
+    })
+    .finally(() => {
+      // Hide the spinner when the fetch operation is complete
+      hideSpinner();
+    });
 }
 
 function signUpUser(email) {
@@ -1075,23 +1076,26 @@ function signUpUser(email) {
 
   console.log("Signing up user with email:", email);
 
-  return fetch("https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec", {
-    method: "POST",
-    body: formData
-  })
-  .then(response => {
+  return fetch(
+    "https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec",
+    {
+      method: "POST",
+      body: formData,
+    }
+  )
+    .then((response) => {
       if (!response.ok) {
         console.log("Network response was not ok");
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
-    return response.text();
-  })
-  .then(text => text)
-  .catch(error => {
-    console.log("Network response was not ok");
-    console.error("Error in fetch:", error);
-    throw error; // Propagate the error so it can be caught in setupEmailForm
-  });
+      return response.text();
+    })
+    .then((text) => text)
+    .catch((error) => {
+      console.log("Network response was not ok");
+      console.error("Error in fetch:", error);
+      throw error; // Propagate the error so it can be caught in setupEmailForm
+    });
 }
 
 function loadData() {
@@ -1103,25 +1107,28 @@ function loadData() {
 
   showSpinner();
 
-  fetch(`https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec?code=${classDetails.code}`)
-  .then(response => response.text())
-  .then(text => {
-    if (text === "Not found" || text === "Missing code") {
-      console.log("Invalid code");
-    } else {
-      let data = JSON.parse(text);
-      students = data.students;
-      classDetails = data.classDetails;
-      saveAndRender();
-      console.log("Data loaded!");
-    }
-  }).catch(error => {
-    console.error("Error loading data:", error);
-  })
-  .finally(() => {
-    // Hide the spinner when the fetch operation is complete
-    hideSpinner();
-  });
+  fetch(
+    `https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec?code=${classDetails.code}`
+  )
+    .then((response) => response.text())
+    .then((text) => {
+      if (text === "Not found" || text === "Missing code") {
+        console.log("Invalid code");
+      } else {
+        let data = JSON.parse(text);
+        students = data.students;
+        classDetails = data.classDetails;
+        saveAndRender();
+        console.log("Data loaded!");
+      }
+    })
+    .catch((error) => {
+      console.error("Error loading data:", error);
+    })
+    .finally(() => {
+      // Hide the spinner when the fetch operation is complete
+      hideSpinner();
+    });
 }
 
 function showSpinner() {
@@ -1179,79 +1186,127 @@ function sortColors() {
 }
 
 function setupEmailForm() {
-  document.getElementById('signupForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    var email = document.getElementById('email').value;
-    if (!email) {
-      showMessage("Something is not quite right with that e-mail, try a different address, or try again later.");
-      return;
-    }
-    
-    // Show spinner to user
-    document.getElementById('spinner').style.display = '';
-    document.getElementById('signupForm').style.display = 'none';
-    
-    signUpUser(email).then(responseCode => {
-      document.getElementById('spinner').style.display = 'none';
-      switch (responseCode) {
-        case "User signed up successfully":
-          document.querySelectorAll('.antiCloudFeature').forEach(el => el.style.display = 'none');
-          showMessage("Success! Check your email to sign in.");
-          break;
-        case "Missing email parameter":
-        case "Invalid email format":
-          showMessage("Something is not quite right with that e-mail, try a different address, or try again later.");
-          break;
-        default:
-          showMessage("Something went wrong, check your email or try again later.");
-      }
-      
-      document.getElementById('spinner').style.display = 'none';
-    }).catch(error => {
-      showMessage("An error occurred while signing up. Please try again later.");
-      document.getElementById('spinner').style.display = 'none';
-    });
-  });
+  document
+    .getElementById("signupForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
 
-  document.getElementById('codeForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    
-    var code = document.getElementById('code').value;
-    if (!code) {
-      showMessage("Please enter a valid class code.");
-      return;
-    }
-    
-    classDetails.code = code;
-    
-    showConfirmationModal(loadData, "Would you like to cloud load the data for this class? It will overwrite any existing data.");
- 
-    if (classDetails.code) {
-      document.querySelectorAll('.cloudFeature').forEach(el => el.style.display = '');
-      document.querySelectorAll('.antiCloudFeature').forEach(el => el.style.display = 'none');
-    }
-    
-    closeSignUpPopup()
-  });
+      var email = document.getElementById("email").value;
+      if (!email) {
+        showMessage(
+          "Something is not quite right with that e-mail, try a different address, or try again later."
+        );
+        return;
+      }
+
+      // Show spinner to user
+      document.getElementById("spinner").style.display = "";
+      document.getElementById("signupForm").style.display = "none";
+
+      signUpUser(email)
+        .then((responseCode) => {
+          document.getElementById("spinner").style.display = "none";
+          switch (responseCode) {
+            case "User signed up successfully":
+              document
+                .querySelectorAll(".antiCloudFeature")
+                .forEach((el) => (el.style.display = "none"));
+              showMessage(
+                "Success! Check your email to sign in.  Make sure you make a backup before signing in."
+              );
+              break;
+            case "Missing email parameter":
+            case "Invalid email format":
+              showMessage(
+                "Something is not quite right with that e-mail, try a different address, or try again later."
+              );
+              break;
+            default:
+              showMessage(
+                "Something went wrong, check your email or try again later."
+              );
+          }
+
+          document.getElementById("spinner").style.display = "none";
+        })
+        .catch((error) => {
+          showMessage(
+            "An error occurred while signing up. Please try again later."
+          );
+          document.getElementById("spinner").style.display = "none";
+        });
+    });
+
+  document
+    .getElementById("codeForm")
+    .addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      var code = document.getElementById("code").value;
+      if (!code) {
+        showMessage("Please enter a valid class code.");
+        return;
+      }
+
+      classDetails.code = code;
+
+      showConfirmationModal(
+        loadData,
+        "Would you like to cloud load the data for this class? It will overwrite any existing data."
+      );
+
+      if (classDetails.code) {
+        document
+          .querySelectorAll(".cloudFeature")
+          .forEach((el) => (el.style.display = ""));
+        document
+          .querySelectorAll(".antiCloudFeature")
+          .forEach((el) => (el.style.display = "none"));
+      }
+
+      closeSignUpPopup();
+    });
 }
 
 function showCodeForm() {
-  document.getElementById('signupForm').style.display = 'none'; // Hide email form
-  document.getElementById('codeForm').style.display = 'block'; // Show code form
+  document.getElementById("signupForm").style.display = "none"; // Hide email form
+  document.getElementById("codeForm").style.display = "block"; // Show code form
 }
 
 // Function to show the email form and hide the code form
 function showEmailForm() {
-  document.getElementById('codeForm').style.display = 'none'; // Hide code form
-  document.getElementById('signupForm').style.display = 'block'; // Show email form
+  document.getElementById("codeForm").style.display = "none"; // Hide code form
+  document.getElementById("signupForm").style.display = "block"; // Show email form
 }
 
 function signOut() {
   delete classDetails.code;
-  document.querySelectorAll('.cloudFeature').forEach(el => el.style.display = 'none');
-  document.querySelectorAll('.antiCloudFeature').forEach(el => el.style.display = '');
+  document
+    .querySelectorAll(".cloudFeature")
+    .forEach((el) => (el.style.display = "none"));
+  document
+    .querySelectorAll(".antiCloudFeature")
+    .forEach((el) => (el.style.display = ""));
   saveAndRender();
+}
+
+function checkFirstLoad() {
+  let isFirstLoad =
+    !students || JSON.stringify(students) === JSON.stringify(defaultStudents);
+  let isDefaultClass =
+    !classDetails ||
+    JSON.stringify(classDetails) ===
+      JSON.stringify({
+        name: "Our Class",
+        points: 0,
+      });
+
+  if (isFirstLoad && isDefaultClass) {
+    showConfirmationModal(
+      openHelpPopup,
+      "<h2>Welcome!</h2><p>It looks like this is your first time here.</p><p>Would you like me to open the help dialogue?</p>"
+    );
+  }
 }
 
 function onLoad() {
@@ -1261,18 +1316,31 @@ function onLoad() {
   setupEmailForm();
 
   const urlParams = new URLSearchParams(window.location.search);
-  if(urlParams.has('code')) {
-    classDetails.code = urlParams.get('code');
-    urlParams.delete('code');
-    window.history.replaceState({}, '', `${window.location.pathname}${urlParams.toString() ? '?' + urlParams : ''}`);
-    showConfirmationModal(loadData, "Welcome back. Would you like to cloud load the data for this class? It will overwrite any existing data.");
+  if (urlParams.has("code")) {
+    classDetails.code = urlParams.get("code");
+    urlParams.delete("code");
+    window.history.replaceState(
+      {},
+      "",
+      `${window.location.pathname}${
+        urlParams.toString() ? "?" + urlParams : ""
+      }`
+    );
+    showConfirmationModal(
+      loadData,
+      "Welcome back. Would you like to cloud load the data for this class? It will overwrite any existing data."
+    );
   }
-  
 
   if (classDetails.code) {
-    document.querySelectorAll('.cloudFeature').forEach(el => el.style.display = '');
-    document.querySelectorAll('.antiCloudFeature').forEach(el => el.style.display = 'none');
+    document
+      .querySelectorAll(".cloudFeature")
+      .forEach((el) => (el.style.display = ""));
+    document
+      .querySelectorAll(".antiCloudFeature")
+      .forEach((el) => (el.style.display = "none"));
   }
-  
+
   saveAndRender();
+  checkFirstLoad();
 }

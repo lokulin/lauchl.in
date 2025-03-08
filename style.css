@@ -41,7 +41,7 @@ body {
 .new-student-card {
   position: relative;
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
   align-items: center;
   border: 2px solid darkgrey;
   padding: 10px;
@@ -216,7 +216,8 @@ body {
   background: darkgray;
 }
 
-.avatar, .avatar-large {
+.avatar,
+.avatar-large {
   width: 80px;
   height: 80px;
   border-radius: 12.5%;
@@ -284,9 +285,9 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 input[type="number"] {
-    appearance: textfield;
-    -webkit-appearance: textfield;
-    -moz-appearance: textfield;
+  appearance: textfield;
+  -webkit-appearance: textfield;
+  -moz-appearance: textfield;
 }
 
 #confetti {
@@ -337,9 +338,11 @@ audio {
   align-items: center;
   overflow-y: auto;
   box-sizing: border-box;
+  z-index: 1000;
 }
 
-.modal-content, .signupModal {
+.modal-content,
+.signupModal {
   background-color: white;
   padding: 20px;
   border-radius: 5px;
@@ -382,7 +385,7 @@ audio {
 
 #signupForm input[type="email"]:focus,
 #codeForm input[type="email"]:focus {
-  border-color: #007BFF; /* Blue border on focus */
+  border-color: #007bff; /* Blue border on focus */
   outline: none; /* Remove default outline */
 }
 
@@ -391,7 +394,7 @@ audio {
   width: 100%; /* Full width */
   padding: 12px; /* Add padding */
   margin-bottom: 15px;
-  background-color: #007BFF; /* Blue background */
+  background-color: #007bff; /* Blue background */
   color: white; /* White text */
   border: none; /* Remove border */
   border-radius: 5px; /* Rounded corners */
@@ -415,7 +418,7 @@ audio {
 
 .spinner {
   border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 4px solid #007BFF; /* Blue */
+  border-top: 4px solid #007bff; /* Blue */
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -515,7 +518,8 @@ select {
   width: 150px;
 }
 
-.modal-buttons, .signup-modal-buttons {
+.modal-buttons,
+.signup-modal-buttons {
   display: flex;
   justify-content: flex-end;
   margin-top: auto;
@@ -560,41 +564,45 @@ select {
 }
 
 .searchInput {
-    padding: 10px 35px 10px 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; width: 200px;
+  padding: 10px 35px 10px 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 200px;
 }
 
 .clearButton {
-    position: absolute; 
-    right: 5px; 
-    top: 50%; 
-    transform: translateY(-50%);
-    border: none;
-    background: none;
-    color: gray;
-    cursor: pointer;
-    font-size: 14px;
-    padding: 0 5px;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: none;
+  color: gray;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 5px;
 }
 
 .helpButton {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .closeHelpButton {
-    padding: 10px 20px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+  padding: 10px 20px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 /* Style the dropdown button */
@@ -629,7 +637,7 @@ select {
   display: inline-block;
 }
 
-.carddropdown { 
+.carddropdown {
   position: absolute;
   top: 5px;
   right: 5px;
