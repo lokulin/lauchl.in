@@ -212,7 +212,7 @@ function renderStudent(student, index) {
   )}</div>
           <div class="info">
             <button class="avatarSettings" onclick="showAvatarSettingsModal(${index})">…</button>
-            <button class="delete" onclick="showConfirmationModal(deleteStudent, ${index})">X</button>
+            <button class="delete" onclick="showConfirmationModal(deleteStudent, 'Are you sure you want to remove ${firstName} ${lastInitial}?', ${index})">X</button>
             <span class="name" onclick="toggleSelect(${index})">${firstName} ${lastInitial} <span class="points">${points}</span></span>
             <div class="pointsManage">
               <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)" class="points-input">
@@ -671,13 +671,17 @@ function closeSignUpPopup() {
 function showMessage(message) {
   var messageDiv = document.getElementById('message');
   messageDiv.innerText = message;
-  messageDiv.style.display = 'block';
+  messageDiv.style.display = '';
 }
 
-function showConfirmationModal(onConfirm, ...args) {
+function showConfirmationModal(onConfirm, text = "Are you sure", ...args) {
   const modal = document.getElementById("confirmationModal");
   const confirmButton = document.getElementById("confirmButton");
   const cancelButton = document.getElementById("cancelButton");
+  const infoBox = document.getElementById("confirmationModalText");
+
+  cancelButton.style.display = '';
+  infoBox.innerText = text;
 
   modal.style.display = "flex";
 
@@ -689,6 +693,23 @@ function showConfirmationModal(onConfirm, ...args) {
   cancelButton.onclick = function () {
     modal.style.display = "none";
   };
+}
+
+function showInfoModal(text) {
+  const modal = document.getElementById("confirmationModal");
+  const confirmButton = document.getElementById("confirmButton");
+  const cancelButton = document.getElementById("cancelButton");
+  const infoBox = document.getElementById("confirmationModalText");
+
+  infoBox.innerText = text;
+
+  modal.style.display = "flex";
+
+  confirmButton.onclick = function () {
+    modal.style.display = "none";
+  };
+
+  cancelButton.style.display = 'none';
 }
 
 function showAvatarSettingsModal(index) {
@@ -1016,9 +1037,11 @@ function storeData(silent = false) {
   };
 
   let formData = new URLSearchParams();
-  formData.append("method", "storeData");
+  formData.append("method", "saveData");
   formData.append("code", classDetails.code);
   formData.append("data", JSON.stringify(data));
+
+  showSpinner();
 
   fetch("https://script.google.com/macros/s/AKfycbx8mu6REQVsV9RPa3RnOYW02LQTa9U6X0aw5xcJTy4bB8YDohxhpWyYkrGvjSqtDCP9Tg/exec", {
     method: "POST",
@@ -1027,11 +1050,17 @@ function storeData(silent = false) {
   .then(response => response.text())
   .then(text => {
     if (!silent) {
-      alert("Your code: " + classDetails.code + "\n" + text);
+      showInfoModal(text);
     } else {
       console.log("Code:", classDetails.code);
       console.log("Response:", text);
     }
+  }).catch(error => {
+    console.error("Error loading data:", error);
+  })
+  .finally(() => {
+    // Hide the spinner when the fetch operation is complete
+    hideSpinner();
   });
 }
 
@@ -1064,9 +1093,11 @@ function signUpUser(email) {
 function loadData() {
   // alert if classDetails.code is not set
   if (!classDetails.code) {
-    alert("Add a class code before attempting to loading data.");
+    showInfoModal("Add a class code before attempting to loading data.");
     return;
   }
+
+  showSpinner();
 
   fetch(`https://script.google.com/macros/s/AKfycbx8mu6REQVsV9RPa3RnOYW02LQTa9U6X0aw5xcJTy4bB8YDohxhpWyYkrGvjSqtDCP9Tg/exec?code=${classDetails.code}`)
   .then(response => response.text())
@@ -1080,7 +1111,35 @@ function loadData() {
       saveAndRender();
       console.log("Data loaded!");
     }
+  }).catch(error => {
+    console.error("Error loading data:", error);
+  })
+  .finally(() => {
+    // Hide the spinner when the fetch operation is complete
+    hideSpinner();
   });
+}
+
+function showSpinner() {
+  // Create the spinner container if it doesn't exist
+  if (!document.getElementById("spinner-overlay")) {
+    const spinnerOverlay = document.createElement("div");
+    spinnerOverlay.id = "spinner-overlay";
+    spinnerOverlay.innerHTML = `
+      <div class="spinner"></div>
+    `;
+    document.body.appendChild(spinnerOverlay);
+  }
+
+  // Display the spinner
+  document.getElementById("spinner-overlay").style.display = "flex";
+}
+
+function hideSpinner() {
+  const spinnerOverlay = document.getElementById("spinner-overlay");
+  if (spinnerOverlay) {
+    spinnerOverlay.style.display = "none";
+  }
 }
 
 // Startup functions (usually only called once)
@@ -1126,11 +1185,11 @@ function setupEmailForm() {
     }
     
     // Show spinner to user
-    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('spinner').style.display = '';
     document.getElementById('signupForm').style.display = 'none';
     
     signUpUser(email).then(responseCode => {
-      
+      document.getElementById('spinner').style.display = 'none';
       switch (responseCode) {
         case "User signed up successfully":
           document.querySelectorAll('.antiCloudFeature').forEach(el => el.style.display = 'none');

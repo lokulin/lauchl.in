@@ -581,7 +581,7 @@
             <button onclick="exportCSV()">⬆️ Backup</button>
             <button onclick="clickFileInput()">⬇️ Restore</button>
             <button class="cloudFeature" onclick="storeData()" style="display: none;">⛅ Cloud Save</button>
-            <button class="cloudFeature" onclick="loadData()" style="display: none;">🌧️ Cloud Load</button>
+            <button class="cloudFeature" onclick="showConfirmationModal(loadData)" style="display: none;">🌧️ Cloud Load</button>
             <button onclick="toggleClassPhotoMode()">📸 Class Photo</button>
             <button onclick="showConfirmationModal(resetPoints)">💣 Reset Points</button>
             <button onclick="showConfirmationModal(clearStudents)">⚙️ Clear Class</button>
@@ -621,10 +621,10 @@
           Clear
         </button>
       </div>
-      <button onclick="launchConfetti()">🎉 Celebrate!</button>
       <button onclick="bulkUpdatePoints(1)">+1</button>
       <button onclick="bulkUpdatePoints(5)">+5</button>
       <button onclick="bulkUpdatePoints(10)">+10</button>
+      <button onclick="launchConfetti()">🎉 Celebrate!</button>
       <button onclick="toggleSelectAll()">🔘 Select...</button>
       <button id="undoButton" onclick="undo()" disabled> ↩️ Undo</button>
       <div class="dropdown">
@@ -711,26 +711,24 @@
 
   <!-- Signup Modal -->
 <!-- Signup Modal -->
-<div id="signupPopup" class="modal" style="display: none;">
-  <div class="signupModal" style="width: 50%;">
-  <h2>Signin/Signup to Class Points!</h2>
+<div id="signupPopup" class="modal">
+  <div class="signupModal">
+  <h2>Login</h2>
   <!-- Add the form here -->
   <div id="signupForm">
-    <p style="align-content: left">Sign up to enable cloud save and load!  No more need to deal with pesky backup and restores.  Save to the cloud and then load anywhere!  Note, class points are not automatically synced between devices.  You can manually sync by clicking the "⛅ Cloud Save" and "🌧️ Cloud Load" buttons in the menu once logged in.</p>
+    <p>Enter your e-mail to sign up or login.</p>
     <form id="signupForm">
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
-      <button type="submit">Submit</button>
+      <input type="email" id="email" name="email" placeholder="Your E-mail..." required>
+      <button type="submit">Login</button>
     </form>
   </div>
   
   <!-- Spinner HTML -->
-  <div id="spinner" style="display: none;">Loading...</div>
+  <div id="spinner" style="display: none;"><div class="spinner"></div></div>
   
   <!-- Messages will be displayed here -->
-  <div id="message"></div>
-  <p></p>
-  <button onclick="closeSignUpPopup()" class="modal-buttons">Close</button>
+  <div id="message" style="display: none;"><p>&nbsp;</p></div>
+  <button onclick="closeSignUpPopup()" class="signup-modal-buttons">Close</button>
   </div>
 </div>
 
@@ -739,7 +737,7 @@
   <!-- Confirmation Modal -->
   <div id="confirmationModal" class="modal">
     <div class="modal-content">
-      <p>Are you sure?</p>
+      <p id="confirmationModalText">Are you sure?</p>
       <button id="confirmButton">Confirm</button>
       <button id="cancelButton">Cancel</button>
     </div>
@@ -816,7 +814,7 @@
 
           <div class="row">
             <div class="modal-buttons">
-              <button id="avatarNextButton">Next</button>
+              <!-- <button id="avatarNextButton">Next</button> -->
               <button id="avatarRandomButton">Random</button>
               <button id="avatarDefaultButton">Default</button>
               <button id="avatarResetButton">Reset</button>

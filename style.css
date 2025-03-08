@@ -335,6 +335,8 @@ audio {
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .modal-content, .signupModal {
@@ -342,6 +344,99 @@ audio {
   padding: 20px;
   border-radius: 5px;
   text-align: center;
+  overflow-y: auto;
+}
+
+.signupModal {
+  max-width: 90vw;
+  min-width: 300px;
+  max-height: 90vh;
+  min-height: 300px;
+  position: relative;
+}
+
+#message {
+  padding: 10px;
+  margin: 10px;
+  height: 118px;
+}
+
+#signupForm input[type="email"] {
+  width: 100%; /* Full width */
+  padding: 12px; /* Add padding */
+  margin-bottom: 15px; /* Space between input and button */
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px;
+  box-sizing: border-box; /* Include padding in width */
+  color: #333; /* Dark grey text */
+  background-color: #f9f9f9; /* Light grey background */
+  transition: border-color 0.3s ease; /* Smooth transition for focus */
+}
+
+#signupForm input[type="email"]::placeholder {
+  color: #999; /* Grey placeholder text */
+}
+
+#signupForm input[type="email"]:focus {
+  border-color: #007BFF; /* Blue border on focus */
+  outline: none; /* Remove default outline */
+}
+
+#signupForm button[type="submit"] {
+  width: 100%; /* Full width */
+  padding: 12px; /* Add padding */
+  margin-bottom: 15px;
+  background-color: #007BFF; /* Blue background */
+  color: white; /* White text */
+  border: none; /* Remove border */
+  border-radius: 5px; /* Rounded corners */
+  font-size: 16px;
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s ease; /* Smooth transition for hover */
+}
+
+#signupForm button[type="submit"]:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+#spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 118px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #007BFF; /* Blue */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite; /* Spin animation */
+}
+
+#spinner-overlay {
+  display: none; /* Hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it appears above other content */
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .helpModal {
@@ -349,6 +444,8 @@ audio {
   padding: 20px;
   border-radius: 5px;
   text-align: left;
+  overflow-y: auto;
+  max-height: 100vh; /* Limit height to 90% of the viewport height */
 }
 
 .avatarModal {
@@ -361,6 +458,7 @@ audio {
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
   justify-content: center;
   align-items: center;
+  overflow-y: auto;
 }
 
 .avatarModal-content {
@@ -371,7 +469,11 @@ audio {
   display: flex;
   flex-direction: row; /* Arrange items horizontally */
   align-items: center; /* Center the items vertically */
+  max-width: 90%;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
+
 .modal-left {
   flex: 1;
   display: flex;
@@ -407,13 +509,21 @@ label {
 select {
   width: 150px;
 }
-.modal-buttons {
+
+.modal-buttons, .signup-modal-buttons {
   display: flex;
   justify-content: flex-end;
   margin-top: auto;
+  margin-bottom: 0px;
   gap: 10px;
   margin-left: auto;
   margin-right: 0px;
+}
+
+.signup-modal-buttons {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
 }
 
 .dragging {
@@ -552,6 +662,7 @@ select {
   width: 100%;
   cursor: pointer;
   display: block;
+  font-size: 16px;
 }
 
 /* Hover effect for buttons inside the dropdown */
@@ -575,6 +686,22 @@ select {
 
 .floatingRestoreButton:hover {
   background: darkred;
+}
+
+@media (max-width: 650px) {
+  .avatarModal-content {
+    flex-direction: column; /* Stack items vertically on smaller screens */
+    padding: 10px; /* Reduce padding to save space */
+  }
+
+  .modal-right {
+    padding-left: 0; /* Remove left padding on smaller screens */
+    padding-top: 20px; /* Add top padding to separate sections */
+  }
+
+  label {
+    margin-bottom: 5px; /* Add space below labels */
+  }
 }
 
 @media print {
