@@ -574,6 +574,20 @@
     <div id="classCardTemplate" class="class-card">
       <div class="avatar" id="classAvatar"></div>
       <div class="info">
+        <div class="carddropdown">
+          <button class="carddropbtn">☰</button>
+          <div class="dropdown-content carddropdown-content">
+            <button class="antiCloudFeature" onclick="openSignUpPopup()">👤 Signup/Signin</button>
+            <button onclick="exportCSV()">⬆️ Backup</button>
+            <button onclick="clickFileInput()">⬇️ Restore</button>
+            <button class="cloudFeature" onclick="storeData()" style="display: none;">⛅ Cloud Save</button>
+            <button class="cloudFeature" onclick="loadData()" style="display: none;">🌧️ Cloud Load</button>
+            <button onclick="toggleClassPhotoMode()">📸 Class Photo</button>
+            <button onclick="showConfirmationModal(resetPoints)">💣 Reset Points</button>
+            <button onclick="showConfirmationModal(clearStudents)">⚙️ Clear Class</button>
+            <button onclick="openHelpPopup()">❓ Help</button>
+          </div>
+        </div>
         <span class="name">
           <input type="text" id="className" placeholder="Class Name" class="class-name" value=""
             onchange="setClassName(this.value)">
@@ -623,6 +637,7 @@
       <div class="dropdown">
         <button class="dropbtn">☰</button>
         <div class="dropdown-content">
+          <button class="antiCloudFeature" onclick="openSignUpPopup()">👤 Signup/Signin</button>
           <button onclick="exportCSV()">⬆️ Backup</button>
           <button onclick="clickFileInput()">⬇️ Restore</button>
           <button class="cloudFeature" onclick="storeData()" style="display: none;">⛅ Cloud Save</button>
@@ -630,15 +645,15 @@
           <button onclick="toggleClassPhotoMode()">📸 Class Photo</button>
           <button onclick="showConfirmationModal(resetPoints)">💣 Reset Points</button>
           <button onclick="showConfirmationModal(clearStudents)">⚙️ Clear Class</button>
+          <button onclick="openHelpPopup()">❓ Help</button>
         </div>
       </div>
       <input id="fileInput" type="file" accept=".csv, .txt" onchange="importCSV(event)" style="display: none" />
-      <button onclick="openHelpPopup()" class="helpButton">
-        Help
-      </button>
+      
     </div>
   <!-- Help Modal -->
-  <div id="helpPopup" class="helpModal" style="display: none;">
+  <div id="helpPopup" class="modal" style="display: none;">
+    <div class="helpModal">
     <h2>How to Use Class Points</h2>
     <p>
       <strong>1. Add a Student:</strong> Click on the "Enter student name"
@@ -690,8 +705,35 @@
     <p>
       <a href="https://github.com/lokulin/lauchl.in">Pull requests welcome.</a>
     </p>
-    <button onclick="closeHelpPopup()" class="closeHelpButton">Close</button>
+    <button onclick="closeHelpPopup()" class="modal-buttons">Close</button>
+    </div>
   </div>
+
+  <!-- Signup Modal -->
+<!-- Signup Modal -->
+<div id="signupPopup" class="modal" style="display: none;">
+  <div class="signupModal" style="width: 50%;">
+  <h2>Signin/Signup to Class Points!</h2>
+  <!-- Add the form here -->
+  <div id="signupForm">
+    <p style="align-content: left">Sign up to enable cloud save and load!  No more need to deal with pesky backup and restores.  Save to the cloud and then load anywhere!  Note, class points are not automatically synced between devices.  You can manually sync by clicking the "⛅ Cloud Save" and "🌧️ Cloud Load" buttons in the menu once logged in.</p>
+    <form id="signupForm">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  
+  <!-- Spinner HTML -->
+  <div id="spinner" style="display: none;">Loading...</div>
+  
+  <!-- Messages will be displayed here -->
+  <div id="message"></div>
+  <p></p>
+  <button onclick="closeSignUpPopup()" class="modal-buttons">Close</button>
+  </div>
+</div>
+
   <!-- Class Photo Close Button -->
   <button id="classPhotoRestoreButton" class="floatingRestoreButton" onclick="toggleClassPhotoMode()" style="display: none;">X</button>
   <!-- Confirmation Modal -->

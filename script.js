@@ -653,11 +653,25 @@ function animateHeart(amount) {
 // Modal Functions
 
 function openHelpPopup() {
-  document.getElementById("helpPopup").style.display = "block";
+  document.getElementById("helpPopup").style.display = "flex";
 }
 
 function closeHelpPopup() {
   document.getElementById("helpPopup").style.display = "none";
+}
+
+function openSignUpPopup() {
+  document.getElementById("signupPopup").style.display = "flex";
+}
+
+function closeSignUpPopup() {
+  document.getElementById('signupPopup').style.display = 'none';
+}
+
+function showMessage(message) {
+  var messageDiv = document.getElementById('message');
+  messageDiv.innerText = message;
+  messageDiv.style.display = 'block';
 }
 
 function showConfirmationModal(onConfirm, ...args) {
@@ -1002,10 +1016,11 @@ function storeData(silent = false) {
   };
 
   let formData = new URLSearchParams();
+  formData.append("method", "storeData");
   formData.append("code", classDetails.code);
   formData.append("data", JSON.stringify(data));
 
-  fetch("https://script.google.com/macros/s/AKfycbzkVWpzBcgrW4kzzucREBr7wfOubJc6jOZ1A9v9iNODQVPDhI6zhxv_VMT3QWSyeks9uQ/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbx8mu6REQVsV9RPa3RnOYW02LQTa9U6X0aw5xcJTy4bB8YDohxhpWyYkrGvjSqtDCP9Tg/exec", {
     method: "POST",
     body: formData
   })
@@ -1020,6 +1035,32 @@ function storeData(silent = false) {
   });
 }
 
+function signUpUser(email) {
+  let formData = new URLSearchParams();
+  formData.append("method", "signup");
+  formData.append("email", email);
+
+  console.log("Signing up user with email:", email);
+
+  return fetch("https://script.google.com/macros/s/AKfycbx8mu6REQVsV9RPa3RnOYW02LQTa9U6X0aw5xcJTy4bB8YDohxhpWyYkrGvjSqtDCP9Tg/exec", {
+    method: "POST",
+    body: formData
+  })
+  .then(response => {
+      if (!response.ok) {
+        console.log("Network response was not ok");
+        throw new Error('Network response was not ok');
+      }
+    return response.text();
+  })
+  .then(text => text)
+  .catch(error => {
+    console.log("Network response was not ok");
+    console.error("Error in fetch:", error);
+    throw error; // Propagate the error so it can be caught in setupEmailForm
+  });
+}
+
 function loadData() {
   // alert if classDetails.code is not set
   if (!classDetails.code) {
@@ -1027,7 +1068,7 @@ function loadData() {
     return;
   }
 
-  fetch(`https://script.google.com/macros/s/AKfycbzkVWpzBcgrW4kzzucREBr7wfOubJc6jOZ1A9v9iNODQVPDhI6zhxv_VMT3QWSyeks9uQ/exec?code=${classDetails.code}`)
+  fetch(`https://script.google.com/macros/s/AKfycbx8mu6REQVsV9RPa3RnOYW02LQTa9U6X0aw5xcJTy4bB8YDohxhpWyYkrGvjSqtDCP9Tg/exec?code=${classDetails.code}`)
   .then(response => response.text())
   .then(text => {
     if (text === "Not found" || text === "Missing code") {
@@ -1074,10 +1115,48 @@ function sortColors() {
   colors.sort((a, b) => hexToHsl(a[1]) - hexToHsl(b[1]));
 }
 
+function setupEmailForm() {
+  document.getElementById('signupForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    var email = document.getElementById('email').value;
+    if (!email) {
+      showMessage("Something is not quite right with that e-mail, try a different address, or try again later.");
+      return;
+    }
+    
+    // Show spinner to user
+    document.getElementById('spinner').style.display = 'block';
+    document.getElementById('signupForm').style.display = 'none';
+    
+    signUpUser(email).then(responseCode => {
+      
+      switch (responseCode) {
+        case "User signed up successfully":
+          document.querySelectorAll('.antiCloudFeature').forEach(el => el.style.display = 'none');
+          showMessage("Success! Check your email to sign in.");
+          break;
+        case "Missing email parameter":
+        case "Invalid email format":
+          showMessage("Something is not quite right with that e-mail, try a different address, or try again later.");
+          break;
+        default:
+          showMessage("Something went wrong, check your email or try again later.");
+      }
+      
+      document.getElementById('spinner').style.display = 'none';
+    }).catch(error => {
+      showMessage("An error occurred while signing up. Please try again later.");
+      document.getElementById('spinner').style.display = 'none';
+    });
+  });
+}
+
 function onLoad() {
   loadSVGTemplates();
   sortColors();
   renderSkinColorSelect();
+  setupEmailForm();
 
   const urlParams = new URLSearchParams(window.location.search);
   classDetails.code = urlParams.has('code') ? urlParams.get('code') : classDetails.code;
@@ -1086,6 +1165,7 @@ function onLoad() {
 
   if (classDetails.code) {
     document.querySelectorAll('.cloudFeature').forEach(el => el.style.display = '');
+    document.querySelectorAll('.antiCloudFeature').forEach(el => el.style.display = 'none');
   }
   
   saveAndRender();

@@ -313,14 +313,8 @@ input[type="number"] {
   }
 }
 
-#helpPopup {
-  max-width: 500px;
-  width: 90%;
-  background: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 10000;
+audio {
+  display: none;
 }
 
 #helpPopup h2 {
@@ -329,10 +323,6 @@ input[type="number"] {
 
 #helpPopup button {
   margin-top: 10px;
-}
-
-audio {
-  display: none;
 }
 
 .modal {
@@ -347,11 +337,18 @@ audio {
   align-items: center;
 }
 
-.modal-content {
+.modal-content, .signupModal {
   background-color: white;
   padding: 20px;
   border-radius: 5px;
   text-align: center;
+}
+
+.helpModal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  text-align: left;
 }
 
 .avatarModal {
@@ -485,19 +482,6 @@ select {
     cursor: pointer;
 }
 
-.helpModal {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    z-index: 10000;
-}
-
 /* Style the dropdown button */
 .dropbtn {
   padding: 16px;
@@ -507,25 +491,54 @@ select {
   margin-bottom: 10px;
 }
 
+.carddropbtn {
+  background: white;
+  color: darkgrey;
+  border: none;
+  border-radius: 25%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 0px;
+}
+
 /* Dropdown container */
 .dropdown {
   position: relative;
   display: inline-block;
 }
 
+.carddropdown { 
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
 /* Dropdown content (hidden by default) */
 .dropdown-content {
+  font-size: 16px;
   display: none;
   position: absolute;
   background-color: #f9f9f9;
-  min-width: 160px;
+  min-width: 180px;
   box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
   z-index: 1;
   margin-top: 0px;
 }
 
+.carddropdown-content {
+  transform: translate(-156px, -5px);
+}
+
 /* Show the dropdown content when hovering over the button */
-.dropdown:hover .dropdown-content {
+.dropdown:hover .dropdown-content,
+.carddropdown:hover .dropdown-content {
   display: block;
 }
 
