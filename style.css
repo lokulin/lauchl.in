@@ -361,7 +361,8 @@ audio {
   height: 118px;
 }
 
-#signupForm input[type="email"] {
+#signupForm input[type="email"],
+#codeForm input[type="text"] {
   width: 100%; /* Full width */
   padding: 12px; /* Add padding */
   margin-bottom: 15px; /* Space between input and button */
@@ -374,16 +375,19 @@ audio {
   transition: border-color 0.3s ease; /* Smooth transition for focus */
 }
 
-#signupForm input[type="email"]::placeholder {
+#signupForm input[type="email"]::placeholder,
+#codeForm input[type="email"]::placeholder {
   color: #999; /* Grey placeholder text */
 }
 
-#signupForm input[type="email"]:focus {
+#signupForm input[type="email"]:focus,
+#codeForm input[type="email"]:focus {
   border-color: #007BFF; /* Blue border on focus */
   outline: none; /* Remove default outline */
 }
 
-#signupForm button[type="submit"] {
+#signupForm button[type="submit"],
+#codeForm button[type="submit"] {
   width: 100%; /* Full width */
   padding: 12px; /* Add padding */
   margin-bottom: 15px;
@@ -396,7 +400,8 @@ audio {
   transition: background-color 0.3s ease; /* Smooth transition for hover */
 }
 
-#signupForm button[type="submit"]:hover {
+#signupForm button[type="submit"]:hover,
+#codeForm button[type="submit"]:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
 

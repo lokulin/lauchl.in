@@ -1209,6 +1209,45 @@ function setupEmailForm() {
       document.getElementById('spinner').style.display = 'none';
     });
   });
+
+  document.getElementById('codeForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    
+    var code = document.getElementById('code').value;
+    if (!code) {
+      showMessage("Please enter a valid class code.");
+      return;
+    }
+    
+    classDetails.code = code;
+    
+    showConfirmationModal(loadData, "Would you like to cloud load the data for this class? It will overwrite any existing data.");
+ 
+    if (classDetails.code) {
+      document.querySelectorAll('.cloudFeature').forEach(el => el.style.display = '');
+      document.querySelectorAll('.antiCloudFeature').forEach(el => el.style.display = 'none');
+    }
+    
+    closeSignUpPopup()
+  });
+}
+
+function showCodeForm() {
+  document.getElementById('signupForm').style.display = 'none'; // Hide email form
+  document.getElementById('codeForm').style.display = 'block'; // Show code form
+}
+
+// Function to show the email form and hide the code form
+function showEmailForm() {
+  document.getElementById('codeForm').style.display = 'none'; // Hide code form
+  document.getElementById('signupForm').style.display = 'block'; // Show email form
+}
+
+function signOut() {
+  delete classDetails.code;
+  document.querySelectorAll('.cloudFeature').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.antiCloudFeature').forEach(el => el.style.display = '');
+  saveAndRender();
 }
 
 function onLoad() {
@@ -1218,9 +1257,13 @@ function onLoad() {
   setupEmailForm();
 
   const urlParams = new URLSearchParams(window.location.search);
-  classDetails.code = urlParams.has('code') ? urlParams.get('code') : classDetails.code;
-  urlParams.delete('code');
-  window.history.replaceState({}, '', `${window.location.pathname}${urlParams.toString() ? '?' + urlParams : ''}`);
+  if(urlParams.has('code')) {
+    classDetails.code = urlParams.get('code');
+    urlParams.delete('code');
+    window.history.replaceState({}, '', `${window.location.pathname}${urlParams.toString() ? '?' + urlParams : ''}`);
+    showConfirmationModal(loadData, "Would you like to cloud load the data for this class? It will overwrite any existing data.");
+  }
+  
 
   if (classDetails.code) {
     document.querySelectorAll('.cloudFeature').forEach(el => el.style.display = '');

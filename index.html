@@ -577,7 +577,8 @@
         <div class="carddropdown">
           <button class="carddropbtn">☰</button>
           <div class="dropdown-content carddropdown-content">
-            <button class="antiCloudFeature" onclick="openSignUpPopup()">👤 Signup/Signin</button>
+            <button class="antiCloudFeature" onclick="openSignUpPopup()">👤 Signup/Login</button>
+            <button class="cloudFeature" onclick="showConfirmationModal(signOut)" style="display: none;">👤 Logout</button>
             <button onclick="exportCSV()">⬆️ Backup</button>
             <button onclick="clickFileInput()">⬇️ Restore</button>
             <button class="cloudFeature" onclick="storeData()" style="display: none;">⛅ Cloud Save</button>
@@ -632,20 +633,6 @@
         <div class="dropdown-content">
           <button onclick="sortStudentsByName()">🔠 by Name</button>
           <button onclick="sortStudentsByScore()">🏅 by Score</button>
-        </div>
-      </div>
-      <div class="dropdown">
-        <button class="dropbtn">☰</button>
-        <div class="dropdown-content">
-          <button class="antiCloudFeature" onclick="openSignUpPopup()">👤 Signup/Signin</button>
-          <button onclick="exportCSV()">⬆️ Backup</button>
-          <button onclick="clickFileInput()">⬇️ Restore</button>
-          <button class="cloudFeature" onclick="storeData()" style="display: none;">⛅ Cloud Save</button>
-          <button class="cloudFeature" onclick="loadData()" style="display: none;">🌧️ Cloud Load</button>
-          <button onclick="toggleClassPhotoMode()">📸 Class Photo</button>
-          <button onclick="showConfirmationModal(resetPoints)">💣 Reset Points</button>
-          <button onclick="showConfirmationModal(clearStudents)">⚙️ Clear Class</button>
-          <button onclick="openHelpPopup()">❓ Help</button>
         </div>
       </div>
       <input id="fileInput" type="file" accept=".csv, .txt" onchange="importCSV(event)" style="display: none" />
@@ -721,6 +708,17 @@
       <input type="email" id="email" name="email" placeholder="Your E-mail..." required>
       <button type="submit">Login</button>
     </form>
+    <p><a href="#" onclick="showCodeForm()">Or use a code</a></p>
+  </div>
+  
+  <!-- Code Form (hidden by default) -->
+  <div id="codeForm" style="display: none;">
+    <p>Enter your class code to load data.</p>
+    <form id="codeForm">
+      <input type="text" id="code" name="code" placeholder="Your Class Code..." required>
+      <button type="submit">Login</button>
+    </form>
+    <p><a href="#" onclick="showEmailForm()">Or use an email</a></p>
   </div>
   
   <!-- Spinner HTML -->
