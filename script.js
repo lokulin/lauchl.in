@@ -237,21 +237,14 @@ function renderClass() {
 
 function renderStudents() {
   const container = document.querySelector("#studentsContainer");
-  const classCardTemplate = document.querySelector("#classCardTemplate");
-  const clonedClassTemplate = classCardTemplate.cloneNode(true);
-  const newStudentCardTemplate = document.querySelector(
-    "#newStudentCardTemplate"
-  );
-  const clonedNewStudentTemplate = newStudentCardTemplate.cloneNode(true);
+  const clonedClassTemplate = document.getElementById("class-card-template").innerHTML;
+  const clonedNewStudentTemplate = document.getElementById("new-student-card-template").innerHTML;
 
-  container.innerHTML = students
+  container.innerHTML = clonedClassTemplate + students
     .map((student, index) => {
       return renderStudent(student, index);
     })
-    .join("");
-
-  container.prepend(clonedClassTemplate);
-  container.append(clonedNewStudentTemplate);
+    .join("") + clonedNewStudentTemplate;
   renderClass();
   renderNewStudent();
 }

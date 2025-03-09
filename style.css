@@ -65,11 +65,11 @@ body {
   padding: 5px;
 }
 .points-input {
-  width: 2ch;
+  width: 3ch;
 }
 .points-input,
 .student-name {
-  padding: 6px 10px;
+  padding: 5px 10px;
   border: none;
   border-radius: 5px;
   background-color: #f0f0f0;
@@ -550,6 +550,12 @@ select {
   background-color: #f1f1f1;
 }
 
+.taskbar button:hover,
+.taskbar input:hover
+{
+  background-color: #ddd;
+}
+
 .taskbar {
   display: flex;
   gap: 10px;
@@ -579,11 +585,12 @@ select {
 .taskdropdown-content {
   display: none;
   position: absolute;
-  bottom: 42px;
+  bottom: 41px;
   background-color: #f9f9f9;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
   z-index: 10;
-  border-radius: 6px;
+  border-radius: 5px;
+  border: 1px #f1f1f1 solid;
   white-space: nowrap;
 }
 .taskdropdown:hover .taskdropdown-content {
