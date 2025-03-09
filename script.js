@@ -212,7 +212,7 @@ function renderStudent(student, index) {
   )}</div>
           <div class="info">
             <button class="avatarSettings" onclick="showAvatarSettingsModal(${index})">…</button>
-            <button class="delete" onclick="showConfirmationModal(deleteStudent, 'Are you sure you want to remove ${firstName} ${lastInitial}?', ${index})">X</button>
+            <button class="delete" onclick="showConfirmationModal(deleteStudent, '<p>Are you sure you want to remove ${firstName} ${lastInitial}?</p><p>All data for this student will be lost</p>', ${index})">X</button>
             <span class="name" onclick="toggleSelect(${index})">${firstName} ${lastInitial} <span class="points">${points}</span></span>
             <div class="pointsManage">
               <input type="number" min="-100" max="100" onchange="setPoints(${index}, this.value)" class="points-input">
@@ -459,6 +459,7 @@ function saveAndRender() {
   localStorage.setItem("students", JSON.stringify(students));
   localStorage.setItem("classDetails", JSON.stringify(classDetails));
   enableDragAndDrop();
+  updateTaskbarVisibility();
 }
 
 function exportCSV() {
@@ -675,7 +676,7 @@ function showMessage(message) {
   messageDiv.style.display = "";
 }
 
-function showConfirmationModal(onConfirm, text = "Are you sure", ...args) {
+function showConfirmationModal(onConfirm, text = "<p>Are you sure</p>", ...args) {
   const modal = document.getElementById("confirmationModal");
   const confirmButton = document.getElementById("confirmButton");
   const cancelButton = document.getElementById("cancelButton");
@@ -702,7 +703,7 @@ function showInfoModal(text) {
   const cancelButton = document.getElementById("cancelButton");
   const infoBox = document.getElementById("confirmationModalText");
 
-  infoBox.innerText = text;
+  infoBox.innerHTML = text;
 
   modal.style.display = "flex";
 
@@ -1054,7 +1055,7 @@ function storeData(silent = false) {
     .then((response) => response.text())
     .then((text) => {
       if (!silent) {
-        showInfoModal(text);
+        showInfoModal(`<p>${text}</p>`);
       } else {
         console.log("Code:", classDetails.code);
         console.log("Response:", text);
@@ -1101,7 +1102,7 @@ function signUpUser(email) {
 function loadData() {
   // alert if classDetails.code is not set
   if (!classDetails.code) {
-    showInfoModal("Add a class code before attempting to loading data.");
+    showInfoModal("<p>Add a class code before attempting to loading data.</p>");
     return;
   }
 
@@ -1212,7 +1213,7 @@ function setupEmailForm() {
                 .querySelectorAll(".antiCloudFeature")
                 .forEach((el) => (el.style.display = "none"));
               showMessage(
-                "Success! Check your email to sign in.  Make sure you make a backup before signing in."
+                "Success! Check your email to sign in."
               );
               break;
             case "Missing email parameter":
@@ -1252,7 +1253,7 @@ function setupEmailForm() {
 
       showConfirmationModal(
         loadData,
-        "Would you like to cloud load the data for this class? It will overwrite any existing data."
+        "<p>Would you like to load the class for this code? It will overwrite the existing class.</p>"
       );
 
       if (classDetails.code) {
@@ -1309,11 +1310,34 @@ function checkFirstLoad() {
   }
 }
 
+function updateTaskbarVisibility() {
+  let taskbar = document.querySelector(".taskbar");
+  let studentsContainer = document.getElementById("studentsContainer");
+  let scrollPosition = window.innerHeight + window.scrollY;
+  let documentHeight = document.documentElement.scrollHeight;
+
+  // Add padding below studentsContainer to prevent content from being hidden
+  let taskbarHeight = taskbar.offsetHeight;
+  studentsContainer.style.paddingBottom = taskbarHeight + "px";
+
+  // Show taskbar if at bottom OR if no scrolling is required
+  if (scrollPosition >= documentHeight-taskbarHeight || documentHeight <= window.innerHeight-taskbarHeight) {
+    taskbar.style.visibility = "visible";
+    taskbar.style.opacity = "1";
+  } else {
+    taskbar.style.visibility = "hidden";
+    taskbar.style.opacity = "0";
+  }
+}
+
 function onLoad() {
   loadSVGTemplates();
   sortColors();
   renderSkinColorSelect();
   setupEmailForm();
+
+  document.addEventListener("scroll", updateTaskbarVisibility);
+  window.addEventListener("resize", updateTaskbarVisibility);
 
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.has("code")) {
@@ -1328,7 +1352,7 @@ function onLoad() {
     );
     showConfirmationModal(
       loadData,
-      "Welcome back. Would you like to cloud load the data for this class? It will overwrite any existing data."
+      "<p>Welcome back. Would you like to load the last saved data for this class? It will overwrite any existing class data.</p>"
     );
   }
 
@@ -1342,5 +1366,6 @@ function onLoad() {
   }
 
   saveAndRender();
+
   checkFirstLoad();
 }

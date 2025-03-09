@@ -1284,45 +1284,6 @@
       <div id="classCardTemplate" class="class-card">
         <div class="avatar" id="classAvatar"></div>
         <div class="info">
-          <div class="carddropdown">
-            <button class="carddropbtn">☰</button>
-            <div class="dropdown-content carddropdown-content">
-              <button class="antiCloudFeature" onclick="openSignUpPopup()">
-                👤 Signup/Login
-              </button>
-              <button
-                class="cloudFeature"
-                onclick="showConfirmationModal(signOut)"
-                style="display: none"
-              >
-                👤 Logout
-              </button>
-              <button onclick="exportCSV()">⬆️ Backup</button>
-              <button onclick="clickFileInput()">⬇️ Restore</button>
-              <button
-                class="cloudFeature"
-                onclick="storeData()"
-                style="display: none"
-              >
-                ⛅ Cloud Save
-              </button>
-              <button
-                class="cloudFeature"
-                onclick="showConfirmationModal(loadData)"
-                style="display: none"
-              >
-                🌧️ Cloud Load
-              </button>
-              <button onclick="toggleClassPhotoMode()">📸 Class Photo</button>
-              <button onclick="showConfirmationModal(resetPoints)">
-                💣 Reset Points
-              </button>
-              <button onclick="showConfirmationModal(clearStudents)">
-                ⚙️ Clear Class
-              </button>
-              <button onclick="openHelpPopup()">❓ Help</button>
-            </div>
-          </div>
           <span class="name">
             <input
               type="text"
@@ -1370,7 +1331,46 @@
       </div>
     </div>
     <!-- Controls -->
-    <div id="manageControls">
+    <div class="taskbar">
+      <div class="taskdropdown">
+        <button class="taskbtn">☰</button>
+        <div class="taskdropdown-content">
+          <button class="antiCloudFeature" onclick="openSignUpPopup()">
+            👤 Signup/Login
+          </button>
+          <button
+            class="cloudFeature"
+            onclick="showConfirmationModal(signOut, '<p>Are you sure you want to sign out?</p>')"
+            style="display: none"
+          >
+            👤 Logout
+          </button>
+          <button
+            class="cloudFeature"
+            onclick="storeData()"
+            style="display: none"
+          >
+          💾 Save
+          </button>
+          <button
+            class="cloudFeature"
+            onclick="showConfirmationModal(loadData,'<p>Are you sure you want to load the last saved data?</p><p>Any changes not saved will be lost.</p>')"
+            style="display: none"
+          >
+          📂 Load
+          </button>
+          <button onclick="exportCSV()">⬆️ Export</button>
+          <button onclick="clickFileInput()">⬇️ Import</button>
+          <button onclick="toggleClassPhotoMode()">📸 Class Photo</button>
+          <button onclick="showConfirmationModal(resetPoints, '<p>Are you sure you want to reset points?</p>')">
+            💣 Reset Points
+          </button>
+          <button onclick="showConfirmationModal(clearStudents, '<p>Are you sure you want to clear the class?</p>')">
+            ⚙️ Clear Class
+          </button>
+          <button onclick="openHelpPopup()">❓ Help</button>
+        </div>
+      </div>
       <div style="position: relative; display: inline-block">
         <input
           type="text"
@@ -1390,20 +1390,20 @@
       <button onclick="launchConfetti()">🎉 Celebrate!</button>
       <button onclick="toggleSelectAll()">🔘 Select...</button>
       <button id="undoButton" onclick="undo()" disabled>↩️ Undo</button>
-      <div class="dropdown">
-        <button class="dropbtn">↕️ Sort</button>
-        <div class="dropdown-content">
+      <div class="taskdropdown">
+        <button class="taskbtn">↕️ Sort</button>
+        <div class="taskdropdown-content">
           <button onclick="sortStudentsByName()">🔠 by Name</button>
           <button onclick="sortStudentsByScore()">🏅 by Score</button>
         </div>
       </div>
       <input
-        id="fileInput"
-        type="file"
-        accept=".csv, .txt"
-        onchange="importCSV(event)"
-        style="display: none"
-      />
+      id="fileInput"
+      type="file"
+      accept=".csv, .txt"
+      onchange="importCSV(event)"
+      style="display: none"
+    />
     </div>
     <!-- Help Modal -->
     <div id="helpPopup" class="modal" style="display: none">
@@ -1512,7 +1512,6 @@
       </div>
     </div>
 
-    <!-- Signup Modal -->
     <!-- Signup Modal -->
     <div id="signupPopup" class="modal">
       <div class="signupModal">
