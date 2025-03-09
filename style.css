@@ -70,7 +70,7 @@ body {
 .points-input,
 .student-name {
   padding: 6px 10px;
-  border: 1px solid #a9a9a9;
+  border: none;
   border-radius: 5px;
   background-color: #f0f0f0;
   font-family: Arial, sans-serif;
@@ -213,12 +213,14 @@ body {
 button {
   padding: 5px 10px;
   cursor: pointer;
+  border: none;
+  border-radius: 5px;
 }
 select {
   width: 150px;
   padding: 8px;
   margin: 10px 0;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 5px;
 }
 input[type="file"] {
@@ -474,25 +476,7 @@ select {
   animation: wobble 0.2s ease-in-out infinite;
   transform: translateY(10px);
 }
-.searchInput {
-  padding: 10px 35px 10px 10px;
-  font-size: 16px;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  width: 200px;
-}
-.clearButton {
-  position: absolute;
-  right: 5px;
-  top: 50%;
-  transform: translateY(-50%);
-  border: none;
-  background: 0 0;
-  color: gray;
-  cursor: pointer;
-  font-size: 14px;
-  padding: 0 5px;
-}
+
 .floatingRestoreButton {
   position: fixed;
   bottom: 20px;
@@ -509,6 +493,7 @@ select {
 .floatingRestoreButton:hover {
   background: #8b0000;
 }
+
 @media (max-width: 650px) {
   .avatarModal-content {
     flex-direction: column;
@@ -534,32 +519,43 @@ select {
     background-color: none;
   }
 }
-#manageControls,
-.taskbar {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding: 0;
-  font-size: 16px;
+
+.searchInput {
+  width: 200px;
 }
-#manageControls button,
-#manageControls input,
-#manageControls span,
+
+.clearButton {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: 0 0;
+  color: gray;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 5px;
+}
+
 .taskbar button,
-.taskbar input,
-.taskbar span {
+.taskbar input
+{
+  border: none;
+  border-radius: 5px;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
   margin: 0;
+  outline: 0;
+  background-color: #f1f1f1;
 }
-#manageControls span {
-  min-width: 100px;
-  text-align: center;
-}
+
 .taskbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 0;
+  font-size: 16px;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -568,12 +564,11 @@ select {
   padding: 10px;
   justify-content: center;
   gap: 15px;
-  display: flex;
   transition: opacity 0.3s ease-in-out;
   visibility: visible;
+  font-size: 16px;
 }
 .taskbtn {
-  font-size: 16px;
   cursor: pointer;
   text-align: left;
 }
@@ -584,27 +579,23 @@ select {
 .taskdropdown-content {
   display: none;
   position: absolute;
-  bottom: 45px;
+  bottom: 42px;
   background-color: #f9f9f9;
-  min-width: 180px;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
   z-index: 10;
   border-radius: 6px;
-  overflow: hidden;
+  white-space: nowrap;
 }
 .taskdropdown:hover .taskdropdown-content {
-  display: block;
+  display: flex;
+  flex-flow: column;
 }
 .taskdropdown-content button {
-  background-color: #f1f1f1;
+  border-radius: 0;
   color: #000;
-  padding: 12px 16px;
   text-align: left;
   border: none;
-  width: 100%;
-  cursor: pointer;
-  display: block;
-  font-size: 16px;
+
 }
 .taskdropdown-content button:hover {
   background-color: #ddd;

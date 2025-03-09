@@ -455,8 +455,8 @@ function undo() {
 
 function saveAndRender() {
   savedQuery = document.getElementById("searchInput").value.toLowerCase();
-  renderStudents();
   filterStudents();
+  renderStudents();
   localStorage.setItem("students", JSON.stringify(students));
   localStorage.setItem("classDetails", JSON.stringify(classDetails));
   enableDragAndDrop();
@@ -928,7 +928,7 @@ function slotMachineEffect(
 
 function toggleClassPhotoMode() {
   const elementsToHide = document.querySelectorAll(
-    ".class-card, .new-student-card, .points, .pointsManage, #manageControls, .delete, .avatarSettings"
+    ".class-card, .new-student-card, .points, .pointsManage, .taskbar, .delete, .avatarSettings"
   );
   const classPhotoButton = document.getElementById("classPhotoRestoreButton");
   const studentCards = document.querySelectorAll(".student-card");
