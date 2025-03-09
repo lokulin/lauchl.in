@@ -919,6 +919,13 @@ function slotMachineEffect(
 
 // Class photo mode
 
+function classPhotoMode() {
+  selectedStudents.clear();
+  saveAndRender();
+  clearSearch();
+  toggleClassPhotoMode();
+}
+
 function toggleClassPhotoMode() {
   const elementsToHide = document.querySelectorAll(
     ".class-card, .new-student-card, .points, .pointsManage, .taskbar, .delete, .avatarSettings"
