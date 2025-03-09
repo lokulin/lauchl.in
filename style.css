@@ -1,30 +1,25 @@
 body {
   font-family: Arial, sans-serif;
   margin: 20px;
-  background-color: lightgray;
-}
-
-#body:has(:last-child:in-viewport) .taskbar {
-  display: flex;
+  background-color: #d3d3d3;
 }
 
 #studentsContainer {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  justify-content: center; /* Align items to the start of the row */
+  justify-content: center;
   align-items: center;
   padding: 20px;
 }
-
-.student-card,
 .class-card,
-.new-student-card {
+.new-student-card,
+.student-card {
   position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
-  border: 2px solid darkgrey;
+  border: 2px solid #a9a9a9;
   padding: 10px;
   border-radius: 8px;
   background: #f9f9f9;
@@ -32,112 +27,96 @@ body {
   min-height: 100px;
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
 }
-
 .student-card.photo-mode .avatar {
-  margin-bottom: 0px; /* Add space between avatar and name */
+  margin-bottom: 0;
 }
-
 .student-card.photo-mode {
   min-width: 150px;
   min-height: 100px;
-  flex-direction: column; /* Stack elements vertically */
-  align-items: center; /* Center align elements */
+  flex-direction: column;
+  align-items: center;
   padding: 5px;
 }
-
 .class-card,
 .student-card {
-  flex: 0 0 auto; /* Prevent the cards from growing or shrinking */
+  flex: 0 0 auto;
 }
-
 .class-card {
-  background: lightblue;
+  background: #add8e6;
 }
-
 .student-card.selected {
-  background: lightgrey;
+  background: #d3d3d3;
 }
-
 .info {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
-
 .name {
   padding: 5px;
-  font-weight: bold;
+  font-weight: 700;
   font-size: x-large;
   cursor: pointer;
 }
-
 .pointsManage {
   display: flex;
   align-items: center;
   gap: 5px;
   padding: 5px;
 }
-
 .points-input {
-  width: 2ch; /* Adjust width as needed */
+  width: 2ch;
 }
-
 .points-input,
 .student-name {
-  padding: 6px 10px; /* Add some padding for better spacing */
-  border: 1px solid darkgrey; /* Light grey border */
-  border-radius: 5px; /* Rounded corners */
-  background-color: #f0f0f0; /* Light grey background */
-  font-family: Arial, sans-serif; /* Match font to buttons */
-  font-size: 14px; /* Match font size to buttons */
-  text-align: center; /* Center text horizontally */
-  outline: none; /* Remove default focus outline */
-  transition: background-color 0.3s ease; /* Smooth hover effect */
+  padding: 6px 10px;
+  border: 1px solid #a9a9a9;
+  border-radius: 5px;
+  background-color: #f0f0f0;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  text-align: center;
+  outline: 0;
+  transition: background-color 0.3s ease;
 }
-
 .points-input:hover,
 .student-name:hover {
-  background-color: #e0e0e0; /* Slightly darker grey on hover */
-}
-
-.points-input:focus,
-.student-name:focus {
-  border-color: #999; /* Darker border on focus */
-}
-
-.class-name {
-  padding: 0px 0px; /* Add some padding for better spacing */
-  border: 1px solid lightblue; /* Light grey border */
-  border-radius: 5px; /* Rounded corners */
-  background-color: lightblue; /* Light grey background */
-  font-weight: bold;
-  font-size: x-large;
-  text-align: left; /* Center text horizontally */
-  outline: none; /* Remove default focus outline */
-  transition: background-color 0.3s ease; /* Smooth hover effect */
-  width: 180px;
-}
-
-.class-name:hover {
-  border: 1px solid darkgrey;
-  background-color: #e0e0e0; /* Slightly darker grey on hover */
-}
-
-.class-name:focus {
-  border: 1px solid darkgrey;
-  border-color: #999; /* Darker border on focus */
   background-color: #e0e0e0;
 }
-
+.points-input:focus,
+.student-name:focus {
+  border-color: #999;
+}
+.class-name {
+  padding: 0 0;
+  border: 1px solid #add8e6;
+  border-radius: 5px;
+  background-color: #add8e6;
+  font-weight: 700;
+  font-size: x-large;
+  text-align: left;
+  outline: 0;
+  transition: background-color 0.3s ease;
+  width: 180px;
+}
+.class-name:hover {
+  border: 1px solid #a9a9a9;
+  background-color: #e0e0e0;
+}
+.class-name:focus {
+  border: 1px solid #a9a9a9;
+  border-color: #999;
+  background-color: #e0e0e0;
+}
 .points {
   position: absolute;
   top: 5px;
   left: 5px;
-  background: darkgreen;
-  color: white;
+  background: #006400;
+  color: #fff;
   border: 2px;
   border-radius: 50%;
-  border-color: white;
+  border-color: #fff;
   border-style: solid;
   width: 20px;
   height: 20px;
@@ -147,16 +126,15 @@ body {
   justify-content: center;
   cursor: pointer;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 700;
   line-height: 1;
 }
-
 .delete {
   position: absolute;
   top: 5px;
   right: 5px;
-  background: darkgrey;
-  color: white;
+  background: #a9a9a9;
+  color: #fff;
   border: none;
   border-radius: 25%;
   width: 24px;
@@ -166,20 +144,18 @@ body {
   justify-content: center;
   cursor: pointer;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 700;
   line-height: 1;
 }
-
 .delete:hover {
   background: red;
 }
-
 .avatarSettings {
   position: absolute;
   top: 5px;
   right: 34px;
-  background: darkgrey;
-  color: white;
+  background: #a9a9a9;
+  color: #fff;
   border: none;
   border-radius: 25%;
   width: 24px;
@@ -189,20 +165,18 @@ body {
   justify-content: center;
   cursor: pointer;
   font-size: 14px;
-  font-weight: bold;
+  font-weight: 700;
   line-height: 1;
 }
-
 .avatarSettings:hover {
   background: #007bff;
 }
-
 .avatar,
 .avatar-large {
   width: 80px;
   height: 80px;
   border-radius: 12.5%;
-  background-color: lightgrey;
+  background-color: #d3d3d3;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -210,43 +184,36 @@ body {
   position: relative;
   cursor: pointer;
 }
-
 .avatar-large {
   width: 240px;
   height: 240px;
 }
-
 .avatar svg {
   width: 100%;
   height: 100%;
 }
-
 .avatar-large svg {
   width: 300%;
   height: 300%;
 }
-
 .avatar circle,
-.avatar rect,
-.avatar polygon,
 .avatar ellipse,
-.avatar path {
+.avatar path,
+.avatar polygon,
+.avatar rect {
   transform-origin: center;
 }
-
 .avatar-large circle,
-.avatar-large rect,
-.avatar-large polygon,
 .avatar-large ellipse,
-.avatar-large path {
+.avatar-large path,
+.avatar-large polygon,
+.avatar-large rect {
   transform-origin: center;
 }
-
 button {
   padding: 5px 10px;
   cursor: pointer;
 }
-
 select {
   width: 150px;
   padding: 8px;
@@ -254,23 +221,19 @@ select {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
-
 input[type="file"] {
   margin-bottom: 20px;
 }
-
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
 input[type="number"] {
   appearance: textfield;
   -webkit-appearance: textfield;
   -moz-appearance: textfield;
 }
-
 #confetti {
   position: fixed;
   top: 0;
@@ -280,7 +243,6 @@ input[type="number"] {
   pointer-events: none;
   z-index: 9999;
 }
-
 .confetti-piece {
   position: absolute;
   width: 10px;
@@ -288,49 +250,42 @@ input[type="number"] {
   background-color: #ff0;
   animation: fall 3s 3s;
 }
-
 @keyframes fall {
   to {
     transform: translateY(200vh) rotate(720deg);
   }
 }
-
 audio {
   display: none;
 }
-
 #helpPopup h2 {
   margin-top: 0;
 }
-
 #helpPopup button {
   margin-top: 10px;
 }
-
 .modal {
-  display: none; /* Hidden by default */
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
   overflow-y: auto;
   box-sizing: border-box;
   z-index: 1000;
 }
-
 .modal-content,
 .signupModal {
-  background-color: white;
+  background-color: #fff;
   padding: 20px;
   border-radius: 5px;
   text-align: center;
   overflow-y: auto;
 }
-
 .signupModal {
   max-width: 90vw;
   min-width: 300px;
@@ -338,57 +293,50 @@ audio {
   min-height: 300px;
   position: relative;
 }
-
 #message {
   padding: 10px;
   margin: 10px;
   height: 118px;
 }
-
-#signupForm input[type="email"],
-#codeForm input[type="text"] {
-  width: 100%; /* Full width */
-  padding: 12px; /* Add padding */
-  margin-bottom: 15px; /* Space between input and button */
-  border: 1px solid #ccc; /* Light grey border */
-  border-radius: 5px; /* Rounded corners */
-  font-size: 16px;
-  box-sizing: border-box; /* Include padding in width */
-  color: #333; /* Dark grey text */
-  background-color: #f9f9f9; /* Light grey background */
-  transition: border-color 0.3s ease; /* Smooth transition for focus */
-}
-
-#signupForm input[type="email"]::placeholder,
-#codeForm input[type="email"]::placeholder {
-  color: #999; /* Grey placeholder text */
-}
-
-#signupForm input[type="email"]:focus,
-#codeForm input[type="email"]:focus {
-  border-color: #007bff; /* Blue border on focus */
-  outline: none; /* Remove default outline */
-}
-
-#signupForm button[type="submit"],
-#codeForm button[type="submit"] {
-  width: 100%; /* Full width */
-  padding: 12px; /* Add padding */
+#codeForm input[type="text"],
+#signupForm input[type="email"] {
+  width: 100%;
+  padding: 12px;
   margin-bottom: 15px;
-  background-color: #007bff; /* Blue background */
-  color: white; /* White text */
-  border: none; /* Remove border */
-  border-radius: 5px; /* Rounded corners */
+  border: 1px solid #ccc;
+  border-radius: 5px;
   font-size: 16px;
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s ease; /* Smooth transition for hover */
+  box-sizing: border-box;
+  color: #333;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
 }
-
-#signupForm button[type="submit"]:hover,
-#codeForm button[type="submit"]:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+#codeForm input[type="email"]::placeholder,
+#signupForm input[type="email"]::placeholder {
+  color: #999;
 }
-
+#codeForm input[type="email"]:focus,
+#signupForm input[type="email"]:focus {
+  border-color: #007bff;
+  outline: 0;
+}
+#codeForm button[type="submit"],
+#signupForm button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+#codeForm button[type="submit"]:hover,
+#signupForm button[type="submit"]:hover {
+  background-color: #0056b3;
+}
 #spinner {
   display: flex;
   justify-content: center;
@@ -396,134 +344,118 @@ audio {
   width: 100%;
   height: 118px;
 }
-
 .spinner {
-  border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 4px solid #007bff; /* Blue */
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
   border-radius: 50%;
   width: 40px;
   height: 40px;
-  animation: spin 1s linear infinite; /* Spin animation */
+  animation: spin 1s linear infinite;
 }
-
 #spinner-overlay {
-  display: none; /* Hidden by default */
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent dark background */
+  background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ensure it appears above other content */
+  z-index: 1000;
 }
-
 @keyframes spin {
   0% {
-    transform: rotate(0deg);
+    transform: rotate(0);
   }
   100% {
     transform: rotate(360deg);
   }
 }
-
 .helpModal {
-  background-color: white;
+  background-color: #fff;
   padding: 20px;
   border-radius: 5px;
   text-align: left;
   overflow-y: auto;
-  max-height: 100vh; /* Limit height to 90% of the viewport height */
+  max-height: 100vh;
 }
-
 .avatarModal {
-  display: none; /* Hidden by default */
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  background-color: rgba(0, 0, 0, 0.5);
   justify-content: center;
   align-items: center;
   overflow-y: auto;
 }
-
 .avatarModal-content {
-  background-color: white;
+  background-color: #fff;
   padding: 20px;
   border-radius: 5px;
   text-align: center;
   display: flex;
-  flex-direction: row; /* Arrange items horizontally */
-  align-items: center; /* Center the items vertically */
+  flex-direction: row;
+  align-items: center;
   max-width: 90%;
   overflow-y: auto;
   box-sizing: border-box;
 }
-
 .modal-left {
   flex: 1;
   display: flex;
-  margin-top: 0px;
+  margin-top: 0;
   margin-bottom: auto;
 }
-
 .modal-right {
   flex: 2;
   padding-left: 20px;
   flex-direction: row;
 }
-
 .modal-info {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
 }
-
 .row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 5px;
 }
-
 label {
   white-space: nowrap;
   margin-right: 5px;
   margin-left: auto;
 }
-
 select {
   width: 150px;
 }
-
 .modal-buttons,
 .signup-modal-buttons {
   display: flex;
   justify-content: flex-end;
   margin-top: auto;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   gap: 10px;
   margin-left: auto;
-  margin-right: 0px;
+  margin-right: 0;
 }
-
 .signup-modal-buttons {
   position: absolute;
   bottom: 15px;
   right: 15px;
 }
-
 .dragging {
   opacity: 0.5;
   transform: scale(0.95);
 }
-
 @keyframes wobble {
   0% {
-    transform: rotate(0deg);
+    transform: rotate(0);
   }
   25% {
     transform: rotate(-2deg);
@@ -535,15 +467,13 @@ select {
     transform: rotate(-1deg);
   }
   100% {
-    transform: rotate(0deg);
+    transform: rotate(0);
   }
 }
-
 .drag-over {
   animation: wobble 0.2s ease-in-out infinite;
   transform: translateY(10px);
 }
-
 .searchInput {
   padding: 10px 35px 10px 10px;
   font-size: 16px;
@@ -551,197 +481,84 @@ select {
   border: 1px solid #ccc;
   width: 200px;
 }
-
 .clearButton {
   position: absolute;
   right: 5px;
   top: 50%;
   transform: translateY(-50%);
   border: none;
-  background: none;
+  background: 0 0;
   color: gray;
   cursor: pointer;
   font-size: 14px;
   padding: 0 5px;
 }
-
-.helpButton {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  padding: 10px 20px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.closeHelpButton {
-  padding: 10px 20px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-/* Style the dropdown button */
-.dropbtn {
-  padding: 16px;
-  font-size: 16px;
-  cursor: pointer;
-  text-align: left;
-  margin-bottom: 10px;
-}
-
-.carddropbtn {
-  background: white;
-  color: darkgrey;
-  border: none;
-  border-radius: 25%;
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 1;
-  margin-bottom: 0px;
-}
-
-/* Dropdown container */
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.carddropdown {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-}
-
-/* Dropdown content (hidden by default) */
-.dropdown-content {
-  font-size: 16px;
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 180px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
-  z-index: 1;
-  margin-top: 0px;
-}
-
-.carddropdown-content {
-  transform: translate(-156px, -5px);
-}
-
-/* Show the dropdown content when hovering over the button */
-.dropdown:hover .dropdown-content,
-.carddropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* Style the buttons inside the dropdown */
-.dropdown-content button {
-  background-color: #f1f1f1;
-  color: black;
-  padding: 12px 16px;
-  text-align: left;
-  border: none;
-  width: 100%;
-  cursor: pointer;
-  display: block;
-  font-size: 16px;
-}
-
-/* Hover effect for buttons inside the dropdown */
-.dropdown-content button:hover {
-  background-color: #ddd;
-}
-
 .floatingRestoreButton {
   position: fixed;
   bottom: 20px;
   right: 20px;
   padding: 10px 20px;
   background: red;
-  color: white;
+  color: #fff;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   z-index: 1000;
   font-size: 16px;
 }
-
 .floatingRestoreButton:hover {
-  background: darkred;
+  background: #8b0000;
 }
-
 @media (max-width: 650px) {
   .avatarModal-content {
-    flex-direction: column; /* Stack items vertically on smaller screens */
-    padding: 10px; /* Reduce padding to save space */
+    flex-direction: column;
+    padding: 10px;
   }
-
   .modal-right {
-    padding-left: 0; /* Remove left padding on smaller screens */
-    padding-top: 20px; /* Add top padding to separate sections */
+    padding-left: 0;
+    padding-top: 20px;
   }
-
   label {
-    margin-bottom: 5px; /* Add space below labels */
+    margin-bottom: 5px;
   }
 }
-
 @media print {
-  /* Set the page to landscape */
   @page {
     size: landscape;
-    margin: none; /* Adjust margin as needed */
+    margin: none;
   }
   .floatingRestoreButton {
     display: none !important;
   }
-
   body {
     background-color: none;
   }
 }
-
-#manageControls, .taskbar {
+#manageControls,
+.taskbar {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
-  padding: 0px;
+  padding: 0;
   font-size: 16px;
 }
-
-.taskbar button,
-.taskbar input,
-.taskbar span,
 #manageControls button,
 #manageControls input,
-#manageControls span
-{
+#manageControls span,
+.taskbar button,
+.taskbar input,
+.taskbar span {
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
-  margin: 0px;
+  margin: 0;
 }
-
 #manageControls span {
   min-width: 100px;
   text-align: center;
 }
-
-/* Taskbar container at the bottom of the page */
 .taskbar {
   position: fixed;
   bottom: 0;
@@ -749,48 +566,38 @@ select {
   width: 100%;
   background-color: #222;
   padding: 10px;
-  justify-content: center; /* Center items */
-  gap: 15px; /* Space between buttons */
+  justify-content: center;
+  gap: 15px;
   display: flex;
   transition: opacity 0.3s ease-in-out;
   visibility: visible;
 }
-
-/* Popup button in the taskbar */
 .taskbtn {
   font-size: 16px;
   cursor: pointer;
   text-align: left;
 }
-
-/* Dropdown container */
 .taskdropdown {
   position: relative;
   display: inline-block;
 }
-
-/* Dropdown content positioned above the button */
 .taskdropdown-content {
   display: none;
   position: absolute;
-  bottom: 45px; /* Position above the button */
+  bottom: 45px;
   background-color: #f9f9f9;
   min-width: 180px;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
   z-index: 10;
   border-radius: 6px;
   overflow: hidden;
 }
-
-/* Show dropdown on hover (or use JavaScript for click-based toggle) */
 .taskdropdown:hover .taskdropdown-content {
   display: block;
 }
-
-/* Style dropdown buttons */
 .taskdropdown-content button {
   background-color: #f1f1f1;
-  color: black;
+  color: #000;
   padding: 12px 16px;
   text-align: left;
   border: none;
@@ -799,8 +606,6 @@ select {
   display: block;
   font-size: 16px;
 }
-
-/* Hover effect */
 .taskdropdown-content button:hover {
   background-color: #ddd;
 }
