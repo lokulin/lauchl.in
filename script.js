@@ -268,7 +268,8 @@ function filterStudents() {
     const studentName = card.querySelector(".name").textContent.toLowerCase();
     card.style.display = studentName.includes(query) ? "flex" : "none";
   });
-
+  window.dispatchEvent(new Event("resize"));
+  if (savedQuery !== "") window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" });
   clearButton.style.display = query ? "block" : "none";
 }
 
