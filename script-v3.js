@@ -210,21 +210,29 @@ function shortName(name) {
 }
 
 function renderStudent(student) {
-  const name=shortName(student.name);
+  const name = shortName(student.name);
   const points = student.points;
-  
+
   const selectedClass = selectedStudents.has(student.id) ? "selected" : "";
 
   return `<div class="student-card ${selectedClass}" >
-          <div class="avatar" onclick="toggleSelect('${student.id}')">${generateAvatar(
-    student
-  )}</div>
+          <div class="avatar" onclick="toggleSelect('${
+            student.id
+          }')">${generateAvatar(student)}</div>
           <div class="info">
-            <button class="avatarSettings" onclick="showAvatarSettingsModal('${student.id}')">…</button>
-            <button class="delete" onclick="showConfirmationModal(deleteStudent, '<p>Are you sure you want to remove ${name}?</p><p>All data for this student will be lost</p>', '${student.id}')">X</button>
-            <span class="name" onclick="toggleSelect('${student.id}')">${name} <span class="points">${points}</span></span>
+            <button class="avatarSettings" onclick="showAvatarSettingsModal('${
+              student.id
+            }')">…</button>
+            <button class="delete" onclick="showConfirmationModal(deleteStudent, '<p>Are you sure you want to remove ${name}?</p><p>All data for this student will be lost</p>', '${
+    student.id
+  }')">X</button>
+            <span class="name" onclick="toggleSelect('${
+              student.id
+            }')">${name} <span class="points">${points}</span></span>
             <div class="pointsManage">
-              <input type="number" min="-100" max="100" onchange="setPoints('${student.id}', this.value)" class="points-input">
+              <input type="number" min="-100" max="100" onchange="setPoints('${
+                student.id
+              }', this.value)" class="points-input">
               <button onclick="updatePoints('${student.id}', 1)">❤️</button>
               <button onclick="updatePoints('${student.id}', 5)">+5</button>
               <button onclick="updatePoints('${student.id}', 10)">+10</button>
@@ -246,39 +254,45 @@ function renderClass() {
 
 function renderStudents() {
   const container = document.querySelector("#studentsContainer");
-  const clonedClassTemplate = document.getElementById("class-card-template").innerHTML;
-  const clonedNewStudentTemplate = document.getElementById("new-student-card-template").innerHTML;
+  const clonedClassTemplate = document.getElementById(
+    "class-card-template"
+  ).innerHTML;
+  const clonedNewStudentTemplate = document.getElementById(
+    "new-student-card-template"
+  ).innerHTML;
 
-  container.innerHTML = clonedClassTemplate + students
-    .map((student, _) => {
-      return renderStudent(student);
-    })
-    .join("") + clonedNewStudentTemplate;
+  container.innerHTML =
+    clonedClassTemplate +
+    students
+      .map((student, _) => {
+        return renderStudent(student);
+      })
+      .join("") +
+    clonedNewStudentTemplate;
   renderClass();
   renderNewStudent();
 }
 
 function renderGroups(groups, containerId) {
   const container = document.getElementById(containerId);
-  container.innerHTML = '';
-  groups.forEach(group => {
-    let div = document.createElement('div');
-    div.classList.add('group-card');
-    group.forEach(id => {
+  container.innerHTML = "";
+  groups.forEach((group) => {
+    let div = document.createElement("div");
+    div.classList.add("group-card");
+    group.forEach((id) => {
       let student = students.byID[id];
-      let studentDiv = document.createElement('div');
-      studentDiv.classList.add('student-card');
-      studentDiv.classList.add('photo-mode');
-      
-      
-      let avatarDiv = document.createElement('div');
-      avatarDiv.classList.add('avatar');
+      let studentDiv = document.createElement("div");
+      studentDiv.classList.add("student-card");
+      studentDiv.classList.add("photo-mode");
+
+      let avatarDiv = document.createElement("div");
+      avatarDiv.classList.add("avatar");
       avatarDiv.innerHTML = generateAvatar(student); // Assuming student.avatar contains the avatar SVG/HTML
-      
-      let nameDiv = document.createElement('div');
-      nameDiv.classList.add('name');
+
+      let nameDiv = document.createElement("div");
+      nameDiv.classList.add("name");
       nameDiv.textContent = shortName(student.name);
-      
+
       studentDiv.appendChild(avatarDiv);
       studentDiv.appendChild(nameDiv);
       div.appendChild(studentDiv);
@@ -300,7 +314,8 @@ function filterStudents() {
     card.style.display = studentName.includes(query) ? "flex" : "none";
   });
   window.dispatchEvent(new Event("resize"));
-  if (savedQuery !== "") window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" });
+  if (savedQuery !== "")
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "instant" });
   clearButton.style.display = query ? "block" : "none";
 }
 
@@ -424,7 +439,10 @@ function resetPoints() {
 
 function deleteStudent(id) {
   saveState();
-  students.splice(students.findIndex(student => student.id === id), 1);
+  students.splice(
+    students.findIndex((student) => student.id === id),
+    1
+  );
   saveAndRender();
 }
 
@@ -432,16 +450,16 @@ function clearStudents() {
   saveState();
   students = [];
   classDetails.points = 0;
-  localStorage.removeItem('group_2');
-  localStorage.removeItem('group_3');
+  localStorage.removeItem("group_2");
+  localStorage.removeItem("group_3");
   saveAndRender();
 }
 
 function shuffleArray(array) {
   let newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
   return newArray;
 }
@@ -449,18 +467,23 @@ function shuffleArray(array) {
 function randomizeGroups(groupSize) {
   let groups = createRandomGroups(groupSize);
   saveGroups(groups, groupSize);
-  renderGroups(groups, groupSize === 2 ? 'groupByTwoContainer' : 'groupByThreeContainer');
+  renderGroups(
+    groups,
+    groupSize === 2 ? "groupByTwoContainer" : "groupByThreeContainer"
+  );
 }
 
 function createRandomGroups(groupSize) {
-  let filteredStudents = students.filter(student => !student.isTeacher);
+  let filteredStudents = students.filter((student) => !student.isTeacher);
   let shuffledStudents = shuffleArray(filteredStudents);
-  
+
   let groups = [];
   for (let i = 0; i < shuffledStudents.length; i += groupSize) {
-    groups.push(shuffledStudents.slice(i, i + groupSize).map(student => student.id));
+    groups.push(
+      shuffledStudents.slice(i, i + groupSize).map((student) => student.id)
+    );
   }
-  
+
   return groups;
 }
 
@@ -602,8 +625,8 @@ function importCSV(event) {
       .filter((student) => student.name);
 
     students = checkStudentIDs(students);
-    localStorage.removeItem('group_2');
-    localStorage.removeItem('group_3');
+    localStorage.removeItem("group_2");
+    localStorage.removeItem("group_3");
     saveAndRender();
     event.target.value = "";
   };
@@ -615,7 +638,8 @@ function importCSV(event) {
 
 function wiggleStudentCard(id) {
   const studentCards = document.querySelectorAll(".student-card");
-  const studentCard = studentCards[students.findIndex(student => student.id === id)]; // Adjust for the class row being first
+  const studentCard =
+    studentCards[students.findIndex((student) => student.id === id)]; // Adjust for the class row being first
   wiggleCard(studentCard);
 }
 
@@ -750,7 +774,11 @@ function showMessage(message) {
   messageDiv.style.display = "";
 }
 
-function showConfirmationModal(onConfirm, text = "<p>Are you sure</p>", ...args) {
+function showConfirmationModal(
+  onConfirm,
+  text = "<p>Are you sure</p>",
+  ...args
+) {
   const modal = document.getElementById("confirmationModal");
   const confirmButton = document.getElementById("confirmButton");
   const cancelButton = document.getElementById("cancelButton");
@@ -967,7 +995,6 @@ function slotMachineEffect(
     }, delay);
     delay += (maxDelay - initialDelay) / iterations; // Ease-out delay increase
   }
-
 }
 
 // Class photo mode
@@ -1004,16 +1031,21 @@ function toggleClassPhotoMode() {
 
 // Student Grouping
 function openGroupView(groupSize) {
-  const container = groupSize === 2 ? 'groupByTwoContainer' : 'groupByThreeContainer';
+  const container =
+    groupSize === 2 ? "groupByTwoContainer" : "groupByThreeContainer";
 
   const groups = getSavedGroups(groupSize) || createRandomGroups(groupSize);
   saveGroups(groups, groupSize);
   renderGroups(groups, container);
-  document.getElementById(groupSize === 2 ? 'groupByTwoView' : 'groupByThreeView').style.display = "flex";
+  document.getElementById(
+    groupSize === 2 ? "groupByTwoView" : "groupByThreeView"
+  ).style.display = "flex";
 }
 
 function closeGroupView(groupSize) {
-  document.getElementById(groupSize === 2 ? 'groupByTwoView' : 'groupByThreeView').style.display = "none";
+  document.getElementById(
+    groupSize === 2 ? "groupByTwoView" : "groupByThreeView"
+  ).style.display = "none";
 }
 
 // Helper Functions
@@ -1299,9 +1331,7 @@ function setupEmailForm() {
               document
                 .querySelectorAll(".antiCloudFeature")
                 .forEach((el) => (el.style.display = "none"));
-              showMessage(
-                "Success! Check your email to sign in."
-              );
+              showMessage("Success! Check your email to sign in.");
               break;
             case "Missing email parameter":
             case "Invalid email format":
@@ -1408,7 +1438,10 @@ function updateTaskbarVisibility() {
   studentsContainer.style.paddingBottom = taskbarHeight + "px";
 
   // Show taskbar if at bottom OR if no scrolling is required
-  if (scrollPosition >= documentHeight-taskbarHeight || documentHeight <= window.innerHeight-taskbarHeight) {
+  if (
+    scrollPosition >= documentHeight - taskbarHeight ||
+    documentHeight <= window.innerHeight - taskbarHeight
+  ) {
     taskbar.style.visibility = "visible";
     taskbar.style.opacity = "1";
   } else {

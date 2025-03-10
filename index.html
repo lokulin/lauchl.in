@@ -4,60 +4,60 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Class Points!</title>
-    <link rel="stylesheet" href="style-v3.css?v=1741608943773" />
-    <script src="script-v3.js?v=1741608943773"></script>
+    <link rel="stylesheet" href="style-v3.css?v=1741609918924" />
+    <script src="script-v3.js?v=1741609918924"></script>
 
     <template id="class-card-template">
-    <div id="classCardTemplate" class="class-card">
-      <div class="avatar" id="classAvatar"></div>
-      <div class="info">
-        <span class="name">
-          <input
-            type="text"
-            id="className"
-            placeholder="Class Name"
-            class="class-name"
-            value=""
-            onchange="setClassName(this.value)"
-          />
-          <span id="classPoints" class="points"></span>
-        </span>
-        <div class="pointsManage">
-          <input
-            type="number"
-            min="-100"
-            max="100"
-            onchange="setClassPoints(this.value);"
-            class="points-input"
-          />
-          <button onclick="updateClassPoints(1)">❤️</button>
-          <button onclick="updateClassPoints(5)">+5</button>
-          <button onclick="updateClassPoints(10)">+10</button>
+      <div id="classCardTemplate" class="class-card">
+        <div class="avatar" id="classAvatar"></div>
+        <div class="info">
+          <span class="name">
+            <input
+              type="text"
+              id="className"
+              placeholder="Class Name"
+              class="class-name"
+              value=""
+              onchange="setClassName(this.value)"
+            />
+            <span id="classPoints" class="points"></span>
+          </span>
+          <div class="pointsManage">
+            <input
+              type="number"
+              min="-100"
+              max="100"
+              onchange="setClassPoints(this.value);"
+              class="points-input"
+            />
+            <button onclick="updateClassPoints(1)">❤️</button>
+            <button onclick="updateClassPoints(5)">+5</button>
+            <button onclick="updateClassPoints(10)">+10</button>
+          </div>
         </div>
       </div>
-    </div>
-  </template>
+    </template>
 
-  <template id="new-student-card-template">
-    <div class="new-student-card" id="newStudentCardTemplate">
-      <div class="avatar" id="newStudentAvatar"></div>
-      <div class="info">
-        <span class="name"
-          ><input
-            type="text"
-            id="newStudentName"
-            placeholder="Enter student name"
-            class="student-name"
-            onchange="addNewStudent()"
-        /></span>
-        <span class="name"
-          ><button class="add-student" onclick="addNewStudent()">
-            Add Student
-          </button></span
-        >
+    <template id="new-student-card-template">
+      <div class="new-student-card" id="newStudentCardTemplate">
+        <div class="avatar" id="newStudentAvatar"></div>
+        <div class="info">
+          <span class="name"
+            ><input
+              type="text"
+              id="newStudentName"
+              placeholder="Enter student name"
+              class="student-name"
+              onchange="addNewStudent()"
+          /></span>
+          <span class="name"
+            ><button class="add-student" onclick="addNewStudent()">
+              Add Student
+            </button></span
+          >
+        </div>
       </div>
-    </div>
-  </template>
+    </template>
 
     <!-- SVG Templates -->
     <!-- #region -->
@@ -251,7 +251,8 @@
           cx="64.571548"
           r="13.569838"
           style="stroke-width: 1.69623"
-        ></circle>
+        >
+        </circle>
         <circle
           fill="#000000"
           id="circle5-5"
@@ -259,7 +260,8 @@
           cx="34.237358"
           r="13.912596"
           style="stroke-width: 1.73909"
-        ></circle>
+        >
+        </circle>
         <ellipse
           cx="40"
           cy="30"
@@ -302,7 +304,8 @@
           "
           id="path6"
           d="m 31.931398,55.922898 c -0.638173,-0.224223 -0.309533,-1.821981 -0.60224,-2.431787 -0.292707,-0.609807 -1.744893,-1.352769 -1.52067,-1.990942 0.224223,-0.638173 1.821981,-0.309533 2.431788,-0.60224 0.609806,-0.292707 1.352768,-1.744894 1.990941,-1.52067 0.638174,0.224223 0.309534,1.821981 0.602241,2.431788 0.292707,0.609806 1.744893,1.352768 1.520669,1.990941 -0.224223,0.638174 -1.821981,0.309533 -2.431787,0.60224 -0.609807,0.292707 -1.352769,1.744893 -1.990942,1.52067 z"
-        ></path>
+        >
+        </path>
         <path
           style="
             font-variation-settings: normal;
@@ -323,7 +326,8 @@
           "
           id="path6-1"
           d="m 61.86941,56.107257 c -0.567788,-0.199493 -0.275395,-1.621031 -0.535818,-2.16358 -0.260424,-0.542549 -1.552444,-1.203568 -1.352951,-1.771356 0.199492,-0.567787 1.62103,-0.275394 2.163579,-0.535817 0.54255,-0.260424 1.203568,-1.552445 1.771356,-1.352951 0.567787,0.199492 0.275394,1.62103 0.535817,2.163579 0.260424,0.542549 1.552445,1.203568 1.352952,1.771355 -0.199493,0.567788 -1.621031,0.275395 -2.16358,0.535818 -0.542549,0.260424 -1.203568,1.552444 -1.771355,1.352952 z"
-        ></path>
+        >
+        </path>
         <path
           style="
             font-variation-settings: normal;
@@ -344,7 +348,8 @@
           "
           id="path6-1-2"
           d="m 37.942618,52.26543 c -1.236453,-0.434429 -0.599717,-3.530065 -1.166833,-4.711557 -0.567116,-1.181492 -3.380707,-2.620971 -2.946278,-3.857424 0.434429,-1.236452 3.530065,-0.599716 4.711557,-1.166832 1.181492,-0.567116 2.620971,-3.380708 3.857423,-2.946278 1.236453,0.434429 0.599717,3.530065 1.166833,4.711557 0.567116,1.181492 3.380708,2.620971 2.946278,3.857423 -0.434429,1.236453 -3.530065,0.599717 -4.711557,1.166833 -1.181492,0.567116 -2.620971,3.380707 -3.857423,2.946278 z"
-        ></path>
+        >
+        </path>
         <path
           style="
             font-variation-settings: normal;
@@ -365,7 +370,8 @@
           "
           id="path6-7"
           d="m 68.480906,54.264961 c -1.236453,-0.434429 -0.599717,-3.530065 -1.166833,-4.711557 -0.567116,-1.181492 -3.380707,-2.620971 -2.946278,-3.857424 0.434429,-1.236452 3.530065,-0.599716 4.711557,-1.166832 1.181492,-0.567116 2.620971,-3.380708 3.857423,-2.946278 1.236453,0.434429 0.599717,3.530065 1.166833,4.711557 0.567116,1.181492 3.380708,2.620971 2.946278,3.857423 -0.434429,1.236453 -3.530065,0.599717 -4.711557,1.166833 -1.181492,0.567116 -2.620971,3.380707 -3.857423,2.946278 z"
-        ></path>
+        >
+        </path>
       </g>
     </template>
 
@@ -390,7 +396,8 @@
           fill="#000000"
           id="circle4"
           d="m 43,45 a 8,8 0 0 1 -4,6.928203 8,8 0 0 1 -8,0 A 8,8 0 0 1 27,45 h 8 z"
-        ></path>
+        >
+        </path>
         <path
           fill="#000000"
           id="circle5"
@@ -425,17 +432,20 @@
           id="ellipse1-8"
           style="opacity: 0.7; fill: #ffffff; stroke-width: 0.426382"
           d="m 17.618418,5.4150232 a 2.1659408,4.1968221 33.133525 0 1 -1.995145,5.2304268 2.1659408,4.1968221 33.133525 0 1 -3.6226,0.38474 2.1659408,4.1968221 33.133525 0 1 1.995144,-5.2304277 2.1659408,4.1968221 33.133525 0 1 3.622601,-0.3847391 z"
-        ></path>
+        >
+        </path>
         <path
           fill="#000000"
           id="circle5"
           d="M 39,17 A 8,13.655527 0 0 1 47,3.344473 8,13.655527 0 0 1 55,17 h -8 z"
-        ></path>
+        >
+        </path>
         <path
           id="ellipse1-8-2"
           style="opacity: 0.7; fill: #ffffff; stroke-width: 0.426382"
           d="m 47.297077,5.4450137 a 2.1660562,4.1968593 33.131775 0 1 -1.995094,5.2305773 2.1660562,4.1968593 33.131775 0 1 -3.622651,0.38459 2.1660562,4.1968593 33.131775 0 1 1.995094,-5.2305779 2.1660562,4.1968593 33.131775 0 1 3.622651,-0.3845894 z"
-        ></path>
+        >
+        </path>
       </g>
     </template>
 
@@ -1356,22 +1366,26 @@
             onclick="storeData()"
             style="display: none"
           >
-          💾 Save
+            💾 Save
           </button>
           <button
             class="cloudFeature"
             onclick="showConfirmationModal(loadData,'<p>Are you sure you want to load the last saved data?</p><p>Any changes not saved will be lost.</p>')"
             style="display: none"
           >
-          📂 Load
+            📂 Load
           </button>
           <button onclick="exportCSV()">⬆️ Export</button>
           <button onclick="clickFileInput()">⬇️ Import</button>
           <button onclick="classPhotoMode()">📸 Class Photo</button>
-          <button onclick="showConfirmationModal(resetPoints, '<p>Are you sure you want to reset points?</p>')">
+          <button
+            onclick="showConfirmationModal(resetPoints, '<p>Are you sure you want to reset points?</p>')"
+          >
             💣 Reset Points
           </button>
-          <button onclick="showConfirmationModal(clearStudents, '<p>Are you sure you want to clear the class?</p>')">
+          <button
+            onclick="showConfirmationModal(clearStudents, '<p>Are you sure you want to clear the class?</p>')"
+          >
             ⚙️ Clear Class
           </button>
           <button onclick="openHelpPopup()">❓ Help</button>
@@ -1411,23 +1425,23 @@
         </div>
       </div>
       <input
-      id="fileInput"
-      type="file"
-      accept=".csv, .txt"
-      onchange="importCSV(event)"
-      style="display: none"
-    />
+        id="fileInput"
+        type="file"
+        accept=".csv, .txt"
+        onchange="importCSV(event)"
+        style="display: none"
+      />
     </div>
     <!-- Group View -->
-    <div id="groupByTwoView" class="modal bigmodal" style="display: none;">
+    <div id="groupByTwoView" class="modal bigmodal" style="display: none">
       <div id="groupByTwoContainer" class="group-container"></div>
       <div class="group-controls">
         <button onclick="randomizeGroups(2)" class="">🔀</button>
         <button onclick="closeGroupView(2)" class="">⬅️</button>
       </div>
     </div>
-    
-    <div id="groupByThreeView" class="modal bigmodal" style="display: none;">
+
+    <div id="groupByThreeView" class="modal bigmodal" style="display: none">
       <div id="groupByThreeContainer" class="group-container"></div>
       <div class="group-controls">
         <button onclick="randomizeGroups(3)" class="">🔀</button>
@@ -1583,7 +1597,9 @@
         </div>
 
         <!-- Messages will be displayed here -->
-        <div id="message" style="display: none"><p>&nbsp;</p></div>
+        <div id="message" style="display: none">
+          <p>&nbsp;</p>
+        </div>
         <button onclick="closeSignUpPopup()" class="signup-modal-buttons">
           Close
         </button>
@@ -1615,14 +1631,14 @@
           <div>
             <!-- A Tick box to set whether the "student" is a teacher of not. This is a boolean. -->
             <p>
-            <label for="isTeacher">Teacher:</label>
-            <input
-              type="checkbox"
-              id="isTeacher"
-              name="isTeacher"
-              class="avatar-select"
-            />
-          </p>
+              <label for="isTeacher">Teacher:</label>
+              <input
+                type="checkbox"
+                id="isTeacher"
+                name="isTeacher"
+                class="avatar-select"
+              />
+            </p>
           </div>
         </div>
 

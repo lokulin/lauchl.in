@@ -519,8 +519,7 @@ select {
 }
 
 .taskbar button,
-.taskbar input
-{
+.taskbar input {
   border: none;
   border-radius: 5px;
   padding: 10px 20px;
@@ -532,8 +531,7 @@ select {
 }
 
 .taskbar button:hover,
-.taskbar input:hover
-{
+.taskbar input:hover {
   background-color: #ddd;
 }
 
@@ -583,13 +581,13 @@ select {
   color: #000;
   text-align: left;
   border: none;
-
 }
 .taskdropdown-content button:hover {
   background-color: #ddd;
 }
 
-#groupByThreeView, #groupByTwoView {
+#groupByThreeView,
+#groupByTwoView {
   background: #d3d3d3;
   display: flex;
   flex-direction: column;
