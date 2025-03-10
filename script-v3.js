@@ -1296,8 +1296,8 @@ function loadData() {
         let data = JSON.parse(text);
         students = checkStudentIDs(data.students);
         classDetails = data.classDetails;
-        saveGroups(data.group_2, 2);
-        saveGroups(data.group_3, 3);
+        data.group_2 ? saveGroups(data.group_2, 2) : saveGroups(createRandomGroups(2), 2);
+        data.group_3 ? saveGroups(data.group_3, 3) : saveGroups(createRandomGroups(3), 3);
         saveAndRender();
         console.log("Data loaded!");
       }
