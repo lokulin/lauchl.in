@@ -97,8 +97,8 @@ const STUDENT_COLORS = [
   ["Light Beige (Neutral)", "#DFCFBE"],
 ];
 
-let students = checkStudentIDs(JSON.parse(localStorage.getItem("students"))) || DEFAULT_STUDENTS;
-//let students = JSON.parse(localStorage.getItem("students")) || DEFAULT_STUDENTS;
+let students = JSON.parse(localStorage.getItem("students")) || DEFAULT_STUDENTS;
+students = checkStudentIDs(students);
 let classDetails = JSON.parse(localStorage.getItem("classDetails")) || {
   name: "Our Class",
   points: 0,
