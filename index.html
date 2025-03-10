@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Class Points!</title>
-    <link rel="stylesheet" href="style-v2.css" />
-    <script src="script-v2.js"></script>
+    <link rel="stylesheet" href="style-v3.css" />
+    <script src="script-v3.js"></script>
 
     <template id="class-card-template">
     <div id="classCardTemplate" class="class-card">
@@ -1403,6 +1403,13 @@
           <button onclick="sortStudentsByScore()">🏅 by Score</button>
         </div>
       </div>
+      <div class="taskdropdown">
+        <button class="taskbtn">👥 Group</button>
+        <div class="taskdropdown-content">
+          <button onclick="openGroupView(2)">2️⃣ by two</button>
+          <button onclick="openGroupView(3)">3️⃣ by three</button>
+        </div>
+      </div>
       <input
       id="fileInput"
       type="file"
@@ -1411,8 +1418,24 @@
       style="display: none"
     />
     </div>
+    <!-- Group View -->
+    <div id="groupByTwoView" class="modal bigmodal" style="display: none;">
+      <div id="groupByTwoContainer" class="group-container"></div>
+      <div class="group-controls">
+        <button onclick="randomizeGroups(2)" class="">🔀</button>
+        <button onclick="closeGroupView(2)" class="">⬅️</button>
+      </div>
+    </div>
+    
+    <div id="groupByThreeView" class="modal bigmodal" style="display: none;">
+      <div id="groupByThreeContainer" class="group-container"></div>
+      <div class="group-controls">
+        <button onclick="randomizeGroups(3)" class="">🔀</button>
+        <button onclick="closeGroupView(3)" class="">⬅️</button>
+      </div>
+    </div>
     <!-- Help Modal -->
-    <div id="helpPopup" class="modal" style="display: none">
+    <div id="helpPopup" class="modal bigmodal" style="display: none">
       <div class="helpModal">
         <h2>How to Use Class Points</h2>
         <h3>Managing Students</h3>
@@ -1519,7 +1542,7 @@
     </div>
 
     <!-- Signup Modal -->
-    <div id="signupPopup" class="modal">
+    <div id="signupPopup" class="modal smallmodal">
       <div class="signupModal">
         <h2>Login</h2>
         <!-- Add the form here -->
@@ -1577,7 +1600,7 @@
       X
     </button>
     <!-- Confirmation Modal -->
-    <div id="confirmationModal" class="modal">
+    <div id="confirmationModal" class="modal smallmodal">
       <div class="modal-content">
         <div id="confirmationModalText">Are you sure?</div>
         <button id="confirmButton">Confirm</button>
@@ -1589,6 +1612,18 @@
       <div class="avatarModal-content">
         <div class="modal-left">
           <div id="avatarModalAvatarContainer"></div>
+          <div>
+            <!-- A Tick box to set whether the "student" is a teacher of not. This is a boolean. -->
+            <p>
+            <label for="isTeacher">Teacher:</label>
+            <input
+              type="checkbox"
+              id="isTeacher"
+              name="isTeacher"
+              class="avatar-select"
+            />
+          </p>
+          </div>
         </div>
 
         <div class="modal-right">

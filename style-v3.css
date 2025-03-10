@@ -274,12 +274,18 @@ audio {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
   align-items: center;
   overflow-y: auto;
   box-sizing: border-box;
   z-index: 1000;
 }
+.smallmodal {
+  justify-content: center;
+}
+.bigmodal {
+  justify-content: flex-start;
+}
+
 .modal-content,
 .signupModal {
   background-color: #fff;
@@ -409,6 +415,7 @@ audio {
 .modal-left {
   flex: 1;
   display: flex;
+  flex-direction: column;
   margin-top: 0;
   margin-bottom: auto;
 }
@@ -492,32 +499,6 @@ select {
 }
 .floatingRestoreButton:hover {
   background: #8b0000;
-}
-
-@media (max-width: 650px) {
-  .avatarModal-content {
-    flex-direction: column;
-    padding: 10px;
-  }
-  .modal-right {
-    padding-left: 0;
-    padding-top: 20px;
-  }
-  label {
-    margin-bottom: 5px;
-  }
-}
-@media print {
-  @page {
-    size: landscape;
-    margin: none;
-  }
-  .floatingRestoreButton {
-    display: none !important;
-  }
-  body {
-    background-color: none;
-  }
 }
 
 .searchInput {
@@ -606,4 +587,82 @@ select {
 }
 .taskdropdown-content button:hover {
   background-color: #ddd;
+}
+
+#groupByThreeView, #groupByTwoView {
+  background: #d3d3d3;
+  display: flex;
+  flex-direction: column;
+}
+
+.group-container {
+  flex-direction: row;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px 20px;
+}
+.group-card {
+  background: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+  gap: 10px;
+  min-width: 300px;
+}
+.group-controls {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  align-items: right;
+  justify-content: right;
+  gap: 10px;
+  padding-right: 20px;
+  margin-top: auto;
+  margin-bottom: 10px;
+}
+.group-controls button {
+  font-size: 48px;
+  padding: 0px 0px;
+  margin: 0;
+  background: transparent;
+}
+
+@media (max-width: 650px) {
+  .avatarModal-content {
+    flex-direction: column;
+    padding: 10px;
+  }
+  .group-container {
+    flex-direction: column;
+    padding: 10px;
+  }
+  .group-card {
+    flex-direction: column;
+  }
+  .modal-right {
+    padding-left: 0;
+    padding-top: 20px;
+  }
+  label {
+    margin-bottom: 5px;
+  }
+}
+@media print {
+  @page {
+    size: landscape;
+    margin: none;
+  }
+  .floatingRestoreButton {
+    display: none !important;
+  }
+  body {
+    background-color: none;
+  }
 }
