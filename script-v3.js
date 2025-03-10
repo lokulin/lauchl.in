@@ -215,7 +215,7 @@ function renderStudent(student) {
 
   const selectedClass = selectedStudents.has(student.id) ? "selected" : "";
 
-  return `<div class="student-card ${selectedClass}" >
+  return `<div class="student-card ${selectedClass}" data-student-id="${student.id}">
           <div class="avatar" onclick="toggleSelect('${
             student.id
           }')">${generateAvatar(student)}</div>
@@ -283,6 +283,8 @@ function renderGroups(groups, containerId) {
       let student = students.byID[id];
       let studentDiv = document.createElement("div");
       studentDiv.classList.add("student-card");
+      studentDiv.classList.add("group-student-card");
+      studentDiv.setAttribute("data-student-id", id);
       studentDiv.classList.add("photo-mode");
 
       let avatarDiv = document.createElement("div");
@@ -299,6 +301,7 @@ function renderGroups(groups, containerId) {
     });
     container.appendChild(div);
   });
+  enableDragAndDrop();
 }
 
 // Data manipulation functions
@@ -337,8 +340,12 @@ function addNewStudent() {
 
   if (newStudentName) {
     saveState();
-    students.push({ name: newStudentName, points: 0 });
+    let id = generateUniqueID(students.length + 1);
+    const student = { name: newStudentName, points: 0, id: id };
+    students.push(student);
+    students.byID[id] = student;
     saveAndRender();
+
   } else {
     alert("Please enter a student name.");
   }
@@ -449,6 +456,7 @@ function deleteStudent(id) {
 function clearStudents() {
   saveState();
   students = [];
+  students.byID = {};
   classDetails.points = 0;
   localStorage.removeItem("group_2");
   localStorage.removeItem("group_3");
@@ -483,6 +491,7 @@ function createRandomGroups(groupSize) {
       shuffledStudents.slice(i, i + groupSize).map((student) => student.id)
     );
   }
+  groups.push([]);
 
   return groups;
 }
@@ -849,7 +858,6 @@ function showAvatarSettingsModal(id) {
 
   document.querySelectorAll(".avatar-select").forEach((select) => {
     const listener = function () {
-      console.log("hit");
       const student = students.byID[id];
       student.color = parseInt(document.getElementById("skinColor").value);
       student.shape = parseInt(document.getElementById("faceShape").value);
@@ -1031,15 +1039,19 @@ function toggleClassPhotoMode() {
 
 // Student Grouping
 function openGroupView(groupSize) {
+  selectedStudents.clear();
+  clearSearch();
+  saveAndRender();
+  
   const container =
     groupSize === 2 ? "groupByTwoContainer" : "groupByThreeContainer";
 
   const groups = getSavedGroups(groupSize) || createRandomGroups(groupSize);
   saveGroups(groups, groupSize);
-  renderGroups(groups, container);
   document.getElementById(
     groupSize === 2 ? "groupByTwoView" : "groupByThreeView"
   ).style.display = "flex";
+  renderGroups(groups, container);
 }
 
 function closeGroupView(groupSize) {
@@ -1106,37 +1118,85 @@ function hexToHsl(hex) {
   return h * 360;
 }
 
-function enableDragAndDrop() {
-  const studentCards = document.querySelectorAll(".student-card");
-  studentCards.forEach((card, index) => {
-    card.draggable = true;
 
-    card.addEventListener("dragstart", (e) => {
-      e.dataTransfer.setData("text/plain", index);
+function enableDragAndDrop() {
+  const studentView = document.getElementById("groupByTwoView").style.display === "none" 
+    && document.getElementById("groupByThreeView").style.display === "none";
+  const cards = studentView ? document.querySelectorAll(".student-card") : document.querySelectorAll(".group-card, .group-student-card");
+
+  cards.forEach((card, index) => {
+    const studentId = card.dataset.studentId;
+    
+    card.draggable = studentId ? true : false;
+
+    if(studentId) card.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", studentId);
       card.classList.add("dragging");
     });
 
-    card.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      card.classList.add("drag-over");
-    });
+    if (
+      (studentId && studentView) ||
+      (!studentId && !studentView)) {
+      card.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        card.classList.add("drag-over");
+      });
+    }
 
     card.addEventListener("dragleave", () => {
       card.classList.remove("drag-over");
     });
 
-    card.addEventListener("drop", (e) => {
-      selectedStudents.clear();
-      e.preventDefault();
-      const oldIndex = e.dataTransfer.getData("text/plain");
-      const newIndex = Array.from(studentCards).indexOf(
-        e.target.closest(".student-card")
-      );
-      const movedItem = students.splice(oldIndex, 1)[0];
-      students.splice(newIndex, 0, movedItem);
+    if (studentId && studentView) { 
+      card.addEventListener("drop", (e) => {
+        selectedStudents.clear();
+        e.preventDefault();
+        console.log("not in group view");
+        const draggedStudentId = e.dataTransfer.getData("text/plain");
+        const targetStudentCard = e.target.closest(".student-card")
 
-      saveAndRender();
-    });
+        if (!draggedStudentId || !targetStudentCard) return;
+
+        const targetStudentId = targetStudentCard.dataset.studentId;
+        const oldIndex = students.findIndex(student => student.id === draggedStudentId);
+        const newIndex = students.findIndex(student => student.id === targetStudentId);
+
+        if (oldIndex !== -1 && newIndex !== -1) {
+          // Remove and insert at the new position
+          const [movedStudent] = students.splice(oldIndex, 1);
+          students.splice(newIndex, 0, movedStudent);
+        }
+        saveAndRender();
+      });
+    } else if (!studentId && !studentView) {
+      card.addEventListener("drop", (e) => {
+        const container = e.target.closest(".group-card");
+        const groupSize = container.parentNode.id.includes("Two") ? 2 : 3;
+        const groupCards = container.parentNode.querySelectorAll(".group-card");
+        let groups = JSON.parse(localStorage.getItem(`group_${groupSize}`));
+        const newGroupIndex = Array.from(groupCards).indexOf(container);
+        const movingStudentId = e.dataTransfer.getData("text/plain");
+
+        // find the index of which group in groups that contains movingStudentId
+        const groupToMoveIndex  = groups.findIndex(group => group.includes(movingStudentId));
+
+        const movingGroup = groups[groupToMoveIndex];
+        const studentIndex = movingGroup.indexOf(movingStudentId);
+
+        movingGroup.splice(studentIndex, 1); // Remove the student ID
+        groups[newGroupIndex].push(movingStudentId);
+
+        groups = groups.filter(group => group.length > 0);
+        groups.push([]);
+
+        localStorage.setItem(`group_${groupSize}`, JSON.stringify(groups));
+
+        renderGroups(
+          groups,
+          groupSize === 2 ? "groupByTwoContainer" : "groupByThreeContainer"
+        );
+      });
+    }
 
     card.addEventListener("dragend", () => {
       card.classList.remove("dragging");

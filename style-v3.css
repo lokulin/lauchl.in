@@ -612,13 +612,14 @@ select {
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
   gap: 10px;
   min-width: 300px;
+  min-height: 132px;
 }
 .group-controls {
   position: relative;
   display: flex;
   width: 100%;
   flex-direction: row;
-  align-items: right;
+
   justify-content: right;
   gap: 10px;
   padding-right: 20px;
@@ -655,12 +656,12 @@ select {
 @media print {
   @page {
     size: landscape;
-    margin: none;
+    margin: 0;
   }
   .floatingRestoreButton {
     display: none !important;
   }
   body {
-    background-color: none;
+    background: none;
   }
 }
