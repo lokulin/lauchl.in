@@ -446,6 +446,10 @@ function resetPoints() {
 
 function deleteStudent(id) {
   saveState();
+  
+  [2,3].forEach((i) => { 
+    saveGroups(getSavedGroups(i).map(group => group.filter(studentId => studentId !== id)),i);
+  });
   students.splice(
     students.findIndex((student) => student.id === id),
     1
@@ -1294,7 +1298,11 @@ function loadData() {
         console.log("Invalid code");
       } else {
         let data = JSON.parse(text);
-        students = checkStudentIDs(data.students);
+        if(data.students.length === 0) { 
+          showConfirmationModal(clearStudents,"<p>No students found for this class code.</p><p>Would you like to clear existing students?</p>");
+        } else {
+          students = checkStudentIDs(data.students);
+        }
         classDetails = data.classDetails;
         data.group_2 ? saveGroups(data.group_2, 2) : saveGroups(createRandomGroups(2), 2);
         data.group_3 ? saveGroups(data.group_3, 3) : saveGroups(createRandomGroups(3), 3);
