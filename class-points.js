@@ -51,7 +51,7 @@ class Entity extends Observable(Object) {
 
   constructor(name, points = 0, id, lastUpdated) {
     super();
-    this._name = name;
+    this._name = name.trim().replace(/['"\\;=%<>()\[\]{},]/g, '');
     this._id = id || this.generateUniqueID();
     this._points = points;
     this._lastUpdated = lastUpdated || Date.now();
@@ -2075,7 +2075,7 @@ class ClassManager {
     const card = event.target.closest(".card");
     const nameInput = card.querySelector("#className");
     nameInput.blur();
-    App.class.name = nameInput.value.trim();
+    App.class.name = nameInput.value.trim().replace(/['"\\;=%<>()\[\]{},]/g, '');
   }
 
   static addStudent(event) {
