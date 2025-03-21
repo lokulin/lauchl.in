@@ -2042,7 +2042,7 @@ class LoginManager {
       const confirmed = await ConfirmationModal.show(
         "Cloud save is older than local class data. Do you want to keep your local data?"
       );
-      if (!confirmed) {
+      if (confirmed) {
         InfoModal.show("<p>Keeping local data.  Use the 'Sync' menu option if you change your mind.</p>");
       } else {
         SyncManager.updateState(true);
