@@ -1,8 +1,7 @@
 # Class Points App
 
 <p>
-  <img src="weeble.svg" alt="ClassPoints Logo" width="150" height="auto" align=left style="margin-right: 15px;">
-
+  <img src="weeble.svg" alt="ClassPoints Logo" width="80" height="auto" align=left style="margin-right: 15px;">
 </p>
 
 Class Points is a simple and engaging web application for tracking, managing, and rewarding students in a classroom setting. It allows teachers to assign points, customize avatars, celebrate achievements, and sync data across devices.
