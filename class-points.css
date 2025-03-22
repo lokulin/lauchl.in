@@ -339,10 +339,10 @@ input[type="number"] {
 .avatar {
   width: 80px;
   height: 80px;
-  border-radius: 12.5%;
-  background-color: #d3d3d3;
   overflow: hidden;
   cursor: pointer;
+  border-radius: 12.5%;
+
 }
 
 .avatar svg {
@@ -357,18 +357,6 @@ input[type="number"] {
 
 #newStudentCard .avatar svg {
   opacity: 33%
-}
-
-.avatar linearGradient,
-.avatar stop,
-.avatar svg,
-.avatar defs,
-.avatar circle,
-.avatar ellipse,
-.avatar path,
-.avatar polygon,
-.avatar rect {
-  transform-origin: center;
 }
 
 /* Taskbar */

@@ -667,6 +667,47 @@ class View {
     closeButton.onclick = () => ClassPhotoView.close();
     return closeButton;
   }
+
+  static saveAvatarAsPng(event) {
+    const svgElement = event.target.closest("svg");
+    if (!svgElement) return;
+
+    const gradientElement = document.getElementById("linear-gradient");
+    if (gradientElement) {
+        const clonedGradient = gradientElement.cloneNode(true);
+        
+        let defs = svgElement.querySelector("defs");
+        if (!defs) {
+            defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+            svgElement.insertBefore(defs, svgElement.firstChild);
+        }
+        
+        defs.insertBefore(clonedGradient, defs.firstChild);
+    }
+
+    const svgData = new XMLSerializer().serializeToString(svgElement);
+    const svgBlob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+
+    const img = new Image();
+    img.onload = function () {
+      const canvas = document.createElement("canvas");
+      canvas.width = 500;
+      canvas.height = 500;
+      const ctx = canvas.getContext("2d");
+
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      URL.revokeObjectURL(url);
+
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = "avatar.png";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    };
+    img.src = url;
+  }
 }
 
 class ClassView extends View {
@@ -987,6 +1028,7 @@ class AllAvatarsView extends View {
           avatarDiv.id = "avatar";
           avatarDiv.className = "avatar";
           avatarDiv.innerHTML = AvatarBuilder.build(avatar).outerHTML;
+          avatarDiv.onclick = AllAvatarsView.onAvatarClick;
           avatars.push(avatarDiv);
           c++;
         }
@@ -1034,9 +1076,20 @@ class AllAvatarsView extends View {
     }
     setTimeout(AllAvatarsView.randomSwap, 500);
   }
+
+  static async onAvatarClick(event) {
+    const confirmed = await ConfirmationModal.show(
+      "Do you want to download this avatar as a PNG?"
+    );
+    if (confirmed) {
+      View.saveAvatarAsPng(event);
+    }
+  }
 }
 
 class RandomAvatarView extends View {
+  static rotationTimeout = null;
+  
   static show() {
     const container = document.createElement("div");
     container.id = "randomAvatarContainer";
@@ -1044,6 +1097,7 @@ class RandomAvatarView extends View {
     RandomAvatarView.avatarDiv = document.createElement("div");
     RandomAvatarView.avatarDiv.id = "avatar";
     RandomAvatarView.avatarDiv.className = "avatar";
+    RandomAvatarView.avatarDiv.onclick = RandomAvatarView.onAvatarClick;
 
     const closeButton = document.createElement("div");
     closeButton.className = "close-button";
@@ -1055,10 +1109,11 @@ class RandomAvatarView extends View {
 
     TaskBar.hide();
     document.body.appendChild(container);
-    setTimeout(RandomAvatarView.randomizeAvatar, 250);
+    RandomAvatarView.startRotation();
   }
 
   static close() {
+    clearTimeout(RandomAvatarView.rotationTimeout);
     document.getElementById("randomAvatarContainer").remove();
     View.closeModal();
     View.show();
@@ -1067,7 +1122,29 @@ class RandomAvatarView extends View {
   static randomizeAvatar() {
     const avatar = Avatar.random(false);
     RandomAvatarView.avatarDiv.innerHTML = AvatarBuilder.build(avatar).outerHTML;
-    setTimeout(RandomAvatarView.randomizeAvatar, 250);
+    RandomAvatarView.rotationTimeout = setTimeout(RandomAvatarView.randomizeAvatar, 1000);
+  }
+
+  static startRotation() {
+    RandomAvatarView.randomizeAvatar();
+  }
+
+  static stopRotation() {
+    clearTimeout(RandomAvatarView.rotationTimeout);
+  }
+
+  static async onAvatarClick(event) {
+    RandomAvatarView.stopRotation();
+
+    const confirmed = await ConfirmationModal.show(
+      "Do you want to download this avatar as a PNG?"
+    );
+    if (confirmed) {
+      View.saveAvatarAsPng(event);
+      RandomAvatarView.startRotation();
+    } else {
+      RandomAvatarView.startRotation();
+    }
   }
 }
 
@@ -1107,6 +1184,8 @@ class EditAvatarModal {
 
     App.addEventListener(EditAvatarModal.#modal, ".avatar-select", "change", EditAvatarModal.changeAvatar);
 
+    EditAvatarModal.#avatarContainer = document.querySelector("#avatarContainer");
+    EditAvatarModal.#avatarContainer.onclick = RandomAvatarView.onAvatarClick;
     EditAvatarModal.#isInitialized = true;
   }
 
@@ -1123,8 +1202,17 @@ class EditAvatarModal {
 
     document.getElementById("isTeacher").checked = member.constructor.name === "Teacher";
 
-    EditAvatarModal.#avatarContainer = document.querySelector("#avatarContainer");
-    EditAvatarModal.#avatarContainer.innerHTML = AvatarBuilder.build(EditAvatarModal.#tempAvatar).outerHTML;
+    EditAvatarModal.#avatarContainer.innerHTML = AvatarBuilder.build(EditAvatarModal.#tempAvatar).outerHTML;    
+  }
+
+  static async onAvatarClick(event) {
+    const confirmed = await ConfirmationModal.show(
+      "Do you want to download this avatar as a PNG?"
+    );
+    if (confirmed) {
+      View.saveAvatarAsPng(event);
+      RandomAvatarView.startRotation();
+    }
   }
 
   static toggleTeacher(event) {
@@ -1468,15 +1556,30 @@ class AvatarBuilder {
     return parent;
   }
 
+  static background() {
+    const background = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    background.setAttribute("x", "0");
+    background.setAttribute("y", "0");
+    background.setAttribute("width", "100");
+    background.setAttribute("height", "100");
+    background.setAttribute("rx", "12.5");
+    background.setAttribute("ry", "12.5");
+    background.setAttribute("fill", "#D3D3D3");
+    return background
+  }
+
   static build(avatar) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
     svg.setAttribute("viewBox", "0 0 100 100");
     svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+
+    svg.appendChild(AvatarBuilder.background());
     AvatarBuilder.appendAvatar(avatar, svg);
     return svg;
   }
+
 }
 
 class ClassAvatarBuilder extends AvatarBuilder {
@@ -1487,6 +1590,8 @@ class ClassAvatarBuilder extends AvatarBuilder {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     const outerGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
+    svg.appendChild(AvatarBuilder.background());
+    
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
     svg.setAttribute("viewBox", "0 0 100 100");
