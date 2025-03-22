@@ -708,6 +708,41 @@ class View {
     };
     img.src = url;
   }
+
+  static toggleFullScreen() {
+    const isFullScreen = document.fullscreenElement || document.webkitFullscreenElement;
+    if (!isFullScreen) {
+      this.enterFullScreen();
+    } else {
+      this.exitFullScreen();
+    }
+  }
+
+  static enterFullScreen() {
+    const elem = document.documentElement; // Fullscreen for the whole page
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { // Firefox
+        elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { // Chrome, Safari, and Opera
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { // IE/Edge
+        elem.msRequestFullscreen();
+    }
+  }
+  
+  static exitFullScreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.mozCancelFullScreen) { // Firefox
+        document.mozCancelFullScreen();
+    } else if (document.webkitExitFullscreen) { // Chrome, Safari, and Opera
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { // IE/Edge
+        document.msExitFullscreen();
+    }
+  }
+  
 }
 
 class ClassView extends View {
@@ -1042,12 +1077,15 @@ class AllAvatarsView extends View {
 
     avatars.forEach((avatar) => container.appendChild(avatar));
     TaskBar.hide();
+    ClassView.hide();
     document.body.appendChild(container);
+    window.scrollTo(0, 0);
     setTimeout(AllAvatarsView.randomSwap, 500);
   }
 
   static close() {
     document.getElementById("avatarsContainer").remove();
+    window.dispatchEvent(new Event("resize"));
     View.closeModal();
     View.show();
   }
@@ -1108,13 +1146,16 @@ class RandomAvatarView extends View {
     container.appendChild(closeButton);
 
     TaskBar.hide();
+    ClassView.hide();
     document.body.appendChild(container);
+    window.scrollTo(0, 0);
     RandomAvatarView.startRotation();
   }
 
   static close() {
     clearTimeout(RandomAvatarView.rotationTimeout);
     document.getElementById("randomAvatarContainer").remove();
+    window.dispatchEvent(new Event("resize"));
     View.closeModal();
     View.show();
   }
@@ -1591,7 +1632,7 @@ class ClassAvatarBuilder extends AvatarBuilder {
     const outerGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
 
     svg.appendChild(AvatarBuilder.background());
-    
+
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
     svg.setAttribute("viewBox", "0 0 100 100");

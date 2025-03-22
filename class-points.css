@@ -141,6 +141,7 @@ body {
 
 #avatarsContainer, #randomAvatarContainer {
   position: absolute;
+  top: 0px;
   padding: 10px 0px;
   background: white;
   width: 100%;
