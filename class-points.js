@@ -1471,7 +1471,7 @@ class StudentCard extends Presenter {
   }
 
   static update(student) {
-    const card = document.querySelector(`[data-id="${student.id}"]`);
+    const card = document.querySelector(`.student-card[data-id="${student.id}"]`);
     card.querySelector(".name").textContent = student.shortName();
     card.querySelector(".points").textContent = student.points;
     card.querySelector(".avatar").innerHTML = student.avatar.svg.outerHTML;
