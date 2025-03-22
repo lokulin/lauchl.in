@@ -1746,7 +1746,7 @@ class SyncManager {
   static #SYNC_INTERVAL = 60 * 1000;
 
   static #endpoint =
-    "https://script.google.com/macros/s/AKfycbxnaoy77JysMOq21DVttfTAJfvDtpodECsoOwTGAEHBD_jlMreAzCuPYARaiY4xJz24YA/exec";
+    "https://script.google.com/macros/s/AKfycbxpgrT9O8aDlxpHNlCUXnJz25lj4F-I9kf68zz5gl6deS8-_NjIgL7WyMG70dHwkdLYsA/exec";
 
   static async signUpUser(email) {
     let formData = new URLSearchParams();
