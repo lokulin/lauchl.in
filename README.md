@@ -5,52 +5,61 @@
 
 </p>
 
-Class Points is an easy-to-use app for managing student points, perfect for classrooms, teams, or group activities. With features like bulk point updates, sorting, customizable avatars, and the ability to backup/restore data, it's designed to make managing students' scores fun and efficient.
+Class Points is a simple and engaging web application for tracking, managing, and rewarding students in a classroom setting. It allows teachers to assign points, customize avatars, celebrate achievements, and sync data across devices.
 
-<div style="clear:both;"></div>
+## 🚀 Features
 
-## How to Use Class Points
+- **Student Management**: Add, remove, and update students easily.
+- **Point System**: Award points (+1, +5, +10) and track progress.
+- **Avatar Customization**: Modify student avatars with unique styles.
+- **Bulk Actions**: Select multiple students to update points at once.
+- **Celebration Mode**: Launch confetti to celebrate student achievements.
+- **Sorting & Searching**: Quickly find and sort students by name or score.
+- **Cloud Sync & Backup**: Export and import data, or sync via Google App Script.
 
-1. **Add a Student**  
-   Click on the "Enter student name" field, type a name, and press Enter or click "Add Student."
+## 🛠️ Installation
 
-2. **Update Points**  
-   Click the +1, +5, or +10 buttons next to a student’s name to increase their points. You can also enter a number manually.
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/lokulin/lauchl.in
+   ```
+2. Open `index.html` in your browser to start using the app.
 
-3. **Bulk Update**  
-   Select multiple students by clicking their avatars or names, then use the bulk +1, +5, or +10 buttons at the top to update all selected students.
+## 📝 Usage
 
-4. **Select/Deselect All**  
-   Use the "Select/Deselect All" button to quickly toggle selection for all students.
+1. **Add Students**: Enter a name and click "Add Student."
+2. **Assign Points**: Use the ❤️, +5, or +10 buttons on student cards.
+3. **Customize Avatars**: Click the settings icon on a student card.
+4. **Celebrate Achievements**: Click "🎉 Celebrate!" to launch confetti.
+5. **Backup & Restore**: Use the export/import features to save progress.
+6. **Enable Cloud Sync**: Login to sync data across devices.
 
-5. **Reset Points**  
-   Click "Reset Points" to set all selected students' scores back to zero. If no students are selected, it resets all students.
+## 🔧 Development
 
-6. **Sort Students**  
-   Use "Sort By Name" to arrange students alphabetically or "Sort By Score" to order them by points.
+This app is built with **vanilla JavaScript**, utilizing:
+- **LocalStorage** for persistence.
+- **Google App Script** for syncing data.
+- **Observer Pattern** to trigger updates efficiently.
 
-7. **Customize Avatars**  
-   Click the settings icon (three dots) on a student’s card to modify their avatar features, including face shape, accessories, and colors.
+### Running a Local Server
+For development, you can run a simple local server:
+```sh
+npx serve
+```
 
-8. **Backup & Restore**  
-   Click "Backup" to download student data as a CSV file. Click "Import" to restore data from a CSV file.
+Then, open `http://localhost:3000` in your browser.
 
-9. **Undo**  
-   Click "Undo" to revert the last action (supports up to 10 undo steps).
+## 📌 Roadmap
+- [ ] Multiple classes per user.
+- [ ] More robust syncing.
 
-10. **Celebrate**  
-    Click "Celebrate!" to launch confetti and recognize achievements!
+## 🤝 Contributing
+Pull requests are welcome! For major changes, please open an issue first to discuss.
 
-## Contributing
+## 📜 License
+This project is licensed under the MIT License. See `LICENSE` for details.
 
-Pull requests are welcome! Feel free to contribute improvements, bug fixes, or new features. 
+## 📚 References
+- [Google App Script](https://developers.google.com/apps-script)
+- [Observer Pattern](https://en.wikipedia.org/wiki/Observer_pattern)
 
-1. Fork the repository.
-2. Create a new branch.
-3. Commit your changes.
-4. Push to the branch.
-5. Open a pull request.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

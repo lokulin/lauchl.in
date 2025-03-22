@@ -1,0 +1,11 @@
+{
+  "public": ".",
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/groupBy2", "destination": "/index.html" },
+    { "source": "/groupBy3", "destination": "/index.html" },
+    { "source": "/classPhoto", "destination": "/index.html" },
+    { "source": "/allAvatars", "destination": "/index.html" },
+    { "source": "/randomAvatar", "destination": "/index.html" }
+  ]
+}
